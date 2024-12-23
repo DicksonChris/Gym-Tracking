@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ...existing custom styles... */
+
+/* Optional: Custom DaisyUI overrides can be added here */

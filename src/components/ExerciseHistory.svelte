@@ -24,12 +24,12 @@
 <div class="overflow-x-auto">
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         {#each Object.keys(groupedHistory) as date}
-            <div class="bg-white p-4 rounded-lg shadow">
-                <h3 class="text-lg font-semibold mb-2 text-center">{date}</h3>
+            <div class="card bg-base-100 shadow-md">
+                <h3 class="card-title text-center">{date}</h3> <!-- Removed text-primary -->
                 <ul class="space-y-2">
                     {#each groupedHistory[date] as entry}
-                        <li class="bg-gray-100 p-2 rounded">
-                            <p class="text-sm text-gray-700">
+                        <li class="bg-base-200 p-2 rounded">
+                            <p class="text-sm text-primary"> <!-- Changed to text-primary -->
                                 {entry.measurement.reps 
                                     ? `${entry.measurement.reps} reps x ${entry.measurement.weight} lbs` 
                                     : `Duration: ${entry.measurement.duration}, Distance: ${entry.measurement.distance}`}

@@ -34,20 +34,17 @@
 
 <ul class="space-y-6">
     {#each workouts as workout}
-        <li class="bg-white rounded-lg p-6"> <!-- Removed 'flex items-center' classes -->
-            <!-- Removed SVG Symbol -->
-            <h2 class="text-2xl font-semibold mb-4 text-blue-600">{workout.groupName}</h2>
-            <!-- Existing content -->
-
+        <li class="card bg-base-100 shadow-lg"> <!-- Replaced with DaisyUI's card class -->
+            <h2 class="card-title">{workout.groupName}</h2> <!-- Removed text-primary -->
             <ul class="ml-4 space-y-4">
                 {#each workout.exercises as exerciseId}
                     <li class="flex flex-col">
                         <div class="flex items-center justify-between">
-                            <span class="text-lg font-medium text-gray-700">{exercisesData[exerciseId]?.name}</span>
-                            <span class="text-sm text-gray-500">({exercisesData[exerciseId]?.muscleGroup})</span>
+                            <span class="text-lg font-medium text-primary">{exercisesData[exerciseId]?.name}</span> <!-- Changed to text-primary -->
+                            <span class="text-sm text-primary">{exercisesData[exerciseId]?.muscleGroup}</span> <!-- Changed to text-primary -->
                         </div>
                         {#if historyData[exerciseId]}
-                            <ExerciseHistory history={historyData[exerciseId]} /> <!-- Use the new component -->
+                            <ExerciseHistory history={historyData[exerciseId]} />
                         {/if}
                     </li>
                 {/each}
