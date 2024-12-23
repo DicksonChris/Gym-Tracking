@@ -22,17 +22,24 @@
 </script>
 
 <div class="overflow-x-auto">
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+    <div class="bg-base-300 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2">
         {#each Object.keys(groupedHistory) as date}
-            <div class="card bg-base-100 shadow-md">
-                <h3 class="card-title text-center">{date}</h3> <!-- Removed text-primary -->
-                <ul class="space-y-2">
+            <div class="card rounded-none">
+                <h3 class="card-title text-center">{date}</h3>
+                <ul class="grid grid-cols-2">
                     {#each groupedHistory[date] as entry}
-                        <li class="bg-base-200 p-2 rounded">
-                            <p class="text-sm text-primary"> <!-- Changed to text-primary -->
+                        <li class="p-2 cursor-pointer hover:bg-primary">
+                            <p class="text-sm text-base-content">
                                 {entry.measurement.reps 
-                                    ? `${entry.measurement.reps} reps x ${entry.measurement.weight} lbs` 
-                                    : `Duration: ${entry.measurement.duration}, Distance: ${entry.measurement.distance}`}
+                                    ? `${entry.measurement.reps} reps` 
+                                    : `Duration: ${entry.measurement.duration}`}
+                            </p>
+                        </li>
+                        <li class="p-2 cursor-pointer hover:bg-primary">
+                            <p class="text-sm text-base-content">
+                                {entry.measurement.reps 
+                                    ? `${entry.measurement.weight} lbs` 
+                                    : `Distance: ${entry.measurement.distance}`}
                             </p>
                         </li>
                     {/each}
