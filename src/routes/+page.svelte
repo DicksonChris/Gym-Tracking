@@ -1,21 +1,12 @@
 <script>
     import { onMount } from 'svelte';
     import WorkoutList from '../components/WorkoutList.svelte';
-    // import pb from '$lib/pocketbase'; // Remove PocketBase import
+    import { fetchWorkouts } from '$lib/api'; // Import fetchWorkouts from API utility
 
     let workouts = [];
 
-    async function fetchWorkouts() {
-        try {
-            const response = await fetch('http://localhost:3000/workouts');
-            workouts = await response.json();
-        } catch (error) {
-            console.error('Error fetching workouts:', error);
-        }
-    }
-
-    onMount(() => {
-        fetchWorkouts();
+    onMount(async () => {
+        workouts = await fetchWorkouts();
     });
 </script>
 

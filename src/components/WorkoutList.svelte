@@ -1,42 +1,26 @@
 <script>
     import { onMount } from 'svelte';
     import WorkoutItem from './WorkoutItem.svelte';
+    import { fetchExercises, fetchHistory } from '$lib/api'; // Import API functions
 
     export let workouts = [];
 
     let exercisesData = {};
     let historyData = {};
 
-    async function fetchExercises() {
-        try {
-            const response = await fetch('http://localhost:3000/exercises');
-            const exercises = await response.json();
-            exercisesData = exercises.reduce((acc, exercise) => {
-                acc[exercise.id] = exercise;
-                return acc;
-            }, {});
-        } catch (error) {
-            console.error('Error fetching exercises:', error);
-        }
-    }
+    onMount(async () => {
+        const exercises = await fetchExercises();
+        exercisesData = exercises.reduce((acc, exercise) => {
+            acc[exercise.id] = exercise;
+            return acc;
+        }, {});
 
-    async function fetchHistory() {
-        try {
-            const response = await fetch('http://localhost:3000/history');
-            const history = await response.json();
-            historyData = history.reduce((acc, entry) => {
-                if (!acc[entry.exerciseId]) acc[entry.exerciseId] = [];
-                acc[entry.exerciseId].push(entry);
-                return acc;
-            }, {});
-        } catch (error) {
-            console.error('Error fetching history:', error);
-        }
-    }
-
-    onMount(() => {
-        fetchExercises();
-        fetchHistory();
+        const history = await fetchHistory();
+        historyData = history.reduce((acc, entry) => {
+            if (!acc[entry.exerciseId]) acc[entry.exerciseId] = [];
+            acc[entry.exerciseId].push(entry);
+            return acc;
+        }, {});
     });
 </script>
 
