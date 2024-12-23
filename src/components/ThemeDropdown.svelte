@@ -2,21 +2,21 @@
     import { onMount } from 'svelte';
     let themes = [
         "dark",
-        "synthwave",
-        "halloween",
-        "forest",
-        "aqua",
-        "black",
-        "luxury",
-        "dracula",
-        "business",
-        "night",
-        "coffee",
-        "dim",
-        "sunset"
+            "synthwave",
+            "halloween",
+            "forest",
+            "aqua",
+            "black",
+            "luxury",
+            "dracula",
+            "business",
+            "night",
+            "coffee",
+            "dim",
+            "sunset"
     ];
     
-    let selectedTheme = 'business';
+    let selectedTheme = 'night';
     
     onMount(() => {
         const storedTheme = localStorage.getItem('theme');
@@ -43,7 +43,7 @@
 <select
     bind:value={selectedTheme}
     on:change={handleChange}
-    class="select select-bordered bg-secondary text-secondary-content"
+    class="select select-bordered bg-secondary text-primary"
     aria-label="Select Theme"
 >
     {#each themes as theme}

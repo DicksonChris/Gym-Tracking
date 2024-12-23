@@ -1,6 +1,4 @@
 import PocketBase from 'pocketbase';
-import fs from 'fs';
-import path from 'path';
 
 const pocketbaseUrl = import.meta.env.VITE_POCKETBASE_URL;
 const pb = new PocketBase(pocketbaseUrl);
@@ -84,30 +82,6 @@ export async function updateExercise(id: string, data: Partial<Exercise>): Promi
 // Delete an exercise
 export async function deleteExercise(id: string): Promise<void> {
     await pb.collection('exercises').delete(id);
-}
-
-// Add exercises from db.json
-export async function addExercisesFromJson() {
-  const filePath = path.join(__dirname, 'db.json');
-  const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-
-  if (!data.exercises || !Array.isArray(data.exercises)) {
-      console.error('No exercises found in db.json');
-      return;
-  }
-
-  for (const exercise of data.exercises) {
-      try {
-          await createExercise({
-              name: exercise.name,
-              muscleGroup: exercise.muscleGroup,
-              tracking: exercise.tracking
-          });
-          console.log(`Added exercise: ${exercise.name}`);
-      } catch (error) {
-          console.error(`Failed to add exercise: ${exercise.name}`, error);
-      }
-  }
 }
 
 export default pb;

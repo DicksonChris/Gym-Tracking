@@ -30,7 +30,7 @@
                 <h3 class="card-title text-center">{date}</h3>
                 <ul class="bg-base-300 space-y-2">
                     {#each groupedHistory[date] as entry}
-                        <EntryItem {entry} /> <!-- Use the EntryItem component -->
+                        <EntryItem {entry} />
                     {/each}
                 </ul>
             </div>
