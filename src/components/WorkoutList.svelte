@@ -1,6 +1,7 @@
 <script>
     import { onMount } from 'svelte';
     import ExerciseHistory from './ExerciseHistory.svelte'; // Import the new component
+    import ExerciseItem from './ExerciseItem.svelte';
 
     export let workouts = [];
 
@@ -38,15 +39,7 @@
             <h2 class="card-title">{workout.groupName}</h2> <!-- Removed text-primary -->
             <ul class="ml-4 space-y-4">
                 {#each workout.exercises as exerciseId}
-                    <li class="flex flex-col">
-                        <div class="flex items-center justify-between">
-                            <span class="text-lg font-medium text-primary">{exercisesData[exerciseId]?.name}</span> <!-- Changed to text-primary -->
-                            <span class="text-sm text-primary">{exercisesData[exerciseId]?.muscleGroup}</span> <!-- Changed to text-primary -->
-                        </div>
-                        {#if historyData[exerciseId]}
-                            <ExerciseHistory history={historyData[exerciseId]} />
-                        {/if}
-                    </li>
+                    <ExerciseItem {exerciseId} {exercisesData} {historyData} />
                 {/each}
             </ul>
         </li>
