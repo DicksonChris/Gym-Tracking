@@ -32,25 +32,3 @@
 {:else}
 	<p>Loading...</p>
 {/if}
-
-<!-- <div class="exercise">
-	{#if exercise}
-		<h2>{exercise.name}</h2>
-		<p>Muscle Group: {exercise.muscleGroup}</p>
-		{#if exercise.measurement && exercise.measurement.length > 0}
-			<ul>
-				{#each exercise.measurement as measurement}
-					<li>{measurement}</li>
-				{/each}
-			</ul>
-			<HistoryList exerciseID={exerciseID} />
-		{:else}
-			No measurement
-		{/if}
-
-		<p>Hidden: {exercise.hidden ? 'Yes' : 'No'}</p>
-	{:else}
-		<p>Loading...</p>
-	{/if}
-</div>
-<br/> -->

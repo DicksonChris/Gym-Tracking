@@ -43,27 +43,3 @@
         {/each}
     </div>
 </div>
-
-<!-- {#if historyList.length > 0}
-	<table class="w-full table-auto border-collapse border border-slate-300">
-		<thead>
-			<tr>
-				<th class="border border-slate-300 px-2 py-1">Date</th>
-				<th class="border border-slate-300 px-2 py-1">Reps</th>
-				<th class="border border-slate-300 px-2 py-1">Weight</th>
-				<th class="border border-slate-300 px-2 py-1">Distance</th>
-				<th class="border border-slate-300 px-2 py-1">Time</th>
-			</tr>
-		</thead>
-		<tbody>
-			{#each historyList as history}
-				<HistoryItem {history} />
-			{/each}
-		</tbody>
-	</table>
-{:else}
-	<p>No history entries found.</p>
-{/if}
-<br /> -->
-
-
