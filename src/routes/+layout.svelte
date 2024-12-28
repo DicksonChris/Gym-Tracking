@@ -1,13 +1,13 @@
 <script lang="ts">
     import '../app.css';
-    import ThemeDropdown from '$lib/components/ThemeDropdown.svelte';
-    import Nav from '$lib/components/Nav.svelte'; // Import Nav component
-    export let children: () => any; // Ensure children is a function
+    import ThemeDropdown from '$lib/components/Header/ThemeDropdown.svelte';
+    import Nav from '$lib/components/Header/Nav.svelte';
+    export let children: () => any; 
 </script>
 
 <div class="min-h-screen bg-base-100 text-primary">
     <header class="flex justify-between p-4 bg-secondary">
-        <Nav /> <!-- Include Nav component -->
+        <Nav />
         <ThemeDropdown />
     </header>
     <main class="container mx-auto p-8">

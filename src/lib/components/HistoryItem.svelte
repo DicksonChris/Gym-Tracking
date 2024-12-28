@@ -3,11 +3,19 @@
 	export let history: History;
 </script>
 
-<tr>
-	<td class="border border-slate-300 px-2 py-1">{history.id}</td>
-	<td class="border border-slate-300 px-2 py-1">{history.reps || '-'}</td>
-	<td class="border border-slate-300 px-2 py-1">{history.weight || '-'}</td>
-	<td class="border border-slate-300 px-2 py-1">{history.distance || '-'}</td>
-	<td class="border border-slate-300 px-2 py-1">{history.time || '-'}</td>
-	<td class="border border-slate-300 px-2 py-1">{history.startTime || '-'}</td>
-</tr>
+<div class="flex hover:bg-base-content hover:bg-opacity-10" data-id={history.id}>
+	<li class="flex-1 cursor-pointer p-2 hover:bg-primary">
+		<p class="text-sm text-base-content">
+			{history.reps
+				? `${history.reps} reps`
+				: `${history.duration} min`}
+		</p>
+	</li>
+	<li class="flex-1 cursor-pointer p-2 hover:bg-primary">
+		<p class="text-sm text-base-content">
+			{history.reps
+				? `${history.weight} lbs`
+				: `${history.distance}`}
+		</p>
+	</li>
+</div>
