@@ -1,7 +1,7 @@
 import pb from './pocketbase';
 
 export interface History {
-    id: string;
+    id?: string;
     exercise: string;
     startTime: string;
     reps?: number;
@@ -27,7 +27,10 @@ export async function getHistory(id: string): Promise<History> {
 }
 
 export async function createHistory(data: Partial<History>) {
-    return await pb.collection('history').create(data);
+    return await pb.collection('history').create({
+        ...data,
+        startTime: new Date().toISOString(),
+    });
 }
 
 export async function updateHistory(id: string, data: Partial<History>) {

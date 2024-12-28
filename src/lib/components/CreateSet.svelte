@@ -1,9 +1,13 @@
-<script lang="ts">
+<script lang="ts">	
+	import { goto } from '$app/navigation';
 	export let exerciseID: string;
+
+	function handleClick() {
+		goto(`/exercise/${exerciseID}`);
+	}
 </script>
 
-<button class="btn btn-circle btn-accent btn-sm mt-4 text-white">
-	<!-- svg for plus sign -->
+<button class="btn btn-circle btn-accent btn-sm mt-4 text-white" on:click={handleClick}>
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
 		class="h-6 w-6"
