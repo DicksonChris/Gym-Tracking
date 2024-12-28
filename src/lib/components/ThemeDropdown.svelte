@@ -1,7 +1,7 @@
 <script>
     import { onMount } from 'svelte';
     let themes = [
-        "dark",
+            "dark",
             "synthwave",
             "halloween",
             "forest",

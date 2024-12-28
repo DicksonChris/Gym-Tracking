@@ -11,123 +11,123 @@
       { "id": 5, "groupName": "Cardio", "exercises": [26, 27] }
   ],
   "exercises": [
-      { "id": 1, "name": "Barbell Squat", "muscleGroup": "Quads", "tracking": "Sets and Reps" },
+      { "id": 1, "name": "Barbell Squat", "muscleGroup": "Quads", "tracking": "Weight and Reps" },
       {
           "id": 2,
           "name": "Flat Dumbbell Bench Press",
           "muscleGroup": "Chest",
-          "tracking": "Sets and Reps"
+          "tracking": "Weight and Reps"
       },
       {
           "id": 3,
           "name": "Wide Grip Pulldowns",
           "muscleGroup": "Lats",
-          "tracking": "Sets and Reps"
+          "tracking": "Weight and Reps"
       },
-      { "id": 4, "name": "Leg Curls", "muscleGroup": "Hamstrings", "tracking": "Sets and Reps" },
+      { "id": 4, "name": "Leg Curls", "muscleGroup": "Hamstrings", "tracking": "Weight and Reps" },
       {
           "id": 5,
           "name": "Dumbbell Standing OverheadPress",
           "muscleGroup": "Shoulders",
-          "tracking": "Sets and Reps"
+          "tracking": "Weight and Reps"
       },
       {
           "id": 6,
           "name": "Incline Dumbbell Curl",
           "muscleGroup": "Biceps",
-          "tracking": "Sets and Reps"
+          "tracking": "Weight and Reps"
       },
       {
           "id": 7,
           "name": "Cable Pushdown with Rope",
           "muscleGroup": "Triceps",
-          "tracking": "Sets and Reps"
+          "tracking": "Weight and Reps"
       },
       {
           "id": 8,
           "name": "Straight Leg Calf Raises",
           "muscleGroup": "Gastroc",
-          "tracking": "Sets and Reps"
+          "tracking": "Weight and Reps"
       },
       {
           "id": 9,
           "name": "Face Pulls and Raise",
           "muscleGroup": "Mid Traps",
-          "tracking": "Sets and Reps"
+          "tracking": "Weight and Reps"
       },
-      { "id": 10, "name": "Deadlifts", "muscleGroup": "Gluts", "tracking": "Sets and Reps" },
+      { "id": 10, "name": "Deadlifts", "muscleGroup": "Gluts", "tracking": "Weight and Reps" },
       {
           "id": 11,
           "name": "Incline Dumbbell Bench",
           "muscleGroup": "Chest",
-          "tracking": "Sets and Reps"
+          "tracking": "Weight and Reps"
       },
       {
           "id": 12,
           "name": "Cable Row",
           "muscleGroup": "Back, Rear Delts",
-          "tracking": "Sets and Reps"
+          "tracking": "Weight and Reps"
       },
-      { "id": 13, "name": "Leg Press", "muscleGroup": "Quads", "tracking": "Sets and Reps" },
+      { "id": 13, "name": "Leg Press", "muscleGroup": "Quads", "tracking": "Weight and Reps" },
       {
           "id": 14,
           "name": "Dumbbell Lateral Raise",
           "muscleGroup": "Mid Delt",
-          "tracking": "Sets and Reps"
+          "tracking": "Weight and Reps"
       },
       {
           "id": 15,
           "name": "Dumbbell Hammer Curl",
           "muscleGroup": "Biceps",
-          "tracking": "Sets and Reps"
+          "tracking": "Weight and Reps"
       },
       {
           "id": 16,
           "name": "Overhead Triceps Extension",
           "muscleGroup": "Triceps",
-          "tracking": "Sets and Reps"
+          "tracking": "Weight and Reps"
       },
       {
           "id": 17,
           "name": "Seated Calf Raises",
           "muscleGroup": "Soleus",
-          "tracking": "Sets and Reps"
+          "tracking": "Weight and Reps"
       },
       {
           "id": 18,
           "name": "Dumbbell Skullcrusher",
           "muscleGroup": "Triceps",
-          "tracking": "Sets and Reps"
+          "tracking": "Weight and Reps"
       },
       {
           "id": 19,
           "name": "Bent Over Dumbbell Row",
           "muscleGroup": "Back, Rear Delts",
-          "tracking": "Sets and Reps"
+          "tracking": "Weight and Reps"
       },
-      { "id": 20, "name": "Fly Machine", "muscleGroup": "Chest", "tracking": "Sets and Reps" },
-      { "id": 21, "name": "Leg Extension", "muscleGroup": "Quads", "tracking": "Sets and Reps" },
+      { "id": 20, "name": "Fly Machine", "muscleGroup": "Chest", "tracking": "Weight and Reps" },
+      { "id": 21, "name": "Leg Extension", "muscleGroup": "Quads", "tracking": "Weight and Reps" },
       {
           "id": 22,
           "name": "Back Extensions",
           "muscleGroup": "Lower Back",
-          "tracking": "Sets and Reps"
+          "tracking": "Weight and Reps"
       },
       {
           "id": 23,
           "name": "Dumbbell Preacher Curl",
           "muscleGroup": "Biceps",
-          "tracking": "Sets and Reps"
+          "tracking": "Weight and Reps"
       },
       {
           "id": 24,
           "name": "Heels To The Heavens",
           "muscleGroup": "Abs",
-          "tracking": "Sets and Time"
+          "tracking": "Time"
       },
-      { "id": 25, "name": "X-Man Crunch", "muscleGroup": "Abs", "tracking": "Sets and Time" },
-      { "id": 26, "name": "Running", "muscleGroup": "Heart", "tracking": "Time" },
-      { "id": 27, "name": "Biking", "muscleGroup": "Heart", "tracking": "Time" }
+      { "id": 25, "name": "X-Man Crunch", "muscleGroup": "Abs", "tracking": "Time" },
+      { "id": 26, "name": "Running", "muscleGroup": "Heart", "tracking": "Time and Distance" },
+      { "id": 27, "name": "Biking", "muscleGroup": "Heart", "tracking": "Time and Distance" }
   ],
   "history": [
       {

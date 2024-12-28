@@ -5,6 +5,8 @@ export const workoutsStore = writable([]);
 export const exercisesStore = writable({});
 export const historyStore = writable({});
 
+export const showHidden = writable(false);
+
 export async function loadWorkouts() {
     const data = await fetchWorkouts();
     workoutsStore.set(data);
