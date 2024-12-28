@@ -7,7 +7,7 @@
 	}
 </script>
 
-<button class="btn btn-circle btn-accent btn-sm mt-4 text-white" on:click={handleClick}>
+<button class="btn btn-circle btn-accent btn-sm mt-4 text-white" on:click={handleClick} aria-label="Add set">
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
 		class="h-6 w-6"
