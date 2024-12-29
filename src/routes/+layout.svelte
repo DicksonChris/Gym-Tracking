@@ -10,7 +10,7 @@
         <Nav />
         <ThemeDropdown />
     </header>
-    <main class="container mx-auto p-8">
+    <main class="container mx-auto p-2">
         {@render children()}
     </main>
 </div>

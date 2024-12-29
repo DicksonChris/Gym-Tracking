@@ -3,12 +3,12 @@
 	export let history: History;
 </script>
 
-<div class="flex hover:bg-base-content hover:bg-opacity-10" data-id={history.id}>
+<a type="button" class="flex hover:bg-base-content hover:bg-opacity-10" href="/exercise/{history.exercise}/history/{history.id}">
 	<li class="flex-1 cursor-pointer p-2 hover:bg-primary">
 		<p class="text-sm text-base-content">
 			{history.reps
 				? `${history.reps} reps`
-				: `${history.duration} min`}
+				: `${history.time} min`}
 		</p>
 	</li>
 	<li class="flex-1 cursor-pointer p-2 hover:bg-primary">
@@ -18,4 +18,4 @@
 				: `${history.distance}`}
 		</p>
 	</li>
-</div>
+</a>

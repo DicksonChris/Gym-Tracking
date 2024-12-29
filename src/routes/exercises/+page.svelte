@@ -15,7 +15,7 @@
 	});
 </script>
 
-<main class="container mx-auto p-8">
+<main class="container mx-auto">
 	<h1 class="mb-4 text-center text-4xl font-bold">Exercises</h1>
 	<!-- toggle showHidden boolean -->
 	<button on:click={showHidden}>Show Hidden: {showHidden}</button>
