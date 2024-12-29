@@ -27,12 +27,15 @@
 					{exercise.muscleGroup}
 				</span>
 				<!-- Button that shows all, closed eye open eye prevent clicking and dragging-->
-				<button
-					class="btn btn-ghost btn-sm"
+				<button class="w-8 text-xl"
 					on:click={() => {
 						showAll = !showAll;
 					}} >
-					{showAll ? '▼' : '▶'}
+					{#if showAll} 
+					🞃
+					{:else} 
+					🞂
+					{/if}
 				</button>
 				
 			</span>
