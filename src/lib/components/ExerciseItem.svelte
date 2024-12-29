@@ -32,7 +32,7 @@
 					on:click={() => {
 						showAll = !showAll;
 					}} >
-					{showAll ? '👁️' : '👁️'}
+					{showAll ? '▼' : '▶'}
 				</button>
 				
 			</span>
