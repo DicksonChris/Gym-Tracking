@@ -16,12 +16,15 @@
     $: displayValue = decimal ? value.toFixed(1) : value.toString();
 
     onMount(() => {
+        // Initialize displayValue based on initial value
+        displayValue = decimal ? value.toFixed(1) : value.toString();
         dispatch('update', value);
     });
 
     function decrement() {
         if (value - step >= min) {
             value = parseFloat((value - step).toFixed(decimal ? 1 : 0));
+            displayValue = decimal ? value.toFixed(1) : value.toString();
             dispatch('update', value);
         }
     }
@@ -29,6 +32,7 @@
     function increment() {
         if (value + step <= max) {
             value = parseFloat((value + step).toFixed(decimal ? 1 : 0));
+            displayValue = decimal ? value.toFixed(1) : value.toString();
             dispatch('update', value);
         }
     }
@@ -37,13 +41,7 @@
         const target = event.target as HTMLInputElement;
         displayValue = target.value;
 
-        const parsedValue = parseFloat(target.value);
-        if (!isNaN(parsedValue)) {
-            let clampedValue = Math.max(min, Math.min(max, parsedValue));
-            clampedValue = decimal ? parseFloat(clampedValue.toFixed(1)) : Math.round(clampedValue);
-            value = clampedValue;
-            dispatch('update', clampedValue);
-        }
+        // Optionally, you can add real-time validation or formatting here
     }
 
     function formatValue() {
@@ -51,7 +49,8 @@
         if (isNaN(parsedValue)) {
             value = min !== -Infinity ? min : 0;
         } else {
-            value = decimal ? parseFloat(parsedValue.toFixed(1)) : Math.round(parsedValue);
+            value = Math.max(min, Math.min(max, parsedValue));
+            value = decimal ? parseFloat(value.toFixed(1)) : Math.round(value);
         }
         displayValue = decimal ? value.toFixed(1) : value.toString();
         dispatch('update', value);

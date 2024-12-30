@@ -10,6 +10,11 @@ export interface History {
     time?: string;
 }
 
+function isValidHistory(data: Partial<History>): boolean {
+    // At least one of the following fields must be present
+    return !!(data.reps || data.weight || data.distance || data.time);
+}
+
 export async function getHistories(): Promise<History[]>  {
     return await pb.collection('history').getFullList<History>();
 }
@@ -26,17 +31,25 @@ export async function getHistory(id: string): Promise<History> {
     return await pb.collection('history').getOne(id);
 }
 
-export async function createHistory(data: Partial<History>) {
+export async function createHistory(data: Partial<History>): Promise<History> {
+    if (!isValidHistory(data)) {
+        throw new Error('Cannot create a history with no data.');
+    }
+
     return await pb.collection('history').create({
         ...data,
         startTime: new Date().toISOString(),
     });
 }
 
-export async function updateHistory(id: string, data: Partial<History>) {
+export async function updateHistory(id: string, data: Partial<History>): Promise<History> {
+    if (!isValidHistory(data)) {
+        throw new Error('Cannot update a history to have no data.');
+    }
+
     return await pb.collection('history').update(id, data);
 }
 
-export async function deleteHistory(id: string) {
-    return await pb.collection('history').delete(id);
+export async function deleteHistory(id: string): Promise<void> {
+    await pb.collection('history').delete(id);
 }

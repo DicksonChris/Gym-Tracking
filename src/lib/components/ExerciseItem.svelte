@@ -4,6 +4,7 @@
 	import { exercisesStore } from '$lib/stores/exercisesStore';
 	import { onMount } from 'svelte';
 	import type { Exercise } from '$lib/api/exercises';
+	import Icon from '@iconify/svelte';
 
 	export let exerciseID: string;
 	let showAll = false;
@@ -15,21 +16,21 @@
 {#if exercise}
 	<li class="card bg-base-300 px-4 pb-4">
 		<div class="mt-4 flex items-center justify-between">
-			<span>
+			<div class="flex items-center">
 				<span class="mr-4 inline-block whitespace-nowrap text-2xl font-medium text-base-content">
 					{exercise.name}
 				</span>
-				<span class="badge badge-secondary text-sm">
+				<span class="badge badge-secondary text-sm mr-2">
 					{exercise.muscleGroup}
 				</span>
 				<button class="w-8 text-xl" on:click={() => (showAll = !showAll)}>
 					{#if showAll}
-						🞃
+						<Icon icon="fe:drop-down" class="h-6 w-6" />
 					{:else}
-						🞂
+						<Icon icon="fe:drop-right" class="h-6 w-6" />
 					{/if}
 				</button>
-			</span>
+			</div>
 
 			<PlusButton {exerciseID} />
 		</div>

@@ -8,6 +8,7 @@ export interface Exercise {
     hidden?: boolean;
     defaultReps?: number;
     defaultStep?: number;
+    url?: string;
 }
 
 export let showHidden = false;

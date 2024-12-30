@@ -58,10 +58,9 @@
 						<div class="day-group">
 							<!-- Display Day Header with Day of the Week -->
 							<h3
-								class="mb-2 border-b-[1px] border-neutral-content text-center text-lg font-semibold"
+								class="mb-2 border-b-[1px] border-primary font-semibold"
 							>
-								{getDayOfWeek(groupedHistory[monthKey][dayKey][0].startTime)}
-								{dayKey}
+								<span class="text-sm">{getDayOfWeek(groupedHistory[monthKey][dayKey][0].startTime)}</span><span class="inline-block w-2"></span><span class="text-base-content text-2xl">{dayKey}</span>
 							</h3>
 
 							<!-- List of History Items for the Day -->
