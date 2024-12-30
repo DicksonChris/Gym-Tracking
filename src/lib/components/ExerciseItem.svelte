@@ -16,14 +16,18 @@
 {#if exercise}
 	<li class="card bg-base-300 px-4 pb-4">
 		<div class="mt-4 flex items-center justify-between">
-			<div class="flex items-center">
-				<span class="mr-4 inline-block whitespace-nowrap text-2xl font-medium text-base-content">
+			<div class="flex w-full items-center justify-start">
+				<span
+					class="mr-4 inline-block overflow-hidden text-ellipsis whitespace-nowrap text-2xl font-medium text-base-content"
+				>
 					{exercise.name}
 				</span>
-				<span class="badge badge-secondary text-sm mr-2">
+
+				<span class="badge badge-secondary mr-2 text-sm">
 					{exercise.muscleGroup}
 				</span>
-				<button class="w-8 text-xl" on:click={() => (showAll = !showAll)}>
+
+				<button class="w-8  text-xl" on:click={() => (showAll = !showAll)}>
 					{#if showAll}
 						<Icon icon="fe:drop-down" class="h-6 w-6" />
 					{:else}
