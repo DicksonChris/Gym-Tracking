@@ -1,32 +1,26 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { getHistoriesByExercise, type History } from '$lib/api/history';
+	import { historiesStore, loadHistories } from '$lib/stores/historiesStore';
 	import HistoryItem from './HistoryItem.svelte';
+	import { derived } from 'svelte/store';
+	import type { History } from '$lib/api/history';
 
 	export let showAll = false;
 	export let exerciseID: string;
-	let historyList: History[] = [];
-	let groupedHistory: Record<string, Record<string, History[]>> = {}
 
-	// Fetch and sort history items on component mount
-	onMount(async () => {
-		try {
-			historyList = await getHistoriesByExercise(exerciseID);
-			// Sort historyList by startTime ascending
-			historyList.sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
-		} catch (error) {
-			console.error('Error fetching histories:', error);
-		}
+	// Load histories on mount
+	onMount(() => {
+		loadHistories(exerciseID);
 	});
 
-	// Function to get abbreviated day of the week
-	function getDayOfWeek(dateString) {
-		return new Date(dateString).toLocaleString('default', { weekday: 'short' }).toUpperCase();
-	}
+	// Derived store to get histories for the specific exerciseID
+	const exerciseHistories = derived(historiesStore, ($store) => $store[exerciseID] || []);
 
-	// Reactive statement to group history items by month and day
-	$: {
-		groupedHistory = historyList.reduce(
+	let groupedHistory: Record<string, Record<string, History[]>> = {};
+
+	// Subscribe to derived store
+	exerciseHistories.subscribe((histories) => {
+		groupedHistory = histories.reduce(
 			(acc, history) => {
 				const dateObj = new Date(history.startTime);
 				const month = dateObj.toLocaleString('default', { month: 'short' }).toUpperCase(); // "DEC"
@@ -41,31 +35,45 @@
 			},
 			{} as Record<string, Record<string, History[]>>
 		);
+	});
+
+	// Function to get abbreviated day of the week
+	function getDayOfWeek(dateString: string) {
+		return new Date(dateString).toLocaleString('default', { weekday: 'short' }).toUpperCase();
 	}
 </script>
 
 <div class="history-list">
-	{#each showAll ? Object.keys(groupedHistory).reverse() : Object.keys(groupedHistory).reverse().slice(0,1) as monthKey}
-		<div class="month-group mb-6">
-			<!-- Display Month Header -->
-			<h2 class="mb-4 text-2xl font-bold uppercase">{monthKey}</h2>
-			<div class="grid grid-cols-3 gap-2">
-				{#each showAll ? Object.keys(groupedHistory[monthKey]).reverse() : Object.keys(groupedHistory[monthKey]).reverse().slice(0,3) as dayKey}
-					<div class="day-group">
-						<!-- Display Day Header with Day of the Week -->
-						<h3 class="mb-2 text-center text-lg font-semibold border-b-[1px] border-neutral-content">
-							{getDayOfWeek(groupedHistory[monthKey][dayKey][0].startTime)} {dayKey}
-						</h3>
+	{#if Object.keys(groupedHistory).length > 0}
+		{#each showAll ? Object.keys(groupedHistory).reverse() : Object.keys(groupedHistory)
+					.reverse()
+					.slice(0, 1) as monthKey}
+			<div class="month-group mb-6">
+				<!-- Display Month Header -->
+				<h2 class="mb-4 text-2xl font-bold uppercase">{monthKey}</h2>
+				<div class="grid grid-cols-3 gap-2">
+					{#each showAll ? Object.keys(groupedHistory[monthKey]).reverse() : Object.keys(groupedHistory[monthKey])
+								.reverse()
+								.slice(0, 3) as dayKey}
+						<div class="day-group">
+							<!-- Display Day Header with Day of the Week -->
+							<h3
+								class="mb-2 border-b-[1px] border-neutral-content text-center text-lg font-semibold"
+							>
+								{getDayOfWeek(groupedHistory[monthKey][dayKey][0].startTime)}
+								{dayKey}
+							</h3>
 
-						<!-- List of History Items for the Day -->
-						<ul class="bg-base-300">
-							{#each groupedHistory[monthKey][dayKey] as history}
-								<HistoryItem {history} />
-							{/each}
-						</ul>
-					</div>
-				{/each}
+							<!-- List of History Items for the Day -->
+							<ul class="bg-base-300">
+								{#each groupedHistory[monthKey][dayKey] as history}
+									<HistoryItem {history} />
+								{/each}
+							</ul>
+						</div>
+					{/each}
+				</div>
 			</div>
-		</div>
-	{/each}
+		{/each}
+	{/if}
 </div>

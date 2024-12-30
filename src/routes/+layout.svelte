@@ -2,7 +2,14 @@
     import '../app.css';
     import ThemeDropdown from '$lib/components/Header/ThemeDropdown.svelte';
     import Nav from '$lib/components/Header/Nav.svelte';
+    import { onMount } from 'svelte';
+    import { loadExercises } from '$lib/stores/exercisesStore';
     export let children: () => any; 
+
+    // Initialize exercises store on component mount
+    onMount(() => {
+        loadExercises();
+    });
 </script>
 
 <div class="min-h-screen bg-base-100 text-primary">

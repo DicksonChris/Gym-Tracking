@@ -16,7 +16,7 @@
             "sunset"
     ];
     
-    let selectedTheme = 'night';
+    let selectedTheme = 'dark';
     
     onMount(() => {
         const storedTheme = localStorage.getItem('theme');

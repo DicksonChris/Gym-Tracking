@@ -6,6 +6,8 @@ export interface Exercise {
     muscleGroup: string;
     measurement?: string[];
     hidden?: boolean;
+    defaultReps?: number;
+    defaultStep?: number;
 }
 
 export let showHidden = false;
