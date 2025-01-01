@@ -21,3 +21,8 @@ function getStoreValue<T>(store: import('svelte/store').Readable<T>) {
   store.subscribe((v) => (value = v))();
   return value;
 }
+
+export async function loadAllExercises() {
+  const exercises = await getExercises();
+  return exercises;
+}

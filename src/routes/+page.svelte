@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { workoutsStore, loadWorkouts } from '$lib/stores/workoutsStore';
+	import Title from '$lib/components/Title.svelte';
 	import ExerciseItem from '$lib/components/ExerciseItem.svelte';
 	import Icon from '@iconify/svelte';
 
@@ -18,7 +19,7 @@
 	});
 </script>
 
-<h1 class="mb-4 text-center text-4xl font-bold">Workouts</h1>
+<Title title="Workouts" />
 <ul class="space-y-6">
 	<!-- Workouts List -->
 	{#each workouts as workout}
