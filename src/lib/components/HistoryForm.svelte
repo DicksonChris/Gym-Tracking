@@ -177,7 +177,7 @@
 					<button class="btn btn-block btn-error" on:click={confirmDelete}>Delete</button>
 				</div>
 			</div>
-			<div class="modal-backdrop" on:click={closeDeleteModal}></div>
+			<button class="modal-backdrop" on:click={closeDeleteModal} aria-label="Close modal"></button>
 		</div>
 	{/if}
 {/if}
