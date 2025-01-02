@@ -26,19 +26,19 @@
 		flipDurationMs,
 		type,
 		zoneTabIndex: 0,
-    dropTargetStyle: { border: 'none' },
-    dropTargetClasses: ['rounded-xl','bg-base-300']
+		dropTargetStyle: { borderColor: 'var(--color-primary-100)' },
+    dropTargetClasses: ['border-[1px]', 'border-primary', 'border-solid']
 	}}
 	on:consider={handleDndConsider}
 	on:finalize={handleDndFinalize}
-	class="min-h-[200px] overflow-auto p-2 h-full"
+	class="bg-base-300 rounded-xl  border-[1px] border-base-300 border-solid flex-grow"
 >
 	{#each exercises as exercise (exercise.id)}
 		<div
 			animate:flip={{ duration: flipDurationMs }}
-			class="card my-2 cursor-grab border-2 border-base-200 bg-base-200 p-1 text-center shadow-sm hover:border-primary active:cursor-grabbing"
+			class="rounded-md my-1 mx-1 cursor-grab border-2 border-base-200 bg-white bg-opacity-5 p-1 pl-2 shadow-sm hover:border-primary active:cursor-grabbing"
 		>
-			<span class="font-semibold text-base-content">{exercise.name}</span>
+			<span class="font-semibold text-base-content text-nowrap overflow-ellipsis overflow-clip">{exercise.name}</span>
 		</div>
 	{/each}
 

@@ -39,15 +39,15 @@
 	>
 		<h2 class="card-title ml-2 text-2xl text-black">{workout.groupName}</h2>
 	</div>
-	<div class="grid grid-cols-2 gap-6">
+	<div  class="grid grid-cols-2 gap-1">
 		<!-- All Exercises -->
-		<div class="rounded border p-4 shadow">
+		<div id="all-exercises" class="rounded p-1 border shadow h-full flex flex-col">
 			<h2 class="mb-4 text-center text-2xl font-semibold">All Exercises</h2>
 			<DnDList exercises={allExercises} type="exercise" on:update={handleAllUpdate} />
 		</div>
 
 		<!-- Workout Exercises -->
-		<div class="rounded border p-4 shadow">
+		<div id="workout-exercises" class="rounded p-1 border shadow h-full flex flex-col">
 			<h2 class="mb-4 text-center text-2xl font-semibold">Workout Exercises</h2>
 			<DnDList exercises={workoutExercises} type="exercise" on:update={handleWorkoutUpdate} />
 		</div>
