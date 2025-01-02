@@ -36,13 +36,13 @@
 	{#each exercises as exercise (exercise.id)}
 		<div
 			animate:flip={{ duration: flipDurationMs }}
-			class="rounded-md my-1 mx-1 cursor-grab border-2 border-base-200 bg-white bg-opacity-5 p-1 pl-2 shadow-sm hover:border-primary active:cursor-grabbing"
+			class="rounded-md my-1 mx-1 cursor-grab border-2 border-base-200 bg-white text-base-content overflow-clip overflow-ellipsis bg-opacity-5 p-1 pl-2 shadow-sm hover:border-primary active:cursor-grabbing"
 		>
-			<span class="font-semibold text-base-content text-nowrap overflow-ellipsis overflow-clip">{exercise.name}</span>
+			<span class="font-semibold text-base-content text-nowrap">{exercise.name}</span>
 		</div>
 	{/each}
 
 	{#if exercises.length === 0}
-		<div class="text-center text-gray-500">No exercises available.</div>
+		<div class="text-center text-gray-500"></div>
 	{/if}
 </section>

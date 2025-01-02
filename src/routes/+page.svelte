@@ -7,7 +7,7 @@
 	import Icon from '@iconify/svelte';
 
 	function handleClick(workoutID: string) {
-		goto(`/workout/${workoutID}`);
+		goto(`/workouts/${workoutID}`);
 	}
 
 	let workouts = [];

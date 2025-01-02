@@ -48,7 +48,7 @@
 		{#each showAll ? Object.keys(groupedHistory).reverse() : Object.keys(groupedHistory)
 					.reverse()
 					.slice(0, 1) as monthKey}
-			<div class="month-group mb-6">
+			<div class="month-group">
 				<!-- Display Month Header -->
 				<h2 class="mb-4 text-2xl font-bold uppercase">{monthKey}</h2>
 				<div class="grid grid-cols-3 gap-2">

@@ -46,6 +46,10 @@
 				<a href="/" class="text-primary-content transition-colors hover:text-accent">Home</a>
 			</li>
 			<li>
+				<a href="/workouts" class="text-primary-content transition-colors hover:text-accent"
+					>Workouts</a
+				>
+			<li>
 				<a href="/exercises" class="text-primary-content transition-colors hover:text-accent"
 					>Exercises</a
 				>
