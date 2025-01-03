@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
-	import { workoutsStore } from '$lib/stores/workoutsStore';
+	import { loadWorkouts, workoutsStore, removeWorkout } from '$lib/stores/workoutsStore';
 	import { type Exercise } from '$lib/api/exercises';
 	import Title from '$lib/components/Title.svelte';
 	import Icon from '@iconify/svelte';
@@ -13,41 +13,51 @@
 
 	$: workouts = $workoutsStore ?? [];
 
-	function handleClick(workoutID: string) {
+	function handleEditClick(workoutID: string) {
 		goto(`/workouts/${workoutID}`);
 	}
 
 	function handleCreateClick() {
 		goto('/workouts/new');
 	}
+
+	function handleDeleteClick(workoutID: string) {
+		const confirmDelete = confirm('Are you sure you want to delete this workout?');
+		if (confirmDelete) {
+			removeWorkout(workoutID);
+		}
+	}
+
+	onMount(async () => {
+		await loadWorkouts();
+	});
 </script>
 
 <Title title="Workouts" />
 
-<button on:click={handleCreateClick} class="btn btn-primary mb-4">
-    Create New Workout
-</button>
+<button on:click={handleCreateClick} class="btn btn-primary mb-4"> Create New Workout </button>
 
 <ul class="grid gap-6">
 	<!-- Workouts List -->
 	{#each workouts as workout}
 		<li class="card">
 			<!-- Workout Title -->
-			<button
-				on:click={() => handleClick(workout.id)}
-				aria-label="Edit workout"
-				class="card flex flex-row items-center justify-between bg-secondary p-2 rounded-b-none"
-			>
-				<h2 class="card-title ml-2 text-2xl text-black">{workout.groupName}</h2>
-				<Icon icon="bi:three-dots-vertical" class="h-6 w-8 text-black" />
-			</button>
+			<div class="card flex flex-row items-center justify-between rounded-b-none bg-secondary p-2">
+				<h2 class="card-title ml-2 text-2xl text-black flex-grow">{workout.groupName}</h2>
+				<button on:click={() => handleEditClick(workout.id)} aria-label="Edit workout">
+					<Icon icon="bi:three-dots-vertical" class="h-6 w-8 text-black" />
+				</button>
+				<button on:click={() => handleDeleteClick(workout.id)} aria-label="Delete workout">
+					<Icon icon="bi:x" class="h-6 w-8 text-black btn btn-secondary btn-circle btn-sm hover:btn-error hover:text-base-content" />
+				</button>
+			</div>
 			<!-- Workout Exercises -->
-			<ul class="card bg-secondary rounded-t-none pb-4">
+			<ul class="card rounded-t-none bg-base-300 pb-4 pt-2">
 				{#if workout.exercises}
 					{#each workout.exercises as exerciseID}
 						{#each allExercises as exercise}
 							{#if exercise.id === exerciseID}
-									<li class="ml-4 text-primary-content text-md">{exercise.name}</li>
+								<li class="text-md ml-4 text-base-content">{exercise.name}</li>
 							{/if}
 						{/each}
 					{/each}

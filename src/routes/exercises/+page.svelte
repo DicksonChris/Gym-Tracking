@@ -1,4 +1,3 @@
-<!-- display all exercises -->
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import {

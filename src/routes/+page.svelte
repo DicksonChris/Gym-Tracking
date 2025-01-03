@@ -19,7 +19,7 @@
 	});
 </script>
 
-<Title title="Workouts" />
+<Title title="Home" />
 <ul class="space-y-6">
 	<!-- Workouts List -->
 	{#each workouts as workout}

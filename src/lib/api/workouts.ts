@@ -21,3 +21,7 @@ export async function getWorkout(id: string): Promise<Workout> {
 export async function updateWorkout(id: string, data: Partial<Workout>): Promise<Workout> {
     return await pb.collection('workouts').update(id, data);
 }
+
+export async function deleteWorkout(id: string): Promise<void> {
+    await pb.collection('workouts').delete(id);
+}
