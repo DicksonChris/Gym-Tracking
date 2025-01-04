@@ -5,13 +5,22 @@
 	export let muscleGroups: string[] = [];
 	export let selectedGroups: string[] = [];
 
+	// Split and flatten muscleGroups into individualMuscleGroups
+	$: individualMuscleGroups = Array.from(
+		new Set(
+			muscleGroups.flatMap(group =>
+				group.split(',').map(g => g.trim())
+			)
+		)
+	);
+
 	let selectedSet = new Set<string>(selectedGroups);
 
-	function toggleSelection(mg: string) {
-		if (selectedSet.has(mg)) {
-			selectedSet.delete(mg);
+	function toggleSelection(muscleGroup: string) {
+		if (selectedSet.has(muscleGroup)) {
+			selectedSet.delete(muscleGroup);
 		} else {
-			selectedSet.add(mg);
+			selectedSet.add(muscleGroup);
 		}
 		selectedSet = new Set(selectedSet); // Trigger reactivity
 		dispatch('change', Array.from(selectedSet));
@@ -34,20 +43,20 @@
 	$: isEmpty = selectedSet.size === 0;
 </script>
 
-<div class="mb-4 flex flex-col gap-4">
+<div class="flex flex-col gap-4">
 	<!-- Muscle Group Filtering -->
-	<div class="flex flex-wrap gap-2">
-		{#each muscleGroups as mg}
+	<div class="flex flex-wrap gap-2 select-none">
+		{#each individualMuscleGroups as muscleGroup}
 			<span
 				class="badge cursor-pointer transition-colors
-                    {selectedSet.has(mg) ? 'badge-accent' : 'badge-outline'}"
-				on:click={() => toggleSelection(mg)}
+                    {selectedSet.has(muscleGroup) ? 'badge-accent' : 'text-neutral-content badge-outline'}"
+				on:click={() => toggleSelection(muscleGroup)}
 			>
-				{mg}
+				{muscleGroup}
 			</span>
 		{/each}
 		<button
-			class={`link-hover text-sm ${isEmpty ? 'text-neutral' : 'text-primary'}`}
+			class={`${isEmpty ? '' : 'link-hover'} text-sm ${isEmpty ? 'text-neutral' : 'text-neutral-content'}`}
 			on:click={clearSelection}
 			disabled={isEmpty}
 		>

@@ -39,3 +39,7 @@ export async function hideExercise(id: string) {
 export async function unhideExercise(id: string) {
     return await pb.collection('exercises').update(id, { hidden: false });
 }
+
+export async function updateExercise(id: string, data: Partial<Exercise>) {
+    return await pb.collection('exercises').update(id, data);
+}

@@ -1,28 +1,41 @@
 import { writable } from 'svelte/store';
-import { getExercises, type Exercise } from '$lib/api/exercises';
+import { getExercises, updateExercise, type Exercise } from '$lib/api/exercises';
 
 export const exercisesStore = writable<Exercise[] | null>(null);
 
 export async function loadExercises() {
-  const current = getStoreValue(exercisesStore);
-  if (!current) {
-    try {
-      const exercises = await getExercises();
-      exercisesStore.set(exercises);
-    } catch (error) {
-      console.error('Error loading exercises:', error);
-    }
-  }
+	try {
+		const exercises = await getExercises();
+		exercisesStore.set(exercises);
+	} catch (error) {
+		console.error('Error loading exercises:', error);
+		exercisesStore.set([]);
+	}
 }
 
-// Helper function to get store value without subscribing
-function getStoreValue<T>(store: import('svelte/store').Readable<T>) {
-  let value: T;
-  store.subscribe((v) => (value = v))();
-  return value;
+export async function loadAllExercises(): Promise<Exercise[]> {
+	return await getExercises();
 }
 
-export async function loadAllExercises() {
-  const exercises = await getExercises();
-  return exercises;
+export async function toggleHidden(exercise: Exercise) {
+	const updatedExercise = { ...exercise, hidden: !exercise.hidden };
+	try {
+		await updateExercise(exercise.id, updatedExercise);
+		exercisesStore.update((exercises) =>
+			exercises.map((ex) => (ex.id === exercise.id ? updatedExercise : ex))
+		);
+	} catch (error) {
+		console.error('Error toggling hidden status:', error);
+	}
+}
+
+export async function saveExercise(exercise: Exercise) {
+	try {
+		await updateExercise(exercise.id, exercise);
+		exercisesStore.update((exercises) =>
+			exercises.map((ex) => (ex.id === exercise.id ? exercise : ex))
+		);
+	} catch (error) {
+		console.error('Error saving exercise:', error);
+	}
 }

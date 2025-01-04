@@ -67,7 +67,6 @@
 		</li>
 	{/each}
 </ul>
-<button on:click={handleCreateClick} class="btn btn-primary mb-4"> Create New Workout </button>
 
 <button aria-label="Create workout" title="Create workout"
 	class="btn btn-circle btn-primary btn-lg fixed bottom-4 right-4 hover:btn-neutral hover:text-primary"

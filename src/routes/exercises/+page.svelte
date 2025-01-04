@@ -1,21 +1,43 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
+    import type { Exercise } from '$lib/api/exercises';
     import { goto } from '$app/navigation';
-    import { showHidden, getExercises, hideExercise, unhideExercise, type Exercise } from '$lib/api/exercises';
+    import { toggleHidden, exercisesStore } from '$lib/stores/exercisesStore';
     import MuscleGroupFilter from '$lib/components/MuscleGroupFilter.svelte';
+    import ToggleHidden from '$lib/components/ToggleHidden.svelte';
     import Icon from '@iconify/svelte';
+    import { onMount } from 'svelte';
 
-    let exercises: Exercise[] = [];
-    let selectedGroups: string[] = [];
-    let muscleGroups: string[] = [];
-    let showHiddenExercises: boolean = false; // Track hidden exercises visibility
+    // Data from +page.ts
+    export let data: { allExercises: Exercise[] };
 
-    onMount(async () => {
-        exercises = await getExercises();
-        const groups = new Set(exercises.map(e => e.muscleGroup).filter(Boolean));
-        muscleGroups = Array.from(groups);
+    // Initialize the store with data from +page.ts on component mount
+    onMount(() => {
+        exercisesStore.set(data.allExercises || []);
     });
 
+    // Auto-subscribe to the exercisesStore
+    let exercises: Exercise[] = [];
+    $: exercises = $exercisesStore || [];
+
+    let selectedGroups: string[] = [];
+    let muscleGroups: string[] = [];
+    let showHiddenExercises = false;
+
+    // Build unique muscleGroups reactive to exercises
+    $: {
+        const groups = new Set<string>();
+        exercises.forEach((e) => {
+            if (e.muscleGroup) {
+                e.muscleGroup
+                    .split(',')
+                    .map((g) => g.trim())
+                    .forEach((g) => groups.add(g));
+            }
+        });
+        muscleGroups = Array.from(groups);
+    }
+
+    // Handle updates from filter
     function handleMuscleGroupChange(e: CustomEvent<string[]>) {
         selectedGroups = e.detail;
     }
@@ -24,14 +46,26 @@
         goto('/exercises/new');
     }
 
+    function handleEditClick(exerciseID: string) {
+        goto(`/exercises/${exerciseID}`);
+    }
+
     function toggleShowHidden() {
         showHiddenExercises = !showHiddenExercises;
     }
 
-    // Filter exercises based on selected groups and hidden status
-    $: filteredExercises = exercises.filter(e => {
-        const matchesGroup = selectedGroups.length === 0 || selectedGroups.includes(e.muscleGroup);
-        const matchesHidden = showHiddenExercises || !e.hidden;
+    // Toggle hidden status using store
+    function handleToggleHidden(exercise: Exercise) {
+        toggleHidden(exercise);
+    }
+
+    // Filter exercises reactively based on selected groups and hidden status
+    $: filteredExercises = exercises.filter((e) => {
+        const exerciseGroups = e.muscleGroup.split(',').map((g) => g.trim());
+        const matchesGroup =
+            selectedGroups.length === 0 || exerciseGroups.some((g) => selectedGroups.includes(g));
+
+        const matchesHidden = showHiddenExercises ? e.hidden : true;
         return matchesGroup && matchesHidden;
     });
 </script>
@@ -47,58 +81,51 @@
     />
 
     <!-- Show Hidden Button -->
-    <div class="mb-4">
-        <button on:click={toggleShowHidden} class="btn btn-warning">
-            {showHiddenExercises ? 'Hide Hidden' : 'Show Hidden'}
+    <div class="mb-4 flex justify-end">
+        <button on:click={toggleShowHidden} class="link-hover">
+            {showHiddenExercises ? 'Show All' : 'See Disabled'}
         </button>
     </div>
 
-    <!-- Create New Exercise Button -->
-    <div class="mb-6">
-        <button on:click={handleCreateClick} class="btn btn-success">
-            Create New Exercise
-        </button>
-    </div>
+    <!-- Filtered Exercises -->
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {#each filteredExercises as exercise (exercise.id)}
+            <div class="card bg-base-100 p-4 shadow-lg max-w-sm mx-auto">
+                <span class="mb-2 flex items-center justify-between">
+                    <span class="flex flex-row">
+                        <h2 class="text-2xl font-semibold">{exercise.name}</h2>
+                        {#if exercise.hidden}
+                            <span class="badge badge-outline text-base-content ml-2">disabled</span>
+                        {/if}
+                    </span>
+                    <span class="flex items-center">
+                    <button on:click={() => handleEditClick(exercise.id)} aria-label="Edit workout">
+                        <Icon icon="bi:three-dots-vertical" class="h-6 w-10 text-white" />
+                    </button>
+                    <div class="flex items-center">
+                        <ToggleHidden {exercise} />
+                    </div>
+                </span>
+                </span>
 
-    <!-- Filtered Exercises List -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {#each filteredExercises as exercise}
-            <div class="card bg-base-100 shadow-lg p-4">
-                <h2 class="text-2xl font-semibold mb-2">{exercise.name}</h2>
-                <div class="flex flex-wrap gap-2 mb-4">
-                    <span class="badge badge-accent">{exercise.muscleGroup}</span>
-                    {#if exercise.hidden}
-                        <span class="badge badge-warning">Hidden</span>
-                    {/if}
+                <div class="mb-4 flex flex-wrap gap-2">
+                    {#each exercise.muscleGroup.split(',').map((g) => g.trim()) as group}
+                        <span class="badge badge-accent">{group}</span>
+                    {/each}
                 </div>
-                <p class="mb-2">
-                    <strong>Measurements:</strong>
-                    {#if exercise.measurement && exercise.measurement.length > 0}
-                        <ul class="list-disc list-inside">
-                            {#each exercise.measurement as m}
-                                <li>{m}</li>
-                            {/each}
-                        </ul>
-                    {:else}
-                        None
-                    {/if}
-                </p>
-                <div class="flex gap-2">
-                    {#if exercise.hidden}
-                        <button on:click={() => unhideExercise(exercise.id)} class="btn btn-sm btn-success">
-                            Unhide
-                        </button>
-                    {:else}
-                        <button on:click={() => hideExercise(exercise.id)} class="btn btn-sm btn-error">
-                            Hide
-                        </button>
-                    {/if}
-                </div>
+
+                {#if exercise.measurement && exercise.measurement.length > 0}
+                    <div class="flex flex-wrap gap-2 mt-2">
+                        {#each exercise.measurement as m}
+                            <span class="badge badge-info">{m}</span>
+                        {/each}
+                    </div>
+                {/if}
             </div>
         {/each}
     </div>
 
-    <!-- Floating Create New Exercise Button -->
+    <!-- Floating Create Button -->
     <button
         aria-label="Create Exercise"
         title="Create Exercise"
@@ -108,3 +135,18 @@
         <Icon icon="bi:plus-lg" class="h-6 w-6" />
     </button>
 </main>
+
+<style>
+    /* Optional: Add any page-specific styles here */
+
+    /* Center the cards and limit their width */
+    .card {
+        width: 100%;
+    }
+
+    @media (min-width: 640px) {
+        .card {
+            max-width: 24rem; /* Adjust as needed */
+        }
+    }
+</style>

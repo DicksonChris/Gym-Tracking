@@ -1,4 +1,3 @@
-import { loadWorkouts } from '$lib/stores/workoutsStore';
 import { loadAllExercises } from '$lib/stores/exercisesStore';
 
 export const load = async () => {
