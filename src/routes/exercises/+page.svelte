@@ -1,8 +1,9 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import { goto } from '$app/navigation';
-    import { showHidden, getExercises, type Exercise } from '$lib/api/exercises';
+    import { showHidden, getExercises, hideExercise, unhideExercise, type Exercise } from '$lib/api/exercises';
     import MuscleGroupFilter from '$lib/components/MuscleGroupFilter.svelte';
+    import Icon from '@iconify/svelte';
 
     let exercises: Exercise[] = [];
     let selectedGroups: string[] = [];
@@ -96,4 +97,14 @@
             </div>
         {/each}
     </div>
+
+    <!-- Floating Create New Exercise Button -->
+    <button
+        aria-label="Create Exercise"
+        title="Create Exercise"
+        class="btn btn-circle btn-primary btn-lg fixed bottom-4 right-4 hover:btn-neutral hover:text-primary"
+        on:click={handleCreateClick}
+    >
+        <Icon icon="bi:plus-lg" class="h-6 w-6" />
+    </button>
 </main>
