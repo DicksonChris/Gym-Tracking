@@ -35,20 +35,21 @@
 
 <Title title="Workouts" />
 
-<button on:click={handleCreateClick} class="btn btn-primary mb-4"> Create New Workout </button>
-
 <ul class="grid gap-6">
 	<!-- Workouts List -->
 	{#each workouts as workout}
 		<li class="card">
 			<!-- Workout Title -->
 			<div class="card flex flex-row items-center justify-between rounded-b-none bg-secondary p-2">
-				<h2 class="card-title ml-2 text-2xl text-black flex-grow">{workout.groupName}</h2>
+				<h2 class="card-title ml-2 flex-grow text-2xl text-black">{workout.groupName}</h2>
 				<button on:click={() => handleEditClick(workout.id)} aria-label="Edit workout">
-					<Icon icon="bi:three-dots-vertical" class="h-6 w-8 text-black" />
+					<Icon icon="bi:three-dots-vertical" class="h-6 w-10 text-black" />
 				</button>
 				<button on:click={() => handleDeleteClick(workout.id)} aria-label="Delete workout">
-					<Icon icon="bi:x" class="h-6 w-8 text-black btn btn-secondary btn-circle btn-sm hover:btn-error hover:text-base-content" />
+					<Icon
+						icon="bi:x"
+						class="btn btn-circle btn-secondary btn-sm h-6 w-8 text-black hover:btn-error hover:text-base-content"
+					/>
 				</button>
 			</div>
 			<!-- Workout Exercises -->
@@ -66,3 +67,11 @@
 		</li>
 	{/each}
 </ul>
+<button on:click={handleCreateClick} class="btn btn-primary mb-4"> Create New Workout </button>
+
+<button aria-label="Create workout" title="Create workout"
+	class="btn btn-circle btn-primary btn-lg fixed bottom-4 right-4 hover:btn-neutral hover:text-primary"
+	on:click={handleCreateClick}
+>
+	<Icon icon="bi:plus-lg" class="h-6 w-6" />
+</button>
