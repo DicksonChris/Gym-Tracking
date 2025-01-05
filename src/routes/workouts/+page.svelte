@@ -33,8 +33,6 @@
 	});
 </script>
 
-<Title title="Workouts" />
-
 <ul class="grid gap-6">
 	<!-- Workouts List -->
 	{#each workouts as workout}

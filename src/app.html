@@ -11,19 +11,19 @@
                 try {
                     const storedTheme = localStorage.getItem('theme');
                     const themes = [
-                        "dracula",
-                        "dark",
-                        "synthwave",
-                        "halloween",
-                        "forest",
                         "aqua",
                         "black",
-                        "luxury",
                         "business",
-                        "night",
                         "coffee",
+                        "dark",
                         "dim",
-                        "sunset"
+                        "dracula",
+                        "forest",
+                        "halloween",
+                        "luxury",
+                        "night",
+                        "sunset",
+                        "synthwave"
                     ];
                     if (storedTheme && themes.includes(storedTheme)) {
                         document.documentElement.setAttribute('data-theme', storedTheme);

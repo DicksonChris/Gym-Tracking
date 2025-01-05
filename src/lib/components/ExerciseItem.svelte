@@ -7,6 +7,7 @@
     import Icon from '@iconify/svelte';
 
     export let exerciseID: string;
+		export let index: number;
     let showAll = false;
 
     // Reactive statement to get the exercise from the store
@@ -26,7 +27,7 @@
         </div>
     </li>
 {:else if exercise && !exercise.hidden}
-    <li class="card bg-base-300 px-4 pb-4">
+    <li class="card bg-base-300 px-4 pb-4 {index === -1 ? 'rounded-t-none' : 'rounded-none'}">
         <div class="mt-4 flex items-center justify-between">
             <div class="flex w-full items-center justify-start">
                 <span
@@ -50,7 +51,6 @@
 
             <PlusButton {exerciseID} />
         </div>
-        <hr class="my-2 border-primary" />
         <HistoryList {exerciseID} {showAll} />
     </li>
 {:else if exercise && exercise.hidden}

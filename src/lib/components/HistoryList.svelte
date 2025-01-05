@@ -43,6 +43,12 @@
 	}
 </script>
 
+{#if Object.keys(groupedHistory).length > 0 }
+<hr class="my-2 border-primary" /> 
+{:else}
+<hr class="my-2 border-grey" /> 
+{/if}
+
 <div class="history-list">
 	{#if Object.keys(groupedHistory).length > 0}
 		{#each showAll ? Object.keys(groupedHistory).reverse() : Object.keys(groupedHistory)
@@ -57,10 +63,12 @@
 								.slice(0, 3) as dayKey}
 						<div class="day-group">
 							<!-- Display Day Header with Day of the Week -->
-							<h3
-								class="mb-2 border-b-[1px] border-primary font-semibold"
-							>
-								<span class="text-sm">{getDayOfWeek(groupedHistory[monthKey][dayKey][0].startTime)}</span><span class="inline-block w-2"></span><span class="text-base-content text-2xl">{dayKey}</span>
+							<h3 class="mb-2 border-b-[1px] border-primary font-semibold">
+								<span class="text-sm"
+									>{getDayOfWeek(groupedHistory[monthKey][dayKey][0].startTime)}</span
+								><span class="inline-block w-2"></span><span class="text-2xl text-base-content"
+									>{dayKey}</span
+								>
 							</h3>
 
 							<!-- List of History Items for the Day -->

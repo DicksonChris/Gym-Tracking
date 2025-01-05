@@ -19,21 +19,20 @@
 	});
 </script>
 
-<Title title="Home" />
 <ul class="space-y-6">
 	<!-- Workouts List -->
 	{#each workouts as workout}
 		<li class="card mb-12">
 			<!-- Workout Title -->
-			<button on:click={() => handleClick(workout.id)} aria-label="Edit workout" class="card mb-4 flex flex-row justify-between items-center bg-secondary p-2">
+			<button on:click={() => handleClick(workout.id)} aria-label="Edit workout" class="card flex flex-row justify-between items-center bg-secondary p-2 rounded-b-none">
 				<h2 class="card-title ml-2 text-2xl text-black">{workout.groupName}</h2>
 				<Icon icon="bi:three-dots-vertical" class="h-6 w-8 text-black" />
 			</button>
 			<!-- Workout Exercises -->
-			<ul class="space-y-4">
+			<ul class="">
 				{#if workout.exercises}
-					{#each workout.exercises as exerciseID}
-						<ExerciseItem {exerciseID} />
+					{#each workout.exercises as exerciseID, index}
+						<ExerciseItem {exerciseID} index={index + 1 === workout.exercises.length ? -1 : index} />
 					{/each}
 				{/if}
 			</ul>

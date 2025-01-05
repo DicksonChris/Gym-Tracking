@@ -73,7 +73,6 @@
         })
         .sort((a, b) => a.name.localeCompare(b.name));
 </script>
-<h1 class="mb-4 text-center text-4xl font-bold">Exercises</h1>
 
 <main class="container mx-auto">
 	<!-- Muscle Group Filter -->

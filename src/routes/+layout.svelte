@@ -12,8 +12,8 @@
     });
 </script>
 
-<div class="min-h-screen bg-base-100 text-primary font-sans">
-    <header class="flex justify-between p-4 bg-secondary">
+<div class="min-h-screen bg-black text-primary font-sans">
+    <header class="flex justify-between p-4 bg-secondary mb-2">
         <Nav />
         <ThemeDropdown />
     </header>

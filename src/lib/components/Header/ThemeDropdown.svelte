@@ -1,19 +1,19 @@
 <script>
     import { onMount } from 'svelte';
     let themes = [
-            "dracula",
-            "dark",
-            "synthwave",
-            "halloween",
-            "forest",
             "aqua",
             "black",
-            "luxury",
             "business",
-            "night",
             "coffee",
+            "dark",
             "dim",
-            "sunset"
+            "dracula",
+            "forest",
+            "halloween",
+            "luxury",
+            "night",
+            "sunset",
+            "synthwave"
     ];
     
     let selectedTheme = 'dracula';
