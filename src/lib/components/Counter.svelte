@@ -59,7 +59,7 @@
 
 <div class="grid grid-cols-3">
     <div class="spacer"></div>
-    <div class="flex flex-row items-center justify-center shadow-lg">
+    <div class="flex flex-row items-center justify-center">
         <button
             type="button"
             on:click={decrement}

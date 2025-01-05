@@ -61,15 +61,17 @@
 
 	// Filter exercises reactively based on selected groups and hidden status
 	$: filteredExercises = exercises
-    .filter((e) => {
-        const exerciseGroups = e.muscleGroup.split(',').map((g) => g.trim());
-        const matchesGroup =
-            selectedGroups.length === 0 || exerciseGroups.some((g) => selectedGroups.includes(g));
-
-        const matchesHidden = showHiddenExercises ? e.hidden : true;
-        return matchesGroup && matchesHidden;
-    })
-    .sort((a, b) => a.name.localeCompare(b.name));
+        .filter((e) => {
+            const groups = e.muscleGroup
+                ? e.muscleGroup.split(',').map((g) => g.trim())
+                : [];
+            const matchesGroup =
+                selectedGroups.length === 0 ||
+                groups.some((g) => selectedGroups.includes(g));
+            const matchesHidden = showHiddenExercises ? e.hidden : true;
+            return matchesGroup && matchesHidden;
+        })
+        .sort((a, b) => a.name.localeCompare(b.name));
 </script>
 <h1 class="mb-4 text-center text-4xl font-bold">Exercises</h1>
 
