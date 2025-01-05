@@ -4,7 +4,8 @@ import type { PageLoad } from './$types';
 export const load: PageLoad = async () => {
 
   try {
-    const allExercises = await loadAllExercises()
+    let allExercises = await loadAllExercises()
+    allExercises = allExercises.filter(exercise => !exercise.hidden)
 
     return {
       allExercises

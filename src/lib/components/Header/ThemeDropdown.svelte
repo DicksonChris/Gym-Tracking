@@ -16,7 +16,7 @@
             "sunset"
     ];
     
-    let selectedTheme = 'dark';
+    let selectedTheme = 'dracula';
     
     onMount(() => {
         const storedTheme = localStorage.getItem('theme');
