@@ -14,7 +14,7 @@
 </script>
 
 <label class="label flex cursor-pointer items-center">
-	<input type="checkbox" class="toggle toggle-xs" checked={!exercise.hidden} title={!exercise.hidden ? "Click to disable" : "Click to enable"} on:change={handleChange} />
+	<input type="checkbox" class="toggle toggle-accent" checked={!exercise.hidden} title={!exercise.hidden ? "Click to disable" : "Click to enable"} on:change={handleChange} />
 </label>
 
 <style>

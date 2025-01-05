@@ -1,7 +1,8 @@
 import { loadWorkout, loadWorkoutExercises } from '$lib/stores/workoutsStore';
 import { loadAllExercises } from '$lib/stores/exercisesStore';
+import type { PageLoad } from './$types';
 
-export const load = async ({ params }) => {
+export const load: PageLoad  = async ({ params }) => {
 	const { workoutID } = params;
 
 	if (workoutID === 'new') {

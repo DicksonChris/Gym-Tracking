@@ -1,6 +1,7 @@
 import { loadAllExercises } from '$lib/stores/exercisesStore';
+import type { PageLoad } from './$types';
 
-export const load = async () => {
+export const load: PageLoad = async () => {
 
   try {
     const allExercises = await loadAllExercises()
