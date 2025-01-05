@@ -6,6 +6,35 @@
         <link rel="preload" href="/fonts/Roboto-Bold.ttf" as="font" type="font/ttf" crossorigin />
         <link rel="icon" href="%sveltekit.assets%/favicon.png" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <script>
+            (function() {
+                try {
+                    const storedTheme = localStorage.getItem('theme');
+                    const themes = [
+                        "dracula",
+                        "dark",
+                        "synthwave",
+                        "halloween",
+                        "forest",
+                        "aqua",
+                        "black",
+                        "luxury",
+                        "business",
+                        "night",
+                        "coffee",
+                        "dim",
+                        "sunset"
+                    ];
+                    if (storedTheme && themes.includes(storedTheme)) {
+                        document.documentElement.setAttribute('data-theme', storedTheme);
+                    } else {
+                        document.documentElement.setAttribute('data-theme', 'dracula');
+                    }
+                } catch (e) {
+                    console.error('Failed to set theme:', e);
+                }
+            })();
+        </script>
         %sveltekit.head%
     </head>
     <body data-sveltekit-preload-data="hover">

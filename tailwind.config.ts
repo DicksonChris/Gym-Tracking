@@ -18,6 +18,7 @@ export default {
 
     daisyui: {
         themes: [
+            "dracula",
             "dark",
             "synthwave",
             "halloween",
@@ -25,11 +26,10 @@ export default {
             "aqua",
             "black",
             "luxury",
-            "dracula",
             "business",
             "night",
             "coffee",
             "dim",
-            "sunset"], // Added "cupcake" theme
+            "sunset"], 
     }
 } satisfies Config;

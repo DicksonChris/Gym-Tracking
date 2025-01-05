@@ -51,6 +51,7 @@
 				class="badge cursor-pointer transition-colors
                     {selectedSet.has(muscleGroup) ? 'badge-accent' : 'text-neutral-content badge-outline'}"
 				on:click={() => toggleSelection(muscleGroup)}
+				aria-label={`Filter by ${muscleGroup}`}
 			>
 				{muscleGroup}
 			</span>

@@ -1,6 +1,7 @@
 <script>
     import { onMount } from 'svelte';
     let themes = [
+            "dracula",
             "dark",
             "synthwave",
             "halloween",
@@ -8,7 +9,6 @@
             "aqua",
             "black",
             "luxury",
-            "dracula",
             "business",
             "night",
             "coffee",

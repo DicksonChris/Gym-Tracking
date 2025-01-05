@@ -54,22 +54,12 @@
 		background-color: currentColor;
 	}
 	.toggle:checked,
-	.toggle[aria-checked='true'] {
+	.toggle[aria-checked='true'],
+	.toggle:indeterminate {
 		background-image: none;
 		--handleoffsetcalculator: var(--handleoffset);
 		--tw-text-opacity: 1;
 		color: var(--fallback-bc, oklch(var(--bc) / var(--tw-text-opacity)));
-	}
-	.toggle:checked,
-	.toggle[aria-checked='true'] {
-		background-image: none;
-		--handleoffsetcalculator: var(--handleoffset);
-		--tw-text-opacity: 1;
-		color: var(--fallback-bc, oklch(var(--bc) / var(--tw-text-opacity)));
-	}
-	[dir='rtl'] .toggle:checked,
-	[dir='rtl'] .toggle[aria-checked='true'] {
-		--handleoffsetcalculator: calc(var(--handleoffset) * -1);
 	}
 	[dir='rtl'] .toggle:checked,
 	[dir='rtl'] .toggle[aria-checked='true'] {
@@ -95,7 +85,6 @@
 		border-color: var(--fallback-bc, oklch(var(--bc) / var(--tw-border-opacity)));
 		background-color: transparent;
 		opacity: 0.3;
-		--togglehandleborder: 0 0 0 3px var(--fallback-bc, oklch(var(--bc) / 1)) inset,
-			var(--handleoffsetcalculator) 0 0 3px var(--fallback-bc, oklch(var(--bc) / 1)) inset;
+		--togglehandleborder: 0 0 0 3px var(--fallback-bc, oklch(var(--bc) / 1)) inset;
 	}
 </style>
