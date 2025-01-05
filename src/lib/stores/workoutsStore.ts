@@ -22,7 +22,17 @@ export async function loadWorkoutExercises(workoutID: string): Promise<Exercise[
   if (!workout.exercises) {
     return [];
   }
-  return await Promise.all(workout.exercises.map(e => getExercise(e)));
+  
+  const exercises: Exercise[] = [];
+  for (const exerciseId of workout.exercises) {
+    try {
+      const ex = await getExercise(exerciseId);
+      exercises.push(ex);
+    } catch (error) {
+      console.warn(`Skipped missing exercise ${exerciseId}:`, error);
+    }
+  }
+  return exercises; // or .filter(ex => !ex.hidden) if needed
 }
 
 export async function createNewWorkout(data: Partial<Workout>) {

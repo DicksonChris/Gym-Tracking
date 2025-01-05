@@ -67,15 +67,35 @@ export async function createNewExercise(data: Partial<Exercise>) {
 	exercisesStore.update((exercises) => (exercises ? [...exercises, exercise] : [exercise]));
 }
 
-export async function saveExercise(exercise: Exercise) {
-	try {
-		await updateExercise(exercise.id, exercise);
-		exercisesStore.update((exercises) =>
-			exercises!.map((ex) => (ex.id === exercise.id ? exercise : ex))
-		);
-	} catch (error) {
-		console.error('Error saving exercise:', error);
-	}
+export async function saveExercise(partialExercise: Partial<Exercise>) {
+    try {
+        if (!partialExercise.id) {
+            throw new Error('Exercise ID is required for saving.');
+        }
+
+        const currentExercises = get(exercisesStore);
+        if (!currentExercises) {
+            throw new Error('No exercises available in the store.');
+        }
+
+        const existingExercise = currentExercises.find((ex) => ex.id === partialExercise.id);
+        if (!existingExercise) {
+            throw new Error(`Exercise with ID ${partialExercise.id} not found.`);
+        }
+
+        const updatedExercise: Exercise = { ...existingExercise, ...partialExercise };
+
+        updatedExercise.muscleGroup = updatedExercise.muscleGroup || '';
+
+        await updateExercise(updatedExercise.id, updatedExercise);
+
+        exercisesStore.update((exercises) =>
+            exercises!.map((ex) => (ex.id === updatedExercise.id ? updatedExercise : ex))
+        );
+    } catch (error) {
+        console.error('Error saving exercise:', error);
+        throw error;
+    }
 }
 
 export async function loadMuscleGroups(): Promise<string[]> {

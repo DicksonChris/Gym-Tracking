@@ -8,6 +8,8 @@
 	import { dndzone } from 'svelte-dnd-action';
 	import { flip } from 'svelte/animate';
 	import Counter from '$lib/components/Counter.svelte';
+	import { get } from 'svelte/store';
+	import { exercisesStore } from '$lib/stores/exercisesStore';
 
 	export let data;
 
@@ -19,8 +21,10 @@
 
 	let exerciseName: string = exercise ? exercise.name : '';
 	let selectedMeasurements: string[] = exercise ? exercise.measurement : [];
-	let defaultReps: number | null = exercise?.defaultReps || null;
-	let defaultStep: number | null = exercise?.defaultStep || null;
+
+	// Initialize defaultReps and defaultStep as numbers, not nullable
+	let defaultReps: number = exercise?.defaultReps ?? 0;
+	let defaultStep: number = exercise?.defaultStep ?? 0;
 	let editingExerciseName = exerciseID === 'new';
 
 	// Transform strings into objects with an "id"
@@ -34,11 +38,24 @@
 
 	// Reactive statements to reset defaults when measurements are deselected
 	$: {
-		if (!selectedMeasurements.includes('reps')) {
-			defaultReps = null;
+		if (selectedMeasurements.includes('reps')) {
+			// Ensure defaultReps is initialized to 0 if it's currently less than the minimum
+			if (defaultReps < 0) {
+				defaultReps = exercise?.defaultReps ?? 0;
+			}
+		} else {
+			// Reset to 0 to ensure Counter never receives null
+			defaultReps = exercise?.defaultReps ?? 0;
 		}
-		if (!selectedMeasurements.includes('weight')) {
-			defaultStep = null;
+
+		if (selectedMeasurements.includes('weight')) {
+			// Ensure defaultStep is initialized to 0 if it's currently less than the minimum
+			if (defaultStep < 0) {
+				defaultStep = exercise?.defaultStep ?? 0;
+			}
+		} else {
+			// Reset to 0 to ensure Counter never receives null
+			defaultStep = exercise?.defaultStep ?? 0;
 		}
 	}
 
@@ -89,11 +106,11 @@
 			measurement: selectedMeasurements
 		};
 
-		if (selectedMeasurements.includes('reps') && defaultReps !== null) {
+		if (selectedMeasurements.includes('reps')) {
 			exerciseData.defaultReps = Math.round(defaultReps);
 		}
 
-		if (selectedMeasurements.includes('weight') && defaultStep !== null) {
+		if (selectedMeasurements.includes('weight')) {
 			exerciseData.defaultStep = parseFloat(defaultStep.toFixed(1));
 		}
 
@@ -102,7 +119,7 @@
 				await createNewExercise(exerciseData);
 			} else {
 				exerciseData.id = exerciseID;
-				await saveExercise(exerciseData as Exercise);
+				await saveExercise(exerciseData as Partial<Exercise> & { id: string });
 			}
 			goto('/exercises');
 		} catch (error) {
@@ -131,66 +148,65 @@
 	}
 
 	function toggleEditExerciseName() {
-editingExerciseName = !editingExerciseName;
-}
-function handleExerciseNameBlur(e: FocusEvent) {
-const target = e.target as HTMLInputElement;
-exerciseName = target.value;
-}
-// Confirm logic
-async function handleUpdateExerciseName() {
-if (exerciseID !== 'new') {
-try {
-const exerciseData: Partial<Exercise> = { id: exerciseID, name: exerciseName.trim() };
-await saveExercise(exerciseData as Exercise);
-editingExerciseName = false;
-} catch (error) {
-console.error('Error updating exercise name:', error);
-alert('Failed to update exercise name.');
-}
-} else {
-editingExerciseName = false;
-}
-}
+		editingExerciseName = !editingExerciseName;
+	}
+
+	function handleExerciseNameBlur(e: FocusEvent) {
+		const target = e.target as HTMLInputElement;
+		exerciseName = target.value;
+	}
+
+	async function handleUpdateExerciseName() {
+		if (exerciseID !== 'new') {
+			try {
+				const exerciseData: Partial<Exercise> & { id: string } = { id: exerciseID, name: exerciseName.trim() };
+				await saveExercise(exerciseData);
+				editingExerciseName = false;
+			} catch (error) {
+				console.error('Error updating exercise name:', error);
+				alert('Failed to update exercise name.');
+			}
+		} else {
+			editingExerciseName = false;
+		}
+	}
 </script>
+
 {#if exerciseID === 'new' || exercise}
-<Title title={exerciseID === 'new' ? 'Create New Exercise' : 'Edit Exercise'} />
-<div class="card mb-4 flex flex-row items-center justify-between bg-secondary p-2">
-{#if editingExerciseName}
-<input
-type="text"
-class="input input-bordered input-primary flex-grow"
-bind:value={exerciseName}
-on:blur={handleExerciseNameBlur}
-autofocus
-/>
-{:else}
-<h2 class="card-title ml-2 flex-grow text-2xl text-black">{exerciseName}</h2>
-{/if}
-{#if editingExerciseName}
-<button
-on:click={handleUpdateExerciseName}
-aria-label={exerciseID === 'new' ? 'Confirm exercise name' : 'Update exercise name'}
-class="btn btn-ghost btn-secondary btn-sm"
->
-<Icon icon={exerciseID === 'new' ? 'bi:check2' : 'bi:floppy'} class="h-6 w-6 text-black" />
-</button>
-{:else}
-<button
-on:click={toggleEditExerciseName}
-aria-label="Edit exercise name"
-class="btn btn-ghost btn-secondary btn-sm"
->
-<Icon icon="bi:pencil" class="h-6 w-6 text-black" />
-</button>
-{/if}
-</div>
 	<Title title={exerciseID === 'new' ? 'Create New Exercise' : 'Edit Exercise'} />
+	<div class="card mb-4 flex flex-row items-center justify-between bg-secondary p-2">
+		{#if editingExerciseName}
+			<input
+				type="text"
+				class="input input-bordered input-primary flex-grow"
+				bind:value={exerciseName}
+				on:blur={handleExerciseNameBlur}
+				autofocus
+			/>
+		{:else}
+			<h2 class="card-title ml-2 flex-grow text-2xl text-black">{exerciseName}</h2>
+		{/if}
+		{#if editingExerciseName}
+			<button
+				on:click={handleUpdateExerciseName}
+				aria-label={exerciseID === 'new' ? 'Confirm exercise name' : 'Update exercise name'}
+				class="btn btn-ghost btn-secondary btn-sm"
+			>
+				<Icon icon={exerciseID === 'new' ? 'bi:check2' : 'bi:floppy'} class="h-6 w-6 text-black" />
+			</button>
+		{:else}
+			<button
+				on:click={toggleEditExerciseName}
+				aria-label="Edit exercise name"
+				class="btn btn-ghost btn-secondary btn-sm"
+			>
+				<Icon icon="bi:pencil" class="h-6 w-6 text-black" />
+			</button>
+		{/if}
+	</div>
 
 	<form on:submit|preventDefault={handleSubmit} class="space-y-4">
-		
 		<!-- Add New Muscle Group -->
-
 		<div class="flex items-center">
 			<input
 				type="text"
@@ -205,15 +221,15 @@ class="btn btn-ghost btn-secondary btn-sm"
 
 		<!-- Available Muscle Groups Section -->
 		<div>
-			<h2 class="text-lg font-semibold">Add Tag</h2>
-			<div class="flex select-none flex-wrap gap-2">
+			<h2 class="text-lg font-semibold mb-2">Add Tag</h2>
+			<div class="flex select-none flex-wrap gap-2 mb-2">
 				{#each muscleGroups as group}
 					{#each group.split(',').map((g) => g.trim()) as individualGroup}
 						<span
 							class="badge cursor-pointer transition-colors
-                     {selectedMuscleGroups.includes(individualGroup)
-								? 'badge-accent'
-								: 'badge-outline text-neutral-content'}"
+								{selectedMuscleGroups.includes(individualGroup)
+									? 'badge-accent'
+									: 'badge-outline text-neutral-content'}"
 							on:click={() => toggleMuscleGroup(individualGroup)}
 						>
 							{individualGroup}
@@ -225,7 +241,7 @@ class="btn btn-ghost btn-secondary btn-sm"
 
 		<!-- Selected Muscle Groups -->
 		<div>
-			<h3 class="text-md font-semibold">Selected Tags:</h3>
+			<h3 class="text-md font-semibold mb-2">Selected Tags:</h3>
 			<div
 				use:dndzone={{
 					items,
@@ -235,9 +251,9 @@ class="btn btn-ghost btn-secondary btn-sm"
 				}}
 				on:consider={handleConsider}
 				on:finalize={handleFinalize}
-				class="dnd-zone flex min-h-9 flex-wrap gap-2 rounded-lg border-[1px] border-base-300 bg-base-300 p-2 {isBadgeHovered
-					? 'border-primary'
-					: ''}"
+				class="dnd-zone flex min-h-9 flex-wrap gap-2 rounded-lg border-[1px] border-base-300 bg-base-300 p-2 {isBadgeHovered ? 'border-primary' : ''}"
+				on:mouseenter={onHoverStart}
+				on:mouseleave={onHoverEnd}
 			>
 				{#each items as group (group.id)}
 					<span
@@ -266,14 +282,11 @@ class="btn btn-ghost btn-secondary btn-sm"
 				{#if selectedMeasurements.includes('reps')}
 					<div class="ml-6">
 						<label class="label">Default Reps</label>
-						<input
-							type="number"
+						<Counter
 							bind:value={defaultReps}
-							placeholder="Default Reps"
-							class="input input-bordered w-full"
-							min="1"
-							step="1"
-							required
+							min={0}
+							step={1}
+							decimal={false}
 						/>
 					</div>
 				{/if}
@@ -291,14 +304,11 @@ class="btn btn-ghost btn-secondary btn-sm"
 				{#if selectedMeasurements.includes('weight')}
 					<div class="ml-6">
 						<label class="label">Default Step (lbs)</label>
-						<input
-							type="number"
+						<Counter
 							bind:value={defaultStep}
-							placeholder="Default Step"
-							class="input input-bordered w-full"
-							min="0"
-							step="0.1"
-							required
+							step={0.5}
+							min={0}
+							decimal={true}
 						/>
 					</div>
 				{/if}
