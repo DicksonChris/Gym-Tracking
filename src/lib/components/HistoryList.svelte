@@ -7,6 +7,7 @@
 
 	export let showAll = false;
 	export let exerciseID: string;
+	export let muscleGroups: string[];
 
 	// Load histories on mount
 	onMount(() => {
@@ -43,20 +44,42 @@
 	}
 </script>
 
-{#if Object.keys(groupedHistory).length > 0 }
-<hr class="my-2 border-primary" /> 
+{#if Object.keys(groupedHistory).length > 0}
+	<hr class="my-2 border-primary" />
 {:else}
-<hr class="my-2 border-grey" /> 
+	<hr class="border-grey my-2" />
 {/if}
 
 <div class="history-list">
+	{#if Object.keys(groupedHistory).length === 0}
+		<div class="mt-[6px] flex flex-row gap-2">
+			{#each muscleGroups as muscleGroup}
+				<span class="badge badge-secondary text-nowrap text-sm">
+					{muscleGroup}
+				</span>
+			{/each}
+		</div>
+	{/if}
 	{#if Object.keys(groupedHistory).length > 0}
 		{#each showAll ? Object.keys(groupedHistory).reverse() : Object.keys(groupedHistory)
 					.reverse()
-					.slice(0, 1) as monthKey}
+					.slice(0, 1) as monthKey, index}
 			<div class="month-group">
-				<!-- Display Month Header -->
-				<h2 class="mb-4 text-2xl font-bold uppercase">{monthKey}</h2>
+				<div class="flex flex-row">
+					<!-- Display Month Header -->
+					<h2 class="mb-4 mr-4 text-nowrap text-2xl font-bold uppercase">{monthKey}</h2>
+					{#if index === 0}
+						<!-- Display Muscle Groups -->
+						<div class="mt-[6px] flex flex-row gap-2">
+							{#each muscleGroups as muscleGroup}
+								<span class="badge badge-secondary text-nowrap text-sm">
+									{muscleGroup}
+								</span>
+							{/each}
+						</div>
+					{/if}
+				</div>
+
 				<div class="grid grid-cols-3 gap-2">
 					{#each showAll ? Object.keys(groupedHistory[monthKey]).reverse() : Object.keys(groupedHistory[monthKey])
 								.reverse()

@@ -25,7 +25,7 @@
 		<li class="card mb-12">
 			<!-- Workout Title -->
 			<button on:click={() => handleClick(workout.id)} aria-label="Edit workout" class="card flex flex-row justify-between items-center bg-secondary p-2 rounded-b-none">
-				<h2 class="card-title ml-2 text-2xl text-black">{workout.groupName}</h2>
+				<h2 class="card-title ml-2 md:text-xl lg:text-2xl text-black">{workout.groupName}</h2>
 				<Icon icon="bi:three-dots-vertical" class="h-6 w-8 text-black" />
 			</button>
 			<!-- Workout Exercises -->
