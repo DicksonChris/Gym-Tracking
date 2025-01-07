@@ -1,38 +1,87 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	export const ssr = false;
+	import { onMount, onDestroy } from 'svelte';
 	import { goto } from '$app/navigation';
-	import { workoutsStore, loadWorkouts } from '$lib/stores/workoutsStore';
-	import Title from '$lib/components/Title.svelte';
+	import { loadWorkouts, workoutsStore } from '$lib/stores/workoutsStore';
+	import { loadExercises } from '$lib/stores/exercisesStore';
 	import ExerciseItem from '$lib/components/ExerciseItem.svelte';
 	import Icon from '@iconify/svelte';
+	import WorkoutDropdown from '$lib/components/WorkoutDropdown.svelte';
+	import { selectedWorkoutsStore } from '$lib/stores/selectedWorkoutsStore';
+	import { get } from 'svelte/store';
+
+	let workouts = [];
+	$: workouts = $workoutsStore ?? [];
+	let query = '';
+	let showList = false;
+	let container: HTMLDivElement;
+	let textInput: HTMLInputElement;
+
+	// Subscribe to selectedWorkoutsStore
+	let selectedWorkouts: string[] = [];
+	const unsubscribe = selectedWorkoutsStore.subscribe(value => {
+		selectedWorkouts = value;
+	});
+
+	onMount(async () => {
+		await loadWorkouts();
+		if (typeof document !== 'undefined') {
+			document.addEventListener('click', handleClickOutside);
+		}
+		await loadExercises();
+	});
+
+	onDestroy(() => {
+		if (typeof document !== 'undefined') {
+			document.removeEventListener('click', handleClickOutside);
+		}
+		unsubscribe();
+	});
+
+	function handleClickOutside(e: MouseEvent) {
+		if (container && !container.contains(e.target as Node)) {
+			showList = false;
+		}
+	}
 
 	function handleClick(workoutID: string) {
 		goto(`/workouts/${workoutID}`);
 	}
 
-	let workouts = [];
+	function handleSelectionChange(event) {
+		selectedWorkoutsStore.set(event.detail);
+	}
 
-	$: workouts = $workoutsStore ?? [];
-
-	onMount(async () => {
-		await loadWorkouts();
-	});
+	$: orderedWorkouts = selectedWorkouts
+		.map(id => workouts.find(w => w.id === id))
+		.filter(w => w);
 </script>
 
+<WorkoutDropdown 
+    selectedWorkouts={selectedWorkouts} 
+    on:selectionChange={handleSelectionChange} 
+/>
+
 <ul class="space-y-6">
-	<!-- Workouts List -->
-	{#each workouts as workout}
+	{#each orderedWorkouts as workout, idx}
 		<li class="card mb-12">
-			<!-- Workout Title -->
-			<button on:click={() => handleClick(workout.id)} aria-label="Edit workout" class="card flex flex-row justify-between items-center bg-secondary p-2 rounded-b-none">
-				<h2 class="card-title ml-2 md:text-xl lg:text-2xl text-black">{workout.groupName}</h2>
+			<button
+				on:click={() => handleClick(workout.id)}
+				aria-label="Edit workout"
+				class="card flex flex-row items-center justify-between rounded-b-none bg-secondary p-2"
+			>
+				<h2 class="card-title ml-2 text-black md:text-xl lg:text-2xl">
+					{workout.groupName}
+				</h2>
 				<Icon icon="bi:three-dots-vertical" class="h-6 w-8 text-black" />
 			</button>
-			<!-- Workout Exercises -->
-			<ul class="">
+			<ul>
 				{#if workout.exercises}
 					{#each workout.exercises as exerciseID, index}
-						<ExerciseItem {exerciseID} index={index + 1 === workout.exercises.length ? -1 : index} />
+						<ExerciseItem
+							{exerciseID}
+							index={index + 1 === workout.exercises.length ? -1 : index}
+						/>
 					{/each}
 				{/if}
 			</ul>
