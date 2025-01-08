@@ -24,13 +24,13 @@
 </script>
 
 {#if $exercisesStore === null}
-	<li class="card bg-base-300 px-4 pb-4">
+	<li class="card bg-base-100 px-4 pb-4">
 		<div class="mt-4 flex items-center justify-center">
 			<span class="text-lg">Loading exercises...</span>
 		</div>
 	</li>
 {:else if exercise && !exercise.hidden}
-	<li class="card bg-base-300 px-4 pb-4 {index === -1 ? 'rounded-t-none' : 'rounded-none'}">
+	<li class="card bg-base-100 px-4 pb-4 {index === -1 ? 'rounded-t-none' : 'rounded-none'}">
 		<div class="mt-4 flex items-center justify-between">
 			<div id="{exerciseID}-titleRow" class="flex items-center overflow-hidden">
 				<span
@@ -46,20 +46,20 @@
 					{/if}
 				</button>
 			</div>
-			<PlusButton class="flex-shrink-0" {exerciseID} />
+			<PlusButton {exerciseID} />
 		</div>
 		<HistoryList {exerciseID} {showAll} muscleGroups={exercise?.muscleGroup.split(', ') ?? []} />
 	</li>
 {:else if exercise && exercise.hidden}
 	<!-- Handle hidden exercise if needed -->
 {:else}
-	<li class="card bg-base-300 px-4 pb-4">
+	<li class="card bg-base-100 px-4 pb-4">
 		<div class="mt-4 flex items-center justify-between">
 			<span class="mr-4 inline-block whitespace-nowrap text-2xl font-medium text-base-content">
 				Loading...
 			</span>
 			<PlusButton exerciseID="#" />
 		</div>
-		<hr class="my-2 border-primary" />
+		<hr class="my-2 border-grey" />
 	</li>
 {/if}

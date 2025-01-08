@@ -45,7 +45,7 @@
 </script>
 
 {#if Object.keys(groupedHistory).length > 0}
-	<hr class="my-2 border-primary" />
+	<hr class= />
 {:else}
 	<hr class="border-grey my-2" />
 {/if}
@@ -54,7 +54,7 @@
 	{#if Object.keys(groupedHistory).length === 0}
 		<div class="mt-[6px] flex flex-row gap-2">
 			{#each muscleGroups as muscleGroup}
-				<span class="badge badge-secondary text-nowrap text-sm">
+				<span class="badge badge-accent text-nowrap text-sm">
 					{muscleGroup}
 				</span>
 			{/each}
@@ -67,12 +67,12 @@
 			<div class="month-group">
 				<div class="flex flex-row">
 					<!-- Display Month Header -->
-					<h2 class="mb-4 mr-4 text-nowrap text-2xl font-bold uppercase">{monthKey}</h2>
+					<h2 class="mb-4 mr-4 text-nowrap text-2xl font-bold uppercase text-error">{monthKey}</h2>
 					{#if index === 0}
 						<!-- Display Muscle Groups -->
 						<div class="mt-[6px] flex flex-row gap-2">
 							{#each muscleGroups as muscleGroup}
-								<span class="badge badge-secondary text-nowrap text-sm">
+								<span class="badge badge-accent text-nowrap text-sm">
 									{muscleGroup}
 								</span>
 							{/each}
@@ -86,7 +86,7 @@
 								.slice(0, 3) as dayKey}
 						<div class="day-group">
 							<!-- Display Day Header with Day of the Week -->
-							<h3 class="mb-2 border-b-[1px] border-primary font-semibold">
+							<h3 class="mb-2 border-b-[1px] border-white font-semibold">
 								<span class="text-sm"
 									>{getDayOfWeek(groupedHistory[monthKey][dayKey][0].startTime)}</span
 								><span class="inline-block w-2"></span><span class="text-2xl text-base-content"
@@ -95,7 +95,7 @@
 							</h3>
 
 							<!-- List of History Items for the Day -->
-							<ul class="bg-base-300">
+							<ul>
 								{#each groupedHistory[monthKey][dayKey] as history}
 									<HistoryItem {history} />
 								{/each}

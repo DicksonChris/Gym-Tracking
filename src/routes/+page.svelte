@@ -8,18 +8,14 @@
 	import Icon from '@iconify/svelte';
 	import WorkoutDropdown from '$lib/components/WorkoutDropdown.svelte';
 	import { selectedWorkoutsStore } from '$lib/stores/selectedWorkoutsStore';
-	import { get } from 'svelte/store';
 
 	let workouts = [];
 	$: workouts = $workoutsStore ?? [];
-	let query = '';
 	let showList = false;
 	let container: HTMLDivElement;
-	let textInput: HTMLInputElement;
 
-	// Subscribe to selectedWorkoutsStore
 	let selectedWorkouts: string[] = [];
-	const unsubscribe = selectedWorkoutsStore.subscribe(value => {
+	const unsubscribe = selectedWorkoutsStore.subscribe((value) => {
 		selectedWorkouts = value;
 	});
 
@@ -53,28 +49,25 @@
 	}
 
 	$: orderedWorkouts = selectedWorkouts
-		.map(id => workouts.find(w => w.id === id))
-		.filter(w => w);
+		.map((id) => workouts.find((w) => w.id === id))
+		.filter((w) => w);
 </script>
 
-<WorkoutDropdown 
-    selectedWorkouts={selectedWorkouts} 
-    on:selectionChange={handleSelectionChange} 
-/>
+<WorkoutDropdown {selectedWorkouts} on:selectionChange={handleSelectionChange} />
 
 <ul class="space-y-6">
 	{#each orderedWorkouts as workout, idx}
 		<li class="card mb-12">
-			<button
-				on:click={() => handleClick(workout.id)}
-				aria-label="Edit workout"
-				class="card flex flex-row items-center justify-between rounded-b-none bg-secondary p-2"
+			<div
+				class="workout-header card flex flex-row items-center justify-between rounded-b-none border-b-[1px] border-primary bg-base-100 p-2 text-white"
 			>
-				<h2 class="card-title ml-2 text-black md:text-xl lg:text-2xl">
+				<h2 class="card-title ml-2 md:text-xl lg:text-2xl">
 					{workout.groupName}
 				</h2>
-				<Icon icon="bi:three-dots-vertical" class="h-6 w-8 text-black" />
-			</button>
+				<button on:click={() => handleClick(workout.id)} aria-label="Edit workout">	
+					<Icon icon="bi:three-dots-vertical" class="h-6 w-8" />
+				</button>
+			</div>
 			<ul>
 				{#if workout.exercises}
 					{#each workout.exercises as exerciseID, index}

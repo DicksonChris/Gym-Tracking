@@ -11,8 +11,8 @@
 	}
 </script>
 
-<nav class="bg-secondary text-primary">
-	<div class="navbar-center">
+<nav class="">
+	<div class="navbar-center text-slate-300">
 		<ul class="flex items-center space-x-4">
 			{#if $showBackButton}
 				<li>
@@ -43,14 +43,14 @@
 			{/if}
 
 			<li>
-				<a href="/" class="text-primary-content transition-colors hover:text-accent">Home</a>
+				<a href="/" class="transition-colors hover:text-accent">Home</a>
 			</li>
 			<li>
-				<a href="/workouts" class="text-primary-content transition-colors hover:text-accent"
+				<a href="/workouts" class="transition-colors hover:text-accent"
 					>Workouts</a
 				>
 			<li>
-				<a href="/exercises" class="text-primary-content transition-colors hover:text-accent"
+				<a href="/exercises" class="transition-colors hover:text-accent"
 					>Exercises</a
 				>
 			</li>

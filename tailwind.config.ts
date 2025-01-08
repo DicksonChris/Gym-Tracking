@@ -34,7 +34,7 @@ export default {
             {
                 // Palenight
                 palenight: {
-                    "primary": "#95ffa4",       // defaultAccent
+                    "primary": "#a7fcb3",       // defaultAccent
                     "secondary": "#80CBC4",     // base.blue
                     "accent": "#C792EA",        // base.purple
                     "neutral": "#333747",       // inputBackground

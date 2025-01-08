@@ -140,7 +140,7 @@
 				on:click={() => toggleWorkout(sw)}
 				aria-label="Remove selection"
 			>
-				<span class="badge badge-primary flex items-center">
+				<span class="badge badge-accent flex items-center">
 					{workouts.find((w) => w.id === sw)?.groupName}
 				</span>
 			</button>

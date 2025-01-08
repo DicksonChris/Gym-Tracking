@@ -118,7 +118,7 @@
 				</button>{/if}
 		</div>
     
-  <hr class="my-2 border-primary" />
+  <hr class="my-2 border-grey" />
 		{#if initialData}
 			<p class="text-primary">{new Date(initialData.startTime).toLocaleString()}</p>
 		{/if}

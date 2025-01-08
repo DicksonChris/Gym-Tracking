@@ -6,18 +6,17 @@
     import { loadExercises } from '$lib/stores/exercisesStore';
     export let children: () => any; 
 
-    // Initialize exercises store on component mount
     onMount(() => {
         loadExercises();
     });
 </script>
 
 <div class="min-h-screen bg-base-200 text-primary font-sans">
-    <header class="flex justify-between p-4 bg-secondary mb-2">
+    <header class="fixed top-0 w-full z-10 flex justify-between p-4 bg-base-200">
         <Nav />
         <ThemeDropdown />
     </header>
-    <main class="container mx-auto p-2">
+    <main class="container mx-auto p-2 pt-20">
         {@render children()}
     </main>
 </div>

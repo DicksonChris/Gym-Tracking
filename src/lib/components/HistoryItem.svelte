@@ -5,7 +5,7 @@
 
 <a
 	type="button"
-	class="flex hover:bg-primary hover:bg-opacity-5 border-[1px] border-base-300 hover:border-[1px] hover:border-primary"
+	class="flex hover:bg-secondary hover:bg-opacity-20 border-[1px] border-base-100 hover:border-[1px] hover:border-secondary"
 	href="/exercise/{history.exercise}/history/{history.id}"
 >
 	<li class="flex-1 cursor-pointer p-2">
