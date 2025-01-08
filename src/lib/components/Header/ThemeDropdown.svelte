@@ -13,7 +13,8 @@
             "luxury",
             "night",
             "sunset",
-            "synthwave"
+            "synthwave",
+            "palenight"
     ];
     
     let selectedTheme = 'dracula';

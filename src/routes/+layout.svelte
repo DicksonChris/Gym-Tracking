@@ -12,7 +12,7 @@
     });
 </script>
 
-<div class="min-h-screen bg-black text-primary font-sans">
+<div class="min-h-screen bg-base-200 text-primary font-sans">
     <header class="flex justify-between p-4 bg-secondary mb-2">
         <Nav />
         <ThemeDropdown />

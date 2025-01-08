@@ -30,6 +30,26 @@ export default {
             "night",
             "coffee",
             "dim",
-            "sunset"], 
+            "sunset",
+            {
+                // Palenight
+                palenight: {
+                    "primary": "#95ffa4",       // defaultAccent
+                    "secondary": "#80CBC4",     // base.blue
+                    "accent": "#C792EA",        // base.purple
+                    "neutral": "#333747",       // inputBackground
+                    "base-100": "#292D3E",      // background
+                    "base-200": "#1B1E2B",      // backgroundAlt
+                    "base-300": "#424A6C",      // contrastBorder
+                    "info": "#89DDFF",          // base.cyan
+                    "success": "#C3E88D",       // base.green
+                    "warning": "#FFCB6B",       // base.yellow
+                    "error": "#f07178",         // base.red
+                    "--btn-text-case": "none",
+                    "--rounded-box": "0.25rem",
+                    "--rounded-btn": "0.25rem"
+                }
+            }
+        ]
     }
 } satisfies Config;
