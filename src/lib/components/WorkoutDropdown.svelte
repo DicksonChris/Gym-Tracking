@@ -105,8 +105,8 @@
 			{/if}
 
 			{#each filteredWorkouts as workout}
-      <li
-      class="flex cursor-pointer items-center px-4 py-2 hover:bg-base-200"
+      <button
+      class="w-full text-start flex cursor-pointer items-center px-4 py-2 hover:bg-base-200"
       on:click={(e) => {
         e.stopPropagation();
         toggleWorkout(workout.id);
@@ -115,7 +115,7 @@
 					<div class="relative mr-2">
 						<input
 							type="checkbox"
-							class="custom-checkbox checkbox-accent checkbox bg-transparent"
+							class="custom-checkbox checkbox-primary checkbox bg-transparent"
 							checked={selectedWorkouts.includes(workout.id)}
 							readonly
 						/>
@@ -126,7 +126,7 @@
 						{/if}
 					</div>
 					<span class="flex-1">{workout.groupName}</span>
-				</li>
+				</button>
 			{/each}
 		</ul>
 	{/if}

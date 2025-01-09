@@ -44,7 +44,7 @@
 <select
     bind:value={selectedTheme}
     on:change={handleChange}
-    class="select select-bordered bg-secondary text-primary-content"
+    class="select pb-6 select-xs select-ghost text-base-content"
     aria-label="Select Theme"
 >
     {#each themes as theme}

@@ -18,13 +18,13 @@
 				<li>
 					<button
 						on:click={goBack}
-						class="flex h-8 w-8 items-center justify-center rounded-full bg-secondary transition-colors hover:bg-primary"
+						class="flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:bg-primary"
 						aria-label="Go back"
 					>
 						<!-- Inline SVG for Left Arrow Icon -->
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
-							class="h-5 w-5 text-primary-content"
+							class="h-5 w-5"
 							fill="none"
 							viewBox="0 0 24 24"
 							stroke="currentColor"

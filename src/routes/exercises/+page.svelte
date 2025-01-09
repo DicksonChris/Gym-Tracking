@@ -90,7 +90,7 @@
 		{#each filteredExercises as exercise (exercise.id)}
             {#if !exercise.hidden || showHiddenExercises}            
 			<div class="shadow-lg flex-grow mb-2">
-				<span class="flex items-start justify-between bg-secondary rounded-t-xl">
+				<span class="flex items-start justify-between bg-base-100 border-b-[1px] border-primary">
 					<span class="my-auto">
 						{#if exercise.hidden }
 							<span class="badge badge-outline ml-2 text-base-content">disabled</span>
@@ -103,8 +103,8 @@
 						<ToggleHidden {exercise} />
 					</span>
 				</span>
-                <div class="bg-base-300 p-4 rounded-b-xl">
-				<h2 class="text-lg font-semibold marquee">
+                <div class="bg-base-100 p-4">
+				<h2 class="text-lg font-semibold">
 					{exercise.name}
 				</h2>
 
@@ -116,8 +116,12 @@
 
 				{#if exercise.measurement && exercise.measurement.length > 0}
 					<div class="mt-2 flex flex-wrap gap-2">
-						{#each exercise.measurement as m}
-							<span class="badge badge-info">{m}</span>
+						{#each exercise.measurement as measure}
+							{#if measure === 'reps'}
+								<span class="text-base-content">{measure}: {exercise.defaultReps}</span>
+							{:else}
+								<span class="text-base-content">{measure}</span>
+							{/if}
 						{/each}
 					</div>
 				{/if}
