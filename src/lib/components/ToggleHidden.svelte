@@ -14,7 +14,13 @@
 </script>
 
 <label class="label flex cursor-pointer items-center">
-	<input type="checkbox" class="toggle toggle-accent" checked={!exercise.hidden} title={!exercise.hidden ? "Click to disable" : "Click to enable"} on:change={handleChange} />
+	<input
+		type="checkbox"
+		class="toggle toggle-accent toggle-xs"
+		checked={!exercise.hidden}
+		title={!exercise.hidden ? 'Click to disable' : 'Click to enable'}
+		on:change={handleChange}
+	/>
 </label>
 
 <style>
@@ -86,5 +92,11 @@
 		background-color: transparent;
 		opacity: 0.3;
 		--togglehandleborder: 0 0 0 3px var(--fallback-bc, oklch(var(--bc) / 1)) inset;
+	}
+
+	[type='checkbox'].toggle-xs {
+		--handleoffset: 0.5rem /* 8px */;
+		height: 1rem /* 16px */;
+		width: 1.5rem /* 24px */;
 	}
 </style>

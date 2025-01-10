@@ -174,25 +174,25 @@
 
 {#if exerciseID === 'new' || exercise}
 	<Title title={exerciseID === 'new' ? 'Create New Exercise' : 'Edit Exercise'} />
-	<div class="card mb-4 flex flex-row items-center justify-between bg-secondary p-2">
+	<div class="card mb-4 flex flex-row items-center justify-between bg-base-100 p-2">
 		{#if editingExerciseName}
 			<input
 				type="text"
-				class="input input-bordered input-primary flex-grow"
+				class="input input-bordered bg-white text-black flex-grow"
 				bind:value={exerciseName}
 				on:blur={handleExerciseNameBlur}
 				autofocus
 			/>
 		{:else}
-			<h2 class="card-title ml-2 flex-grow text-2xl text-black">{exerciseName}</h2>
+			<h2 class="card-title ml-2 flex-grow text-2xl text-white">{exerciseName}</h2>
 		{/if}
 		{#if editingExerciseName}
 			<button
 				on:click={handleUpdateExerciseName}
 				aria-label={exerciseID === 'new' ? 'Confirm exercise name' : 'Update exercise name'}
-				class="btn btn-ghost btn-secondary btn-sm"
+				class="btn btn-ghost btn-secondary btn-sm text-base-content"
 			>
-				<Icon icon={exerciseID === 'new' ? 'bi:check2' : 'bi:floppy'} class="h-6 w-6 text-black" />
+				<Icon icon={exerciseID === 'new' ? 'bi:check2' : 'bi:floppy'} class="h-6 w-6 text-base-content" />
 			</button>
 		{:else}
 			<button
@@ -200,7 +200,7 @@
 				aria-label="Edit exercise name"
 				class="btn btn-ghost btn-secondary btn-sm"
 			>
-				<Icon icon="bi:pencil" class="h-6 w-6 text-black" />
+				<Icon icon="bi:pencil" class="h-6 w-6 text-base-content" />
 			</button>
 		{/if}
 	</div>

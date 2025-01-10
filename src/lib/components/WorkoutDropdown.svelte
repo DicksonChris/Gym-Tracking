@@ -193,8 +193,8 @@
 	}
 
 	/* Ensure the checkbox has no default checkmark and centers the number */
-	.checkbox-accent:checked,
-	.checkbox-accent[aria-checked='true'] {
+	.checkbox-primary:checked,
+	.checkbox-primary[aria-checked='true'] {
 		background-repeat: no-repeat;
 		animation: none; /* Remove checkmark animation */
 		background-color: var(--chkbg);
@@ -214,13 +214,13 @@
 	}
 
 	/* Optional: Adjust the checkbox size if necessary */
-	.checkbox-accent {
+	.checkbox-primary {
 		height: 1.5rem; /* 24px */
 		width: 1.5rem; /* 24px */
 	}
 
 	/* Optional: Prevent text selection on the checkbox and number */
-	.checkbox-accent,
+	.checkbox-primary,
 	.checkbox-number {
 		user-select: none;
 	}

@@ -34,11 +34,11 @@
 		<div class="mt-4 flex items-center justify-between">
 			<div id="{exerciseID}-titleRow" class="flex items-center overflow-hidden">
 				<span
-					class="mr-4 min-w-0 flex-grow overflow-hidden text-ellipsis whitespace-nowrap sm:text-lg md:text-xl font-medium text-base-content"
+					class="mr-4 min-w-0 flex-grow overflow-hidden text-ellipsis whitespace-nowrap sm:text-lg md:text-xl font-medium text-white"
 				>
 					{exercise.name}
 				</span>
-				<button class="w-8 text-xl flex-shrink-0" on:click={() => (showAll = !showAll)}>
+				<button class="w-8 text-xl flex-shrink-0 text-secondary" on:click={() => (showAll = !showAll)}>
 					{#if showAll}
 						<Icon icon="fe:drop-down" class="h-6 w-6" />
 					{:else}

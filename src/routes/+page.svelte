@@ -1,5 +1,4 @@
 <script lang="ts">
-	export const ssr = false;
 	import { onMount, onDestroy } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { loadWorkouts, workoutsStore } from '$lib/stores/workoutsStore';

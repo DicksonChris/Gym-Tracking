@@ -9,6 +9,8 @@
 	export let exerciseID: string;
 	export let muscleGroups: string[];
 
+	let badgeClasses = "badge badge-neutral border-accent select-none"
+
 	// Load histories on mount
 	onMount(() => {
 		loadHistories(exerciseID);
@@ -54,7 +56,7 @@
 	{#if Object.keys(groupedHistory).length === 0}
 		<div class="mt-[6px] flex flex-row gap-2">
 			{#each muscleGroups as muscleGroup}
-				<span class="badge badge-accent text-nowrap text-sm">
+				<span class="{badgeClasses} text-nowrap text-sm">
 					{muscleGroup}
 				</span>
 			{/each}
@@ -67,12 +69,12 @@
 			<div class="month-group">
 				<div class="flex flex-row">
 					<!-- Display Month Header -->
-					<h2 class="mb-4 mr-4 text-nowrap text-2xl font-bold uppercase text-error">{monthKey}</h2>
+					<h2 class="mb-4 mr-4 text-nowrap text-2xl font-bold uppercase text-base-content">{monthKey}</h2>
 					{#if index === 0}
 						<!-- Display Muscle Groups -->
 						<div class="mt-[6px] flex flex-row gap-2">
 							{#each muscleGroups as muscleGroup}
-								<span class="badge badge-accent text-nowrap text-sm">
+								<span class="{badgeClasses} text-nowrap text-sm">
 									{muscleGroup}
 								</span>
 							{/each}

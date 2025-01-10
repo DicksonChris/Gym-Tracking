@@ -62,17 +62,17 @@
 
 {#if workout}
     <Title title={workoutID === 'new' ? 'Create Workout' : 'Edit Workout'} />
-    <div class="card mb-4 flex flex-row items-center justify-between bg-secondary p-2">
+    <div class="card mb-4 flex flex-row items-center justify-between bg-base-100 p-2">
         {#if editingGroupName}
             <input
                 type="text"
-                class="input input-bordered input-primary flex-grow"
+                class="input input-bordered flex-grow text-black bg-white"
                 bind:value={workout.groupName}
                 on:blur={handleGroupNameBlur}
                 autofocus
             />
         {:else}
-            <h2 id="groupName" class="card-title ml-2 flex-grow text-2xl text-black">{workout.groupName}</h2>
+            <h2 id="groupName" class="card-title ml-2 flex-grow text-2xl text-white">{workout.groupName}</h2>
         {/if}
         {#if editingGroupName}
             <!-- For new workout, show check icon instead of 'floppy' but same button functionality -->
@@ -81,7 +81,7 @@
                 aria-label={workoutID === 'new' ? 'Confirm workout name' : 'Update workout name'}
                 class="btn btn-ghost btn-secondary btn-sm"
             >
-                <Icon icon={workoutID === 'new' ? 'bi:check' : 'bi:floppy'} class="h-6 w-6 text-black" />
+                <Icon icon={workoutID === 'new' ? 'bi:check' : 'bi:floppy'} class="h-6 w-6 text-base-content" />
             </button>
         {:else}
             <button
@@ -89,7 +89,7 @@
                 aria-label="Edit workout name"
                 class="btn btn-ghost btn-secondary btn-sm"
             >
-                <Icon icon="bi:pencil" class="h-6 w-6 text-black" />
+                <Icon icon="bi:pencil" class="h-6 w-6 text-base-content" />
             </button>
         {/if}
     </div>
@@ -97,13 +97,13 @@
     <div class="grid grid-cols-2 gap-1">
         <!-- All Exercises -->
         <div id="all-exercises" class="flex h-full flex-col rounded border p-1 shadow">
-            <h2 class="mb-2 text-center text-xl font-semibold uppercase">Available</h2>
+            <h2 class="mb-2 text-center text-xl font-semibold uppercase text-white">Available</h2>
             <DnDList exercises={allExercises} type="exercise" on:update={handleAllUpdate} />
         </div>
 
         <!-- Workout Exercises -->
         <div id="workout-exercises" class="flex h-full flex-col rounded border p-1 shadow">
-            <h2 class="mb-2 text-center text-xl font-semibold uppercase">Selected</h2>
+            <h2 class="mb-2 text-center text-xl font-semibold uppercase text-white">Selected</h2>
             <DnDList exercises={workoutExercises} type="exercise" on:update={handleWorkoutUpdate} />
         </div>
     </div>

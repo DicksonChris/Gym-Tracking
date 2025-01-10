@@ -61,73 +61,81 @@
 
 	// Filter exercises reactively based on selected groups and hidden status
 	$: filteredExercises = exercises
-        .filter((e) => {
-            const groups = e.muscleGroup
-                ? e.muscleGroup.split(',').map((g) => g.trim())
-                : [];
-            const matchesGroup =
-                selectedGroups.length === 0 ||
-                groups.some((g) => selectedGroups.includes(g));
-            const matchesHidden = showHiddenExercises ? e.hidden : true;
-            return matchesGroup && matchesHidden;
-        })
-        .sort((a, b) => a.name.localeCompare(b.name));
+		.filter((e) => {
+			const groups = e.muscleGroup ? e.muscleGroup.split(',').map((g) => g.trim()) : [];
+			const matchesGroup =
+				selectedGroups.length === 0 || groups.some((g) => selectedGroups.includes(g));
+			const matchesHidden = showHiddenExercises ? e.hidden : true;
+			return matchesGroup && matchesHidden;
+		})
+		.sort((a, b) => a.name.localeCompare(b.name));
 </script>
 
-<main class="container mx-auto">
-	<!-- Muscle Group Filter -->
-	<MuscleGroupFilter {muscleGroups} {selectedGroups} on:change={handleMuscleGroupChange} />
-
-	<!-- Show Hidden Button -->
-	<div class="mb-4 flex justify-end">
+<main class="container card mx-auto min-w-[500px] bg-base-100 py-4">
+	<div class="px-2">
+		<MuscleGroupFilter {muscleGroups} {selectedGroups} on:change={handleMuscleGroupChange} />
+	</div>
+	<div class="mb-4 flex justify-end border-b-[1px] border-primary p-2 text-white">
 		<button on:click={toggleShowHidden} class="link-hover">
 			{showHiddenExercises ? 'Show All' : 'See Disabled'}
 		</button>
 	</div>
 
-	<!-- Filtered Exercises -->
-	<div class="flex flex-wrap gap-4">
+	<div class="text-base-content">
+		<div
+			class="sticky top-[66px] z-50 grid grid-cols-[4fr_2fr_2fr_1fr_1fr_0.3fr_1fr] gap-1 border-b border-base-content bg-base-100 py-2 font-semibold text-primary"
+		>
+			<div class="text-center text-sm">Exercise</div>
+			<div class="text-center text-sm">Tags</div>
+			<div class="text-center text-sm">Measures</div>
+			<div class="text-center text-sm">Default Reps</div>
+			<div class="text-center text-sm">Default Step</div>
+			<div class="text-center text-sm">URL</div>
+			<div class="text-center text-sm">Disable</div>
+		</div>
+		<!-- Rows -->
 		{#each filteredExercises as exercise (exercise.id)}
-            {#if !exercise.hidden || showHiddenExercises}            
-			<div class="shadow-lg flex-grow mb-2">
-				<span class="flex items-start justify-between bg-base-100 border-b-[1px] border-primary">
-					<span class="my-auto">
-						{#if exercise.hidden }
-							<span class="badge badge-outline ml-2 text-base-content">disabled</span>
-						{/if}
-					</span>
-					<span class="flex">
-						<button on:click={() => handleEditClick(exercise.id)} aria-label="Edit workout">
-							<Icon icon="bi:three-dots-vertical" class="h-6 w-10 text-black" />
+			{#if !exercise.hidden || showHiddenExercises}
+				<div class="mb-2 grid grid-cols-[4fr_2fr_2fr_1fr_1fr_0.3fr_1fr] items-center gap-2 px-4">
+					<div class="flex font-semibold">
+						<button on:click={() => handleEditClick(exercise.id)}>
+							<Icon icon="bi:three-dots-vertical" class="mr-2 h-6" />
 						</button>
-						<ToggleHidden {exercise} />
-					</span>
-				</span>
-                <div class="bg-base-100 p-4">
-				<h2 class="text-lg font-semibold">
-					{exercise.name}
-				</h2>
-
-				<div class="mb-4 flex flex-wrap gap-2">
-					{#each exercise.muscleGroup.split(',').map((g) => g.trim()) as group}
-						<span class="badge badge-accent">{group}</span>
-					{/each}
-				</div>
-
-				{#if exercise.measurement && exercise.measurement.length > 0}
-					<div class="mt-2 flex flex-wrap gap-2">
-						{#each exercise.measurement as measure}
-							{#if measure === 'reps'}
-								<span class="text-base-content">{measure}: {exercise.defaultReps}</span>
-							{:else}
-								<span class="text-base-content">{measure}</span>
-							{/if}
+						{exercise.name}
+					</div>
+					<div class="flex flex-col flex-wrap gap-1">
+						{#each exercise.muscleGroup.split(',').map((g) => g.trim()) as group}
+							<span class="badge badge-accent badge-xs whitespace-nowrap">{group}</span>
 						{/each}
 					</div>
-				{/if}
-                </div>
-			</div>
-            {/if}
+					<div class="text-xs">
+						{#if exercise.measurement && exercise.measurement.length > 0}
+							{#each exercise.measurement as measure, idx}
+								<span class="capitalize"
+									>{measure}{idx + 1 === exercise.measurement.length ? '' : ', '}
+								</span>
+							{/each}
+						{/if}
+					</div>
+					<div class="text-xs">{exercise.defaultReps || ''}</div>
+					<div class="text-xs">{exercise.defaultStep || ''}</div>
+					<div>
+						{#if exercise.url}
+							<a
+								href={exercise.url}
+								target="_blank"
+								rel="noopener noreferrer"
+								class="link link-primary"
+							>
+								<Icon icon="line-md:link" class="h-6 w-6" />
+							</a>
+						{/if}
+					</div>
+					<div>
+						<ToggleHidden {exercise} />
+					</div>
+				</div>
+			{/if}
 		{/each}
 	</div>
 
@@ -141,3 +149,9 @@
 		<Icon icon="bi:plus-lg" class="h-6 w-6" />
 	</button>
 </main>
+
+<style>
+	:root {
+		background-color: #1b1e2b;
+	}
+</style>

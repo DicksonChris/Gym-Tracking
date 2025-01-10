@@ -1,21 +1,38 @@
 <script lang="ts">
 	import type { History } from '$lib/api/history';
+	import Icon from '@iconify/svelte';
 	export let history: History;
 </script>
 
 <a
 	type="button"
-	class="flex hover:bg-secondary hover:bg-opacity-20 border-[1px] border-base-100 hover:border-[1px] hover:border-secondary"
+	class="flex overflow-clip whitespace-nowrap border-[1px] border-base-100 text-lg text-base-content hover:border-[1px] hover:border-secondary hover:bg-secondary hover:bg-opacity-20"
 	href="/exercise/{history.exercise}/history/{history.id}"
 >
-	<li class="flex-1 cursor-pointer p-2">
-		<p class="text-sm text-base-content">
-			{history.reps ? `${history.reps} reps` : `${history.time} min`}
-		</p>
-	</li>
-	<li class="flex-1 cursor-pointer p-2">
-		<p class="text-sm text-base-content">
-			{history.reps ? `${history.weight} lbs` : `${history.distance}`}
-		</p>
-	</li>
+	{#if history.reps && history.weight}
+		<div class="py-2 flex flex-nowrap items-center">
+			<div class="cursor-pointer px-1">
+				<p class="">
+					{history.reps ? `${history.reps} ` : `${history.time} min`}
+				</p>
+			</div>
+			<Icon icon="maki:cross" class="px-[3px]" />
+			<div class="cursor-pointer px-1">
+				<p class="">
+					{history.reps ? `${history.weight} lbs` : `${history.distance}`}
+				</p>
+			</div>
+		</div>
+	{:else}
+		<li class="flex-1 cursor-pointer px-1 py-2">
+			<p class="">
+				{history.reps ? `${history.reps} ` : `${history.time} min`}
+			</p>
+		</li>
+		<li class="flex-1 cursor-pointer px-1 py-2">
+			<p class="">
+				{history.reps ? `${history.weight} lbs` : `${history.distance}`}
+			</p>
+		</li>
+	{/if}
 </a>
