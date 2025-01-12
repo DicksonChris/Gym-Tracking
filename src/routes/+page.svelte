@@ -1,85 +1,76 @@
 <script lang="ts">
-	import { onMount, onDestroy } from 'svelte';
-	import { goto } from '$app/navigation';
-	import { loadWorkouts, workoutsStore } from '$lib/stores/workoutsStore';
-	import { loadExercises } from '$lib/stores/exercisesStore';
-	import ExerciseItem from '$lib/components/ExerciseItem.svelte';
-	import Icon from '@iconify/svelte';
-	import WorkoutDropdown from '$lib/components/WorkoutDropdown.svelte';
-	import { selectedWorkoutsStore } from '$lib/stores/selectedWorkoutsStore';
-	
+    import { onDestroy } from 'svelte';
+    import { goto } from '$app/navigation';
+    import { workoutsStore } from '$lib/stores/workoutsStore';
+    import ExerciseItem from '$lib/components/ExerciseItem.svelte';
+    import Icon from '@iconify/svelte';
+    import WorkoutDropdown from '$lib/components/WorkoutDropdown.svelte';
+    import { selectedWorkoutsStore } from '$lib/stores/selectedWorkoutsStore';
 
-	let workouts = [];
-	$: workouts = $workoutsStore ?? [];
-	let showList = false;
-	let container: HTMLUListElement;
+    export let data; 
 
-	let selectedWorkouts: string[] = [];
-	const unsubscribe = selectedWorkoutsStore.subscribe((value) => {
-		selectedWorkouts = value;
-	});
+    let workouts = [];
+    $: workouts = $workoutsStore ?? [];
+    let showList = false;
+    let container: HTMLUListElement;
 
-	onMount(async () => {
-		await loadWorkouts();
-		if (typeof document !== 'undefined') {
-			document.addEventListener('click', handleClickOutside);
-		}
-		await loadExercises();
-	});
+    let selectedWorkouts: string[] = [];
+    const unsubscribe = selectedWorkoutsStore.subscribe((value) => {
+        selectedWorkouts = value;
+    });
 
-	onDestroy(() => {
-		if (typeof document !== 'undefined') {
-			document.removeEventListener('click', handleClickOutside);
-		}
-		unsubscribe();
-	});
+    onDestroy(() => {
+        unsubscribe();
+    });
 
-	function handleClickOutside(e: MouseEvent) {
-		if (container && !container.contains(e.target as Node)) {
-			showList = false;
-		}
-	}
+    function handleClickOutside(e: MouseEvent) {
+        if (container && !container.contains(e.target as Node)) {
+            showList = false;
+        }
+    }
 
-	function handleClick(workoutID: string) {
-		goto(`/workouts/${workoutID}`);
-	}
+    function handleClick(workoutID: string) {
+        goto(`/workouts/${workoutID}`);
+    }
 
-	function handleSelectionChange(event: CustomEvent<string[]>) {
-		selectedWorkoutsStore.set(event.detail);
-	}
+    function handleSelectionChange(event: CustomEvent<string[]>) {
+        selectedWorkoutsStore.set(event.detail);
+    }
 
-	$: orderedWorkouts = selectedWorkouts
-		.map((id) => workouts.find((w) => w.id === id))
-		.filter((w) => w);
+    $: orderedWorkouts = selectedWorkouts
+        .map((id) => workouts.find((w) => w.id === id))
+        .filter((w) => w);
 </script>
+
+<svelte:window on:click={handleClickOutside} />
 
 <WorkoutDropdown {selectedWorkouts} on:selectionChange={handleSelectionChange} />
 
 <ul class="space-y-6" bind:this={container}>
-	{#each orderedWorkouts as workout}
-		{#if workout}
-			<li class="card mb-12">
-				<div
-					class="workout-header card flex flex-row items-center justify-between rounded-b-none border-b-[1px] border-primary bg-base-100 p-2 text-white"
-				>
-					<h2 class="card-title ml-2 md:text-xl lg:text-2xl">
-						{workout.groupName}
-					</h2>
-					<button on:click={() => handleClick(workout.id)} aria-label="Edit workout">
-						<Icon icon="bi:three-dots-vertical" class="h-6 w-8" />
-					</button>
-				</div>
-				<ul>
-					{#if workout.exercises}
-						{#each workout.exercises as exerciseID, index}
-							<ExerciseItem
-								{exerciseID}
-								index={index + 1 === workout.exercises.length ? -1 : index}
-							/>
-						{/each}
-					{/if}
-				</ul>
-			</li>
-		{/if}
-	{/each}
+    {#each orderedWorkouts as workout}
+        {#if workout}
+            <li class="card mb-12">
+                <div
+                    class="workout-header card flex flex-row items-center justify-between rounded-b-none border-b-[1px] border-primary bg-base-100 p-2 text-white"
+                >
+                    <h2 class="card-title ml-2 md:text-xl lg:text-2xl">
+                        {workout.groupName}
+                    </h2>
+                    <button on:click={() => handleClick(workout.id)} aria-label="Edit workout">
+                        <Icon icon="bi:three-dots-vertical" class="h-6 w-8" />
+                    </button>
+                </div>
+                <ul>
+                    {#if workout.exercises}
+                        {#each workout.exercises as exerciseID, index}
+                            <ExerciseItem
+                                {exerciseID}
+                                index={index + 1 === workout.exercises.length ? -1 : index}
+                            />
+                        {/each}
+                    {/if}
+                </ul>
+            </li>
+        {/if}
+    {/each}
 </ul>

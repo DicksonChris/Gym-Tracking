@@ -9,12 +9,10 @@
 	export let exerciseID: string;
 	export let index: number;
 	let showAll = false;
+	let titleRowWidth = 0;
 
 	// Reactive statement to get the exercise from the store
 	$: exercise = $exercisesStore?.find((e) => e.id === exerciseID) ?? null;
-
-	// Reactive statement to get width of {exerciseID}-titleRow
-	$: titleRowWidth = document.getElementById(`${exerciseID}-titleRow`)?.clientWidth ?? 0;
 
 	onMount(async () => {
 		if (!$exercisesStore) {
@@ -32,7 +30,11 @@
 {:else if exercise && !exercise.hidden}
 	<li class="card bg-base-100 px-4 pb-4 {index === -1 ? 'rounded-t-none' : 'rounded-none'}">
 		<div class="mt-4 flex items-center justify-between">
-			<div id="{exerciseID}-titleRow" class="flex items-center overflow-hidden">
+				<div 
+					id="{exerciseID}-titleRow" 
+					bind:clientWidth={titleRowWidth}
+					class="flex items-center overflow-hidden"
+				>
 				<span
 					class="mr-4 min-w-0 flex-grow overflow-hidden text-ellipsis whitespace-nowrap font-medium text-white sm:text-lg md:text-xl"
 				>

@@ -2,21 +2,17 @@
     import '../app.css';
     import ThemeDropdown from '$lib/components/Header/ThemeDropdown.svelte';
     import Nav from '$lib/components/Header/Nav.svelte';
-    import { onMount } from 'svelte';
-    import { loadExercises } from '$lib/stores/exercisesStore';
-    export let children: () => any; 
-
-    onMount(() => {
-        loadExercises();
-    });
+    import { themeStore } from '$lib/stores/themeStore';
+    
+    export let data;
 </script>
 
-<div class="min-h-screen bg-base-200 text-primary font-sans" >
+<div class="min-h-screen bg-base-200 text-primary font-sans" data-theme={$themeStore}>
     <header class="fixed top-0 w-full z-10 flex justify-between p-4 bg-base-200">
         <Nav />
-        <ThemeDropdown />
+        <ThemeDropdown initialTheme={data.theme} />
     </header>
     <main class="container mx-auto p-2 pt-20">
-        {@render children()}
+        <slot />
     </main>
 </div>

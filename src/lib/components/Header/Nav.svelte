@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
 	import { page } from '$app/stores';
 	import { derived } from 'svelte/store';
 
@@ -7,7 +8,9 @@
 
 	// Function to navigate back to the previous page
 	function goBack() {
-		window.history.back();
+		if (browser) {
+			window.history.back();
+		}
 	}
 </script>
 

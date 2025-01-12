@@ -1,53 +1,42 @@
-<script>
-    import { onMount } from 'svelte';
-    let themes = [
-            "aqua",
-            "black",
-            "business",
-            "coffee",
-            "dark",
-            "dim",
-            "dracula",
-            "forest",
-            "halloween",
-            "luxury",
-            "night",
-            "sunset",
-            "synthwave",
-            "palenight"
-    ];
-    
-    let selectedTheme = 'dracula';
-    
-    onMount(() => {
-        const storedTheme = localStorage.getItem('theme');
-        if (storedTheme && themes.includes(storedTheme)) {
-            selectedTheme = storedTheme;
-            applyTheme(selectedTheme);
-        } else {
-            applyTheme(selectedTheme);
-        }
-    });
-    
-    function applyTheme(theme) {
-        const html = document.documentElement;
-        html.setAttribute('data-theme', theme);
-        localStorage.setItem('theme', theme);
-    }
-    
-    function handleChange(event) {
-        selectedTheme = event.target.value;
-        applyTheme(selectedTheme);
-    }
+<script lang="ts">
+	import { themeStore } from '$lib/stores/themeStore';
+	export let initialTheme: string = 'dracula';
+
+	const themes = [
+		'aqua',
+		'black',
+		'business',
+		'coffee',
+		'dark',
+		'dim',
+		'dracula',
+		'forest',
+		'halloween',
+		'luxury',
+		'night',
+		'sunset',
+		'synthwave',
+		'palenight'
+	];
+
+	// Initialize with passed theme
+	$: if (initialTheme) {
+		themeStore.set(initialTheme);
+	}
+
+	function handleChange(event: Event) {
+		const newTheme = (event.target as HTMLSelectElement).value;
+		themeStore.set(newTheme);
+	}
 </script>
 
 <select
-    bind:value={selectedTheme}
-    on:change={handleChange}
-    class="select pb-6 select-xs select-ghost text-base-content"
-    aria-label="Select Theme"
+	bind:value={$themeStore}
+	on:change={handleChange}
+	class="select select-ghost select-xs pb-6 text-base-content"
+	aria-label="Select Theme"
 >
-    {#each themes as theme}
-        <option value={theme}>{theme.charAt(0).toUpperCase() + theme.slice(1)}</option>
-    {/each}
+	{#each themes as theme}
+		<option value={theme}>{theme.charAt(0).toUpperCase() + theme.slice(1)}</option>
+	{/each}
 </select>

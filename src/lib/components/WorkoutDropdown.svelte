@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { createEventDispatcher, onMount, onDestroy } from 'svelte';
+	import { createEventDispatcher } from 'svelte';
 	import Icon from '@iconify/svelte';
 	import { workoutsStore } from '$lib/stores/workoutsStore';
 
@@ -44,19 +44,9 @@
 			showList = false;
 		}
 	}
-
-	onMount(() => {
-		if (typeof document !== 'undefined') {
-			document.addEventListener('click', handleClickOutside);
-		}
-	});
-
-	onDestroy(() => {
-		if (typeof document !== 'undefined') {
-			document.removeEventListener('click', handleClickOutside);
-		}
-	});
 </script>
+
+<svelte:window on:click={handleClickOutside} />
 
 <div class="relative" bind:this={container}>
 	<input

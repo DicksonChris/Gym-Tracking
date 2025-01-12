@@ -1,4 +1,3 @@
-<!-- FilteredExercises.svelte -->
 <script lang="ts">
     import { hideExercise, unhideExercise } from '$lib/api/exercises';
     import type { Exercise } from '$lib/api/exercises';
