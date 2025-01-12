@@ -71,7 +71,7 @@
 		.sort((a, b) => a.name.localeCompare(b.name));
 </script>
 
-<main class="container card mx-auto min-w-[500px] bg-base-100 py-4">
+<main class="container card mx-auto min-w-[500px] bg-base-100 py-4 center">
 	<div class="px-2">
 		<MuscleGroupFilter {muscleGroups} {selectedGroups} on:change={handleMuscleGroupChange} />
 	</div>

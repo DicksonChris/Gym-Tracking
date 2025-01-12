@@ -47,14 +47,14 @@
 	<!-- Muscle Group Filtering -->
 	<div class="flex flex-wrap gap-2 select-none">
 		{#each individualMuscleGroups as muscleGroup}
-			<span
+			<button
 				class="badge cursor-pointer transition-colors
                     {selectedSet.has(muscleGroup) ? 'badge-accent' : 'text-neutral-content badge-outline'}"
 				on:click={() => toggleSelection(muscleGroup)}
 				aria-label={`Filter by ${muscleGroup}`}
 			>
 				{muscleGroup}
-			</span>
+			</button>
 		{/each}
 		<button
 			class={`${isEmpty ? '' : 'link-hover'} text-sm ${isEmpty ? 'text-neutral' : 'text-neutral-content'}`}

@@ -34,17 +34,31 @@
 		<div class="mt-4 flex items-center justify-between">
 			<div id="{exerciseID}-titleRow" class="flex items-center overflow-hidden">
 				<span
-					class="mr-4 min-w-0 flex-grow overflow-hidden text-ellipsis whitespace-nowrap sm:text-lg md:text-xl font-medium text-white"
+					class="mr-4 min-w-0 flex-grow overflow-hidden text-ellipsis whitespace-nowrap font-medium text-white sm:text-lg md:text-xl"
 				>
 					{exercise.name}
 				</span>
-				<button class="w-8 text-xl flex-shrink-0 text-secondary" on:click={() => (showAll = !showAll)}>
+				{#if exercise.url}
+					<a
+						href={exercise.url}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="link text-base-content mr-2"
+					>
+						<Icon icon="line-md:link" class="h-6 w-6" />
+					</a>
+				{/if}
+				<button
+					class="w-8 flex-shrink-0 text-xl text-secondary"
+					on:click={() => (showAll = !showAll)}
+				>
 					{#if showAll}
 						<Icon icon="fe:drop-down" class="h-6 w-6" />
 					{:else}
 						<Icon icon="fe:drop-right" class="h-6 w-6" />
 					{/if}
 				</button>
+				
 			</div>
 			<PlusButton {exerciseID} />
 		</div>
@@ -60,6 +74,6 @@
 			</span>
 			<PlusButton exerciseID="#" />
 		</div>
-		<hr class="my-2 border-grey" />
+		<hr class="border-grey my-2" />
 	</li>
 {/if}

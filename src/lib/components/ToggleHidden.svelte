@@ -47,9 +47,7 @@
 			0 0 0 2px var(--tglbg) inset,
 			var(--togglehandleborder);
 	}
-	[dir='rtl'] .toggle {
-		--handleoffsetcalculator: calc(var(--handleoffset) * 1);
-	}
+
 	.toggle:focus-visible {
 		outline-style: solid;
 		outline-width: 2px;
@@ -60,17 +58,13 @@
 		background-color: currentColor;
 	}
 	.toggle:checked,
-	.toggle[aria-checked='true'],
 	.toggle:indeterminate {
 		background-image: none;
 		--handleoffsetcalculator: var(--handleoffset);
 		--tw-text-opacity: 1;
 		color: var(--fallback-bc, oklch(var(--bc) / var(--tw-text-opacity)));
 	}
-	[dir='rtl'] .toggle:checked,
-	[dir='rtl'] .toggle[aria-checked='true'] {
-		--handleoffsetcalculator: calc(var(--handleoffset) * -1);
-	}
+
 	.toggle:indeterminate {
 		--tw-text-opacity: 1;
 		color: var(--fallback-bc, oklch(var(--bc) / var(--tw-text-opacity)));
@@ -79,12 +73,7 @@
 			calc(var(--handleoffset) / -2) 0 0 2px var(--tglbg) inset,
 			0 0 0 2px var(--tglbg) inset;
 	}
-	[dir='rtl'] .toggle:indeterminate {
-		box-shadow:
-			calc(var(--handleoffset) / 2) 0 0 2px var(--tglbg) inset,
-			calc(var(--handleoffset) / -2) 0 0 2px var(--tglbg) inset,
-			0 0 0 2px var(--tglbg) inset;
-	}
+
 	.toggle:disabled {
 		cursor: not-allowed;
 		--tw-border-opacity: 1;

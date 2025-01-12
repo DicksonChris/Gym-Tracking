@@ -226,7 +226,7 @@
 				{#each muscleGroups as group}
 					{#each group.split(',').map((g) => g.trim()) as individualGroup}
 						<span
-							class="badge cursor-pointer transition-colors
+							class="badge cursor-pointer transition-colors 
 								{selectedMuscleGroups.includes(individualGroup)
 									? 'badge-accent'
 									: 'badge-outline text-neutral-content'}"
@@ -243,6 +243,7 @@
 		<div>
 			<h3 class="text-md font-semibold mb-2">Selected Tags:</h3>
 			<div
+				role="region"
 				use:dndzone={{
 					items,
 					flipDurationMs: 300,

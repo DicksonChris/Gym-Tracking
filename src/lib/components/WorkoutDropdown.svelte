@@ -140,7 +140,7 @@
 				on:click={() => toggleWorkout(sw)}
 				aria-label="Remove selection"
 			>
-				<span class="badge badge-accent flex items-center">
+				<span class="badge badge-primary flex items-center">
 					{workouts.find((w) => w.id === sw)?.groupName}
 				</span>
 			</button>
@@ -176,25 +176,12 @@
 	.absolute {
 		position: absolute;
 	}
-	.inset-0 {
-		top: 0;
-		right: 0;
-		bottom: 0;
-		left: 0;
-	}
-	.text-gray-500 {
-		color: #6b7280; /* Tailwind CSS gray-500 */
-	}
-	.ml-2 {
-		margin-left: 0.5rem; /* Tailwind CSS ml-2 */
-	}
 	.text-sm {
 		font-size: 0.875rem; /* Tailwind CSS text-sm */
 	}
 
 	/* Ensure the checkbox has no default checkmark and centers the number */
-	.checkbox-primary:checked,
-	.checkbox-primary[aria-checked='true'] {
+	.checkbox-primary:checked {
 		background-repeat: no-repeat;
 		animation: none; /* Remove checkmark animation */
 		background-color: var(--chkbg);
