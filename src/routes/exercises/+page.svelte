@@ -84,20 +84,16 @@
 
 	<div class="text-base-content">
 		<div
-			class="sticky top-[65px] z-50 grid grid-cols-[4fr_2fr_2fr_1fr_1fr_0.3fr_1fr] gap-2 border-b border-base-content bg-base-100 px-4 py-2 font-semibold text-primary"
+			class="sticky top-[65px] z-50 grid grid-cols-[4fr_2fr_1fr] gap-2 border-b border-base-content bg-base-100 px-4 py-2 font-semibold text-primary"
 		>
 			<div class="text-center text-sm">Exercise</div>
-			<div class="text-center text-sm">Tags</div>
-			<div class="text-center text-sm">Measures</div>
-			<div class="text-center text-sm">Default Reps</div>
-			<div class="text-center text-sm">Default Step</div>
-			<div class="text-center text-sm">URL</div>
-			<div class="text-center text-sm">Disable</div>
+			<div class="text-start text-sm">Tags</div>
+			<div class="text-start text-sm">Disable</div>
 		</div>
 		<!-- Rows -->
 		{#each filteredExercises as exercise (exercise.id)}
 			{#if !exercise.hidden || showHiddenExercises}
-				<div class="mb-2 grid grid-cols-[4fr_2fr_2fr_1fr_1fr_0.3fr_1fr] items-center gap-2 px-4">
+				<div class="mb-2 grid grid-cols-[4fr_2fr_1fr] items-center gap-2 px-4">
 					<div class="flex items-center font-semibold text-nowrap overflow-hidden">
 						<button on:click={() => handleEditClick(exercise.id)} class="mr-2 focus:outline-none">
 							{#if browser}
@@ -130,38 +126,6 @@
 								{group}
 							</span>
 						{/each}
-					</div>
-
-					<div class="text-xs">
-						{#if exercise.measurement && exercise.measurement.length > 0}
-							{#each exercise.measurement as measure, idx}
-								<span class="capitalize">
-									{measure}{idx + 1 === exercise.measurement.length ? '' : ', '}
-								</span>
-							{/each}
-						{/if}
-					</div>
-
-					<div class="text-xs">
-						{exercise.defaultReps || ''}
-					</div>
-
-					<div class="text-xs">
-						{exercise.defaultStep || ''}
-					</div>
-
-					<div>
-						{#if exercise.url}
-							<a
-								href={exercise.url}
-								target="_blank"
-								rel="noopener noreferrer"
-								class="link link-primary"
-								title="Exercise URL"
-							>
-								<Icon icon="line-md:link" class="h-6 w-6" />
-							</a>
-						{/if}
 					</div>
 
 					<div>
