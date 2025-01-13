@@ -30,7 +30,7 @@
 	const exerciseHistories = derived(historiesStore, ($store) => $store[exercise.id] || []);
 
 	let unsubscribe: () => void;
-	let isSubmitting: boolean = false; // Prevent multiple submissions
+	let isSubmitting: boolean = false;
 
 	onMount(() => {
 		loadHistories(exercise.id);
@@ -50,17 +50,16 @@
 	});
 
 	async function handleSubmit() {
-		if (isSubmitting) return; // Prevent multiple submissions
+		if (isSubmitting) return;
 		isSubmitting = true;
-		console.log('handleSubmit called');
 
 		const historyData: Partial<History> = {
 			reps: reps || undefined,
 			weight: weight || undefined,
 			distance: distance || undefined,
 			time: time || undefined
-			};
-		
+		};
+
 		// Validate data before submission
 		if (!historyData.reps && !historyData.weight && !historyData.distance && !historyData.time) {
 			console.warn('No data provided to create a history.');
@@ -73,7 +72,6 @@
 			goto('/');
 		} catch (error) {
 			console.error('Error submitting form:', error);
-			// Optionally, provide user feedback here
 		} finally {
 			isSubmitting = false;
 		}
@@ -107,19 +105,20 @@
 	<header class="mb-8">
 		<div class="flex items-center justify-between">
 			<h2
-				class="mr-4 flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-2xl font-medium text-base-content"
+				class="mr-4 flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-lg font-medium text-base-content"
 			>
-				{initialData ? 'Update' : 'Create'} {exercise.name} History
+				{initialData ? 'Update' : 'Create'}
+				{exercise.name} History
 			</h2>
-		
+
 			{#if initialData}
 				<button class="btn btn-outline btn-error rounded-full" on:click={openDeleteModal}>
 					<Icon icon="bi:trash" class="h-6 w-6" />
 				</button>
 			{/if}
 		</div>
-    
-  <hr class="my-2 border-grey" />
+
+		<hr class="border-grey my-2" />
 		{#if initialData}
 			<p class="text-primary">{new Date(initialData.startTime).toLocaleString()}</p>
 		{/if}
@@ -162,9 +161,18 @@
 				<input class="input input-bordered" type="text" id="time" bind:value={time} required />
 			</div>
 		{/if}
-		<button class="btn btn-primary btn-block fixed bottom-0 right-0 rounded-none" type="submit">
-			{initialData ? 'Update' : 'Submit'}
-		</button>
+		{#if !initialData}
+			<button class="btn btn-primary btn-block fixed bottom-0 right-0 rounded-none" type="submit">
+				{initialData ? 'Update' : 'Submit'}
+			</button>
+		{:else}
+			<button
+				class="btn btn-circle btn-primary btn-lg fixed bottom-4 right-4 hover:btn-neutral hover:text-primary"
+				type="submit"
+			>
+				<Icon icon="bi:check2" class="h-6 w-6" />
+			</button>
+		{/if}
 	</form>
 
 	<!-- Delete Confirmation Modal -->
@@ -175,7 +183,7 @@
 				<p class="py-4">Are you sure you want to delete these reps?</p>
 				<div class="modal-action grid grid-cols-2 gap-2">
 					<button class="btn btn-block" on:click={closeDeleteModal}>Cancel</button>
-					<button class="btn btn-block btn-error" on:click={confirmDelete}>Delete</button>
+					<button class="btn btn-error btn-block" on:click={confirmDelete}>Delete</button>
 				</div>
 			</div>
 			<button class="modal-backdrop" on:click={closeDeleteModal} aria-label="Close modal"></button>
