@@ -1,7 +1,10 @@
-import { loadExercises, loadMuscleGroups, loadExercise } from '$lib/stores/exercisesStore';
+import { ensureSuperuserAuth } from '$lib/api/pocketbase';
+import { loadMuscleGroups, loadExercise } from '$lib/stores/exercisesStore';
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = async ({ params }) => {
+    await ensureSuperuserAuth();
+    
     const { exerciseID } = params;
 
     const muscleGroups = await loadMuscleGroups();

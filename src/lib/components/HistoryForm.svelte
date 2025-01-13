@@ -106,16 +106,17 @@
 {#if exercise}
 	<header class="mb-8">
 		<div class="flex items-center justify-between">
-			<h2 class="mr-4 inline-block h-6 whitespace-nowrap text-2xl font-medium text-base-content">
-				{initialData ? 'Update' : 'Create'}
-				{exercise.name} History
+			<h2
+				class="mr-4 flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-2xl font-medium text-base-content"
+			>
+				{initialData ? 'Update' : 'Create'} {exercise.name} History
 			</h2>
-
+		
 			{#if initialData}
-				<!-- Delete history button -->
 				<button class="btn btn-outline btn-error rounded-full" on:click={openDeleteModal}>
 					<Icon icon="bi:trash" class="h-6 w-6" />
-				</button>{/if}
+				</button>
+			{/if}
 		</div>
     
   <hr class="my-2 border-grey" />

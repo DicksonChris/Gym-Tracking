@@ -1,4 +1,4 @@
-import pb from './pocketbase';
+import pb from '$lib/api/pocketbase';
 
 export interface Workout {
     id: string;
@@ -11,7 +11,13 @@ export async function createWorkout(data: Partial<Workout>) {
 }
 
 export async function getWorkouts(): Promise<Workout[]> {
-    return await pb.collection<Workout>('workouts').getFullList<Workout>();
+    try {
+        const records = await pb.collection('workouts').getFullList<Workout>();
+        return records;
+    } catch (error) {
+        console.error('Error fetching workouts:', error);
+        throw error;
+    }
 }
 
 export async function getWorkout(id: string): Promise<Workout> {

@@ -24,7 +24,7 @@
             {#if browser}
                 <Icon icon="maki:cross" class="px-[3px]" />
             {:else}
-                <span class="px-[3px]">×</span>
+                <span class="px-[4px]">×</span>
             {/if}
             <div class="cursor-pointer px-1">
                 <p class="">

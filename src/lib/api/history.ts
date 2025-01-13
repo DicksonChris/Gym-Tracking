@@ -1,4 +1,4 @@
-import pb from './pocketbase';
+import pb from '$lib/api/pocketbase';
 
 export interface History {
     id?: string;
@@ -16,7 +16,13 @@ function isValidHistory(data: Partial<History>): boolean {
 }
 
 export async function getHistories(): Promise<History[]>  {
-    return await pb.collection('history').getFullList<History>();
+    try {
+        const records = await pb.collection('history').getFullList<History>();
+        return records;
+    } catch (error) {
+        console.error('Error fetching histories:', error);
+        throw error;
+    }
 }
 
 export async function getHistoriesByExercise(id: string): Promise<History[]> {

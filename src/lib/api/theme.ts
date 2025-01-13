@@ -1,4 +1,4 @@
-import pb from './pocketbase';
+import pb from '$lib/api/pocketbase';
 
 export async function getTheme(): Promise<string> {
     try {

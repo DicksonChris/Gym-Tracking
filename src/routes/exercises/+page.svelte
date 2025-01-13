@@ -4,6 +4,7 @@
 	import { toggleHidden, exercisesStore } from '$lib/stores/exercisesStore';
 	import MuscleGroupFilter from '$lib/components/MuscleGroupFilter.svelte';
 	import ToggleHidden from '$lib/components/ToggleHidden.svelte';
+	import { browser } from '$app/environment';
 	import Icon from '@iconify/svelte';
 	import { onMount } from 'svelte';
 
@@ -83,7 +84,7 @@
 
 	<div class="text-base-content">
 		<div
-			class="sticky top-[66px] z-50 grid grid-cols-[4fr_2fr_2fr_1fr_1fr_0.3fr_1fr] gap-1 border-b border-base-content bg-base-100 py-2 font-semibold text-primary"
+			class="sticky top-[65px] z-50 grid grid-cols-[4fr_2fr_2fr_1fr_1fr_0.3fr_1fr] gap-2 border-b border-base-content bg-base-100 py-2 px-4 font-semibold text-primary"
 		>
 			<div class="text-center text-sm">Exercise</div>
 			<div class="text-center text-sm">Tags</div>
@@ -99,7 +100,25 @@
 				<div class="mb-2 grid grid-cols-[4fr_2fr_2fr_1fr_1fr_0.3fr_1fr] items-center gap-2 px-4">
 					<div class="flex font-semibold">
 						<button on:click={() => handleEditClick(exercise.id)}>
-							<Icon icon="bi:three-dots-vertical" class="mr-2 h-6" />
+							{#if browser}
+								<Icon icon="bi:three-dots-vertical" class="mr-2 h-6" />
+							{:else}
+							<!-- ssr placeholder while icon is loading -->
+							<svg
+								class="mr-2 h-4"
+								xmlns="http://www.w3.org/2000/svg"
+								viewBox="0 0 24 24"
+								stroke-width="2"
+								stroke="currentColor"
+								fill="none"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							>
+								<circle cx="12" cy="12" r="1"></circle>
+								<circle cx="12" cy="5" r="1"></circle>
+								<circle cx="12" cy="19" r="1"></circle>
+							</svg>
+							{/if}
 						</button>
 						{exercise.name}
 					</div>
@@ -143,7 +162,8 @@
 	<button
 		aria-label="Create Exercise"
 		title="Create Exercise"
-		class="btn btn-circle btn-primary btn-lg fixed bottom-4 right-4 hover:btn-neutral hover:text-primary"
+		class="btn btn-circle btn-primary btn-lg fixed bottom-4 right-4 z-50"
+		style="pointer-events: auto;"
 		on:click={handleCreateClick}
 	>
 		<Icon icon="bi:plus-lg" class="h-6 w-6" />

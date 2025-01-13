@@ -1,7 +1,9 @@
+import { ensureSuperuserAuth } from '$lib/api/pocketbase';
 import { loadAllExercises } from '$lib/stores/exercisesStore';
-// import type { PageServerLoad } from './$types';
 
 export const load = async () => {
+  await ensureSuperuserAuth();
+
   try {
     const allExercises = await loadAllExercises();
     return { allExercises };

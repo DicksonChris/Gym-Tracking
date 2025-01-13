@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
 import { browser } from '$app/environment';
-import { saveSelectedWorkouts } from '$lib/api/selectedWorkout';
+import { saveSelectedWorkouts } from '$lib/api/selectedWorkouts';
 
 export const selectedWorkoutsStore = writable<string[]>([]);
 
