@@ -1,20 +1,25 @@
-import pb from '$lib/api/pocketbase';
+import type PocketBase from 'pocketbase';
+import type { AuthRecord } from 'pocketbase';
 
-export async function getTheme(): Promise<string> {
-    try {
-        const record = await pb.collection('theme').getFirstListItem('');
-        return record.theme || 'dracula';
-    } catch {
+/**
+ * Get the user's theme from the user record; default is 'dracula' if not set or not logged in.
+ */
+export async function getTheme(pb: PocketBase, user: AuthRecord | null): Promise<string> {
+    if (!user) {
         return 'dracula';
     }
+    return (user.theme as string) || 'dracula';
 }
 
-export async function saveTheme(theme: string) {
-    try {
-        const existing = await pb.collection('theme').getFirstListItem('');
-        await pb.collection('theme').update(existing.id, { theme });
-    } catch {
-        // Create new if doesn't exist
-        await pb.collection('theme').create({ theme });
+/**
+ * Save the user's theme by updating the user record.
+ */
+export async function saveTheme(pb: PocketBase, user: AuthRecord | null, theme: string) {
+    if (!user) {
+        throw new Error('No user is currently logged in');
     }
+
+    await pb.collection('users').update(user.id, { theme });
+    // Optionally update the local record
+    (user.theme as string) = theme;
 }

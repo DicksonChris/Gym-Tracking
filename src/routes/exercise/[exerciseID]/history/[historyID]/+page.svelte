@@ -1,24 +1,23 @@
 <script lang="ts">
-  import HistoryForm from '$lib/components/HistoryForm.svelte';
-  import { updateHistory, type History } from '$lib/api/history';
-  import { getExercise, type Exercise } from '$lib/api/exercises';
-  import { goto } from '$app/navigation';
-  import { onMount } from 'svelte';
+	/** @type {import('./$types').PageProps} */
+	export let data;
 
-  export let data;
-  const { exerciseID, history } = data;
-  let exercise: Exercise;
+	import HistoryForm from '$lib/components/HistoryForm.svelte';
 
-  onMount(async () => {
-    exercise = await getExercise(exerciseID);
-  });
-
-  async function handleSubmit(e: CustomEvent<Partial<History>>) {
-    await updateHistory(history.id, e.detail);
-    goto(`/`);
-  }
+	const { exercise, history } = data;
 </script>
 
 {#if exercise && history}
-  <HistoryForm {exercise} initialData={history} on:submit={handleSubmit} />
+	<!-- We pass initialData so the form can populate fields.
+	     The form will do a POST with method="POST" to the default action 
+	     that updates the existing record. 
+	-->
+	<HistoryForm {exercise} initialData={history} />
+{/if}
+
+{#if !exercise}
+	<p>Exercise not found</p>
+{/if}
+{#if exercise && !history}
+	<p>History record not found</p>
 {/if}

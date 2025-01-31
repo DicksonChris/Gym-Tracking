@@ -1,142 +1,81 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
-	import { createEventDispatcher, onMount } from 'svelte';
-	import { derived } from 'svelte/store';
-	import { goto } from '$app/navigation'; // Import the goto function
 	import Counter from '$lib/components/Counter.svelte';
 	import type { Exercise } from '$lib/api/exercises';
 	import type { History } from '$lib/api/history';
-	import {
-		historiesStore,
-		loadHistories,
-		saveHistory,
-		deleteHistory
-	} from '$lib/stores/historiesStore';
+	import { enhance } from '$app/forms';
 
 	export let exercise: Exercise;
 	export let initialData: History | null = null;
+	export let lastHistory: History | null = null;
 
-	const dispatch = createEventDispatcher();
+	let reps: number = initialData?.reps ?? exercise.defaultReps ?? 0;
+	let weight: number;
+	let distance: string;
+	let time: string;
 
-	let reps: number = initialData?.reps || exercise.defaultReps || 0;
-	let weight: number = initialData?.weight || 0;
-	let distance: string = initialData?.distance || '';
-	let time: string = initialData?.time || '';
+	const isUpdate = !!initialData;
 
-	// Modal visibility state
-	let showDeleteModal: boolean = false;
+	$: weight = (
+		isUpdate
+			? (initialData?.weight)
+			: (lastHistory?.weight)
+	) ?? 0;
 
-	// Derived store for exercise histories
-	const exerciseHistories = derived(historiesStore, ($store) => $store[exercise.id] || []);
+	$: distance = (
+		isUpdate
+			? (initialData?.distance)
+			: (lastHistory?.distance)
+	) ?? '';
 
-	let unsubscribe: () => void;
-	let isSubmitting: boolean = false;
+	$: time = (
+		isUpdate
+			? (initialData?.time)
+			: (lastHistory?.time)
+	) ?? '';
 
-	onMount(() => {
-		loadHistories(exercise.id);
-		unsubscribe = exerciseHistories.subscribe((histories) => {
-			if (histories.length > 0 && !initialData) {
-				// Find the most recent history
-				const mostRecent = histories.reduce((latest, current) =>
-					new Date(current.startTime) > new Date(latest.startTime) ? current : latest
-				);
-				weight = mostRecent.weight || weight;
-				reps = reps || exercise.defaultReps || mostRecent.reps || 0;
-			}
-		});
-		return () => {
-			if (unsubscribe) unsubscribe();
-		};
-	});
-
-	async function handleSubmit() {
-		if (isSubmitting) return;
-		isSubmitting = true;
-
-		const historyData: Partial<History> = {
-			reps: reps || undefined,
-			weight: weight || undefined,
-			distance: distance || undefined,
-			time: time || undefined
-		};
-
-		// Validate data before submission
-		if (!historyData.reps && !historyData.weight && !historyData.distance && !historyData.time) {
-			console.warn('No data provided to create a history.');
-			isSubmitting = false;
-			return;
-		}
-
-		try {
-			await saveHistory(exercise.id, historyData, initialData?.id);
-			goto('/');
-		} catch (error) {
-			console.error('Error submitting form:', error);
-		} finally {
-			isSubmitting = false;
-		}
-	}
+	let showDeleteModal = false;
 
 	function openDeleteModal() {
 		showDeleteModal = true;
 	}
-
-	async function confirmDelete() {
-		if (initialData?.id) {
-			await deleteHistory(exercise.id, initialData.id);
-			goto('/'); // Redirect to the homepage
-		}
-	}
-
 	function closeDeleteModal() {
 		showDeleteModal = false;
-	}
-
-	function updateReps(event: CustomEvent<number>) {
-		reps = event.detail;
-	}
-
-	function updateWeight(event: CustomEvent<number>) {
-		weight = event.detail;
 	}
 </script>
 
 {#if exercise}
 	<header class="mb-8">
 		<div class="flex items-center justify-between">
-			<h2
-				class="mr-4 flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-lg font-medium text-base-content"
-			>
+			<h2 class="mr-4 flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-lg font-medium">
 				{initialData ? 'Update' : 'Create'}
 				{exercise.name} History
 			</h2>
-
 			{#if initialData}
+				<!-- We'll handle delete in a separate route or action if you want. -->
 				<button class="btn btn-outline btn-error rounded-full" on:click={openDeleteModal}>
 					<Icon icon="bi:trash" class="h-6 w-6" />
 				</button>
 			{/if}
 		</div>
-
 		<hr class="border-grey my-2" />
 		{#if initialData}
-			<p class="text-primary">{new Date(initialData.startTime).toLocaleString()}</p>
+			<p>{new Date(initialData.startTime).toLocaleString()}</p>
 		{/if}
 	</header>
 
-	<form class="form-control flex flex-col" on:submit|preventDefault={handleSubmit}>
+	<!-- 
+		We do method="POST" to trigger the default action 
+		in the route's +page.server.ts for create or update 
+	-->
+	<form method="POST" action="?/upsert" use:enhance>
+
 		{#if exercise.measurement?.includes('weight')}
 			<div class="form-control">
 				<label class="label text-2xl font-semibold" for="weight">WEIGHT (lbs)</label>
 				<hr class="mb-8 border-secondary" />
-				<Counter
-					decimal
-					bind:value={weight}
-					step={exercise.defaultStep || 0}
-					min={0}
-					max={1000}
-					on:update={updateWeight}
-				/>
+				<Counter decimal bind:value={weight} step={exercise.defaultStep || 0} min={0} max={1000} />
+				<input type="hidden" name="weight" value={weight} />
 			</div>
 		{/if}
 
@@ -144,35 +83,34 @@
 			<div class="form-control">
 				<label class="label text-2xl font-semibold" for="reps">REPS</label>
 				<hr class="mb-8 border-secondary" />
-				<Counter bind:value={reps} step={1} min={0} max={1000} on:update={updateReps} />
+				<Counter bind:value={reps} step={1} min={0} max={1000} />
+				<input type="hidden" name="reps" value={reps} />
 			</div>
 		{/if}
 
 		{#if exercise.measurement?.includes('distance')}
 			<div class="form-control">
 				<label class="label" for="distance">Distance</label>
-				<input class="input input-bordered" type="text" id="distance" bind:value={distance} />
+				<input
+					id="distance"
+					name="distance"
+					class="input input-bordered"
+					type="text"
+					bind:value={distance}
+				/>
 			</div>
 		{/if}
 
 		{#if exercise.measurement?.includes('time')}
 			<div class="form-control">
 				<label class="label" for="time">Time</label>
-				<input class="input input-bordered" type="text" id="time" bind:value={time} required />
+				<input id="time" name="time" class="input input-bordered" type="text" bind:value={time} />
 			</div>
 		{/if}
-		{#if !initialData}
-			<button class="btn btn-primary btn-block fixed bottom-0 right-0 rounded-none" type="submit">
-				{initialData ? 'Update' : 'Submit'}
-			</button>
-		{:else}
-			<button
-				class="btn btn-circle btn-primary btn-lg fixed bottom-4 right-4 hover:btn-neutral hover:text-primary"
-				type="submit"
-			>
-				<Icon icon="bi:check2" class="h-6 w-6" />
-			</button>
-		{/if}
+
+		<button class="btn btn-primary btn-block fixed bottom-0 right-0 rounded-none" type="submit">
+			{initialData ? 'Update' : 'Submit'}
+		</button>
 	</form>
 
 	<!-- Delete Confirmation Modal -->
@@ -181,10 +119,14 @@
 			<div class="modal-box">
 				<h3 class="text-lg font-bold">Confirm Deletion</h3>
 				<p class="py-4">Are you sure you want to delete these reps?</p>
-				<div class="modal-action grid grid-cols-2 gap-2">
-					<button class="btn btn-block" on:click={closeDeleteModal}>Cancel</button>
-					<button class="btn btn-error btn-block" on:click={confirmDelete}>Delete</button>
-				</div>
+
+				<form method="POST" action="?/delete" use:enhance>
+					<input type="hidden" name="historyId" value={initialData?.id} />
+					<div class="modal-action grid grid-cols-2 gap-2">
+						<button class="btn btn-block" on:click={closeDeleteModal} type="button">Cancel</button>
+						<button class="btn btn-error btn-block" type="submit">Delete</button>
+					</div>
+				</form>
 			</div>
 			<button class="modal-backdrop" on:click={closeDeleteModal} aria-label="Close modal"></button>
 		</div>

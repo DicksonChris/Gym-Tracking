@@ -4,7 +4,7 @@
     import Nav from '$lib/components/Header/Nav.svelte';
     import { themeStore } from '$lib/stores/themeStore';
     
-    export let data;
+		let { data, children } = $props();
 </script>
 
 <div class="min-h-screen bg-base-200 text-primary font-sans" data-theme={$themeStore}>
@@ -13,6 +13,6 @@
         <ThemeDropdown initialTheme={data.theme} />
     </header>
     <main class="container mx-auto p-2 pt-20">
-        <slot />
+			{@render children()}
     </main>
 </div>

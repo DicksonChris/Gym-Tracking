@@ -1,19 +1,25 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import Icon from '@iconify/svelte';
-	import { workoutsStore } from '$lib/stores/workoutsStore';
+	import type { Workout } from '$lib/api/workouts';
 
+	/** An array of all workouts to filter and display. */
+	export let workouts: Workout[] = [];
+
+	/** The currently selected workout IDs. */
 	export let selectedWorkouts: string[] = [];
 
 	const dispatch = createEventDispatcher();
-	let workouts = [];
-	$: workouts = $workoutsStore ?? [];
 
 	let query = '';
 	let showList = false;
 	let container: HTMLDivElement;
 	let textInput: HTMLInputElement;
 
+	/**
+	 * Toggle a single workout ID in the selectedWorkouts array,
+	 * then dispatch the updated array.
+	 */
 	function toggleWorkout(id: string) {
 		if (selectedWorkouts.includes(id)) {
 			selectedWorkouts = selectedWorkouts.filter((sel) => sel !== id);
@@ -23,6 +29,9 @@
 		dispatch('selectionChange', selectedWorkouts);
 	}
 
+	/**
+	 * Clear all selections at once.
+	 */
 	function clearSelections() {
 		selectedWorkouts = [];
 		dispatch('selectionChange', selectedWorkouts);
@@ -35,10 +44,16 @@
 		}
 	}
 
+	/**
+	 * Filter the workouts based on the input `query`.
+	 */
 	$: filteredWorkouts = workouts
 		.filter((w) => w.groupName.toLowerCase().includes(query.toLowerCase()))
 		.sort((a, b) => a.groupName.localeCompare(b.groupName));
 
+	/**
+	 * Hide the dropdown if user clicks outside container.
+	 */
 	function handleClickOutside(e: MouseEvent) {
 		if (container && !container.contains(e.target as Node)) {
 			showList = false;
@@ -95,13 +110,14 @@
 			{/if}
 
 			{#each filteredWorkouts as workout}
-      <button
-      class="w-full text-start flex cursor-pointer items-center px-4 py-2 hover:bg-base-200"
-      on:click={(e) => {
-        e.stopPropagation();
-        toggleWorkout(workout.id);
-      }}
-    >
+				<!-- Each workout is displayed as a button row -->
+				<button
+					class="w-full text-start flex cursor-pointer items-center px-4 py-2 hover:bg-base-200"
+					on:click={(e) => {
+						e.stopPropagation();
+						toggleWorkout(workout.id);
+					}}
+				>
 					<div class="relative mr-2">
 						<input
 							type="checkbox"
@@ -122,6 +138,7 @@
 	{/if}
 </div>
 
+<!-- Show badges for each selected workout below the dropdown -->
 {#if selectedWorkouts.length}
 	<div class="my-3 flex flex-wrap gap-2">
 		{#each selectedWorkouts as sw}

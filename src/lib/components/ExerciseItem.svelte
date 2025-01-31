@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import PlusButton from './CreateSet.svelte';
 	import HistoryList from '$lib/components/HistoryList.svelte';
-	import { exercisesStore, loadExercises } from '$lib/stores/exercisesStore';
+	import { exercisesStore } from '$lib/stores/exercisesStore';
 	import type { Exercise } from '$lib/api/exercises';
 	import Icon from '@iconify/svelte';
 
@@ -14,11 +14,6 @@
 	// Reactive statement to get the exercise from the store
 	$: exercise = $exercisesStore?.find((e) => e.id === exerciseID) ?? null;
 
-	onMount(async () => {
-		if (!$exercisesStore) {
-			await loadExercises();
-		}
-	});
 </script>
 
 {#if $exercisesStore === null}

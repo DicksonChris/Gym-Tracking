@@ -1,15 +1,16 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
-	const dispatch = createEventDispatcher();
 
 	export let muscleGroups: string[] = [];
 	export let selectedGroups: string[] = [];
 
-	// Split and flatten muscleGroups into individualMuscleGroups
+	const dispatch = createEventDispatcher();
+
+	// Flatten muscleGroups
 	$: individualMuscleGroups = Array.from(
 		new Set(
-			muscleGroups.flatMap(group =>
-				group.split(',').map(g => g.trim())
+			muscleGroups.flatMap((group) =>
+				group.split(',').map((g) => g.trim())
 			)
 		)
 	);
@@ -22,17 +23,17 @@
 		} else {
 			selectedSet.add(muscleGroup);
 		}
-		selectedSet = new Set(selectedSet); // Trigger reactivity
+		selectedSet = new Set(selectedSet); // re-trigger reactivity
 		dispatch('change', Array.from(selectedSet));
 	}
 
 	function clearSelection() {
 		selectedSet.clear();
-		selectedSet = new Set(selectedSet); // Trigger reactivity
+		selectedSet = new Set(selectedSet);
 		dispatch('change', Array.from(selectedSet));
 	}
 
-	// Update selectedSet if parent changes selectedGroups
+	// Keep selectedSet in sync if parent changes selectedGroups
 	$: if (
 		selectedGroups.length !== selectedSet.size ||
 		!selectedGroups.every((g) => selectedSet.has(g))
@@ -44,12 +45,13 @@
 </script>
 
 <div class="flex flex-col gap-4">
-	<!-- Muscle Group Filtering -->
 	<div class="flex flex-wrap gap-2 select-none">
 		{#each individualMuscleGroups as muscleGroup}
 			<button
 				class="badge cursor-pointer transition-colors
-                    {selectedSet.has(muscleGroup) ? 'badge-accent' : 'text-neutral-content badge-outline'}"
+					{selectedSet.has(muscleGroup)
+						? 'badge-accent'
+						: 'text-neutral-content badge-outline'}"
 				on:click={() => toggleSelection(muscleGroup)}
 				aria-label={`Filter by ${muscleGroup}`}
 			>
@@ -57,7 +59,7 @@
 			</button>
 		{/each}
 		<button
-			class={`${isEmpty ? '' : 'link-hover'} text-sm ${isEmpty ? 'text-neutral' : 'text-neutral-content'}`}
+			class="{isEmpty ? 'text-neutral' : 'text-neutral-content link-hover'} text-sm"
 			on:click={clearSelection}
 			disabled={isEmpty}
 		>
