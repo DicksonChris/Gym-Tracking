@@ -1,7 +1,6 @@
 import type { PageServerLoad } from './$types';
-import { getExercise } from '$lib/api/exercises';
+import { getExercise, getMuscleGroups } from '$lib/api/exercises';
 import type { Exercise } from '$lib/api/exercises';
-import { getMuscleGroups } from '$lib/api/somewhere'; // or define your approach
 
 export const load: PageServerLoad = async ({ params, locals }) => {
     const user = locals.pb.authStore.record;
@@ -28,7 +27,6 @@ export const load: PageServerLoad = async ({ params, locals }) => {
         };
     }
 
-    // Otherwise fetch existing exercise
     try {
         const exercise = await getExercise(locals.pb, user, exerciseID);
 
