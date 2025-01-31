@@ -5,35 +5,38 @@
 	import type { Exercise } from '$lib/api/exercises';
 	import Counter from '$lib/components/Counter.svelte';
 
+	/** SSR data from +page.server.ts */
 	export let data;
 
 	let { exerciseID, exercise, muscleGroups } = data;
 
-	// If there's no exercise, we might be "new" or we failed to load
+	// If there's no exercise, we might be "new" or load failed
 	let exerciseName: string = exercise ? exercise.name : '';
 	let selectedMuscleGroups: string[] = exercise
-		? exercise.muscleGroup.split(',').map((g) => g.trim())
+		? (exercise.muscleGroup || '').split(',').map((g) => g.trim())
 		: [];
 	let newMuscleGroup = '';
 
-	let selectedMeasurements: string[] = exercise ? exercise.measurement || [] : [];
+	let selectedMeasurements: string[] = exercise ? (exercise.measurement || []) : [];
 	let defaultReps: number = exercise?.defaultReps ?? 0;
 	let defaultStep: number = exercise?.defaultStep ?? 0;
 	let editingExerciseName = (exerciseID === 'new');
 
-	// DnD for muscle groups (if you want to keep it)...
-
+	/** 
+	 * For inline editing of exercise name 
+	 */
 	function toggleEditExerciseName() {
 		editingExerciseName = !editingExerciseName;
 	}
-
 	function handleExerciseNameBlur(e: FocusEvent) {
 		exerciseName = (e.target as HTMLInputElement).value;
 	}
 
+	/**
+	 * If not "new," do a partial update of just the name field
+	 */
 	async function handleUpdateExerciseName() {
 		if (exerciseID !== 'new' && exercise) {
-			// partial update
 			try {
 				await fetch('/api/exercises', {
 					method: 'POST',
@@ -50,10 +53,14 @@
 				alert('Failed to update exercise name.');
 			}
 		} else {
+			// if "new", do nothing
 			editingExerciseName = false;
 		}
 	}
 
+	/**
+	 * Final submission, either creating or updating the exercise fully
+	 */
 	async function handleSubmit() {
 		if (!exerciseName.trim()) {
 			alert('Exercise name is required.');
@@ -126,6 +133,7 @@
 		{/if}
 
 		{#if editingExerciseName}
+			<!-- If "new," show check icon, else show 'save' icon -->
 			<button
 				on:click={handleUpdateExerciseName}
 				class="btn btn-ghost btn-secondary btn-sm text-base-content"
@@ -175,13 +183,18 @@
 			</div>
 		</div>
 
+		<!-- Chosen muscle groups -->
 		<div>
 			<h3 class="text-md font-semibold mb-2">Selected Tags:</h3>
 			<div class="flex flex-wrap gap-2 bg-base-300 p-2 rounded">
 				{#each selectedMuscleGroups as mg}
 					<span class="badge badge-accent">
 						{mg}
-						<button type="button" on:click={() => (selectedMuscleGroups = selectedMuscleGroups.filter((m) => m !== mg))} class="ml-1">
+						<button
+							type="button"
+							on:click={() => (selectedMuscleGroups = selectedMuscleGroups.filter((m) => m !== mg))}
+							class="ml-1"
+						>
 							<Icon icon="bi:x" class="h-4 w-4" />
 						</button>
 					</span>
@@ -238,7 +251,6 @@
 {:else}
 	<p class="text-error">No exercise found or not authorized.</p>
 {/if}
-
 
 <style>
 	.badge:hover {

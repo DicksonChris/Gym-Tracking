@@ -133,7 +133,7 @@
 					<label class="label flex cursor-pointer items-center">
 						<input
 							type="checkbox"
-							class="toggle toggle-accent toggle-xs"
+							class="toggle toggle-xs"
 							checked={!exercise.hidden}
 							title={!exercise.hidden ? 'Click to disable' : 'Click to enable'}
 							on:change={() => handleHiddenChange(exercise)}
@@ -159,6 +159,7 @@
 	:root {
 		background-color: #1b1e2b;
 	}
+	
 	.toggle {
 		flex-shrink: 0;
 		--tglbg: var(--fallback-b1, oklch(var(--b1) / 1));
@@ -222,5 +223,5 @@
 		--handleoffset: 0.5rem /* 8px */;
 		height: 1rem /* 16px */;
 		width: 1.5rem /* 24px */;
-	}
+	}	
 </style>
