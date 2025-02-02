@@ -88,7 +88,7 @@
 									<!-- Tags / muscle groups -->
 									<div class="flex flex-wrap gap-1 overflow-hidden">
 										{#each exercise.muscleGroup.split(',') as muscleGroup}
-											<p class="badge badge-accent badge-xs">{muscleGroup}</p>
+											<p class="badge badge-accent badge-sm text-nowrap">{muscleGroup}</p>
 										{/each}
 									</div>
 									<!-- Reps -->

@@ -117,10 +117,10 @@
 				</div>
 
 				<!-- Middle: muscle group tags -->
-				<div class="flex flex-wrap gap-1">
+				<div class="flex flex-wrap gap-2">
 					{#each exercise.muscleGroup?.split(',').map((g) => g.trim()) as group}
 						<span
-							class="badge badge-accent badge-xs overflow-hidden truncate whitespace-nowrap"
+							class="badge badge-accent badge-sm overflow-hidden truncate whitespace-nowrap"
 							title={group}
 						>
 							{group}

@@ -75,7 +75,7 @@
 	/>
 	<button
 		type="button"
-		class="absolute right-2 top-1/2 z-10 -translate-y-1/2 transform"
+		class="absolute right-2 top-1/2 -translate-y-1/2 transform"
 		on:click={(e) => {
 			e.stopPropagation();
 			toggleDropdown();
