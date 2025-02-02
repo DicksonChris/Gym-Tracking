@@ -3,6 +3,16 @@
 	export let initialTheme: string = 'dracula';
 
 	const themes = [
+		'autumn',
+		'cmyk',
+		'cupcake',
+		'cyberpunk',
+		'fantasy',
+		'garden',
+		'lemonade',
+		'light',
+		'pastel',
+		'valentine',
 		'aqua',
 		'black',
 		'business',
@@ -14,9 +24,9 @@
 		'halloween',
 		'luxury',
 		'night',
+		'palenight',
 		'sunset',
 		'synthwave',
-		'palenight'
 	];
 
 	// Initialize with passed theme
@@ -36,7 +46,8 @@
 	class="select select-ghost select-xs pb-6 text-base-content"
 	aria-label="Select Theme"
 >
-	{#each themes as theme}
+	{#each themes as theme, idx}
+		{#if idx===10}<hr>{/if}
 		<option value={theme}>{theme.charAt(0).toUpperCase() + theme.slice(1)}</option>
 	{/each}
 </select>

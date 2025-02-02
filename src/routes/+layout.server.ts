@@ -1,4 +1,4 @@
-import type { LayoutServerLoad } from './$types';
+import type { LayoutServerLoad } from './app/$types';
 import { redirect } from '@sveltejs/kit';
 
 export const load: LayoutServerLoad = async ({ locals, url }) => {
@@ -8,7 +8,7 @@ export const load: LayoutServerLoad = async ({ locals, url }) => {
 
   // If no user is found and the current path is not /login or /register,
   // redirect to /login.
-  if (!user && url.pathname !== '/login' && url.pathname !== '/register') {
+  if (!user && url.pathname !== '/login' && url.pathname !== '/register' && url.pathname !== '/') {
     throw redirect(302, '/login');
   }
 

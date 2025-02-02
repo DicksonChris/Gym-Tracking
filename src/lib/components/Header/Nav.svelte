@@ -4,7 +4,9 @@
 	import { derived } from 'svelte/store';
 
 	// Derived store to determine if the current path is not '/'
-	const showBackButton = derived(page, ($page) => $page.url.pathname !== '/');
+	const showBackButton = derived(page, ($page) =>
+		$page.url.pathname !== '/' ? $page.url.pathname !== '/app' : false
+	);
 
 	// Function to navigate back to the previous page
 	function goBack() {
@@ -16,9 +18,9 @@
 
 <nav class="">
 	<div class="navbar-center text-slate-300">
-		<ul class="flex items-center space-x-4">
+		<ul class="flex items-center">
 			{#if $showBackButton}
-				<li>
+				<li class="mr-4">
 					<button
 						on:click={goBack}
 						class="flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:bg-primary"
@@ -44,18 +46,17 @@
 			{:else}
 				<li class="h-8"></li>
 			{/if}
-
-			<li>
-				<a href="/" class="transition-colors hover:text-accent">Home</a>
+			<li class="mr-4">
+				<a href="/"><img src="/images/GainsGalaxySMALL.png" alt="logo" width="80px" /></a>
 			</li>
-			<li>
-				<a href="/workouts" class="transition-colors hover:text-accent"
-					>Workouts</a
-				>
-			<li>
-				<a href="/exercises" class="transition-colors hover:text-accent"
-					>Exercises</a
-				>
+			<li class="mr-4">
+				<a href="/app" class="transition-colors hover:text-accent">Home</a>
+			</li>
+			<li class="mr-4">
+				<a href="/app/workouts" class="transition-colors hover:text-accent">Workouts</a>
+			</li>
+			<li class="mr-4">
+				<a href="/app/exercises" class="transition-colors hover:text-accent">Exercises</a>
 			</li>
 		</ul>
 	</div>

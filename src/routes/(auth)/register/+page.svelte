@@ -22,7 +22,7 @@
 				<!-- Name Field -->
 				<div class="form-control">
 					<label class="label" for="name">
-						<span class="label-text">Name</span>
+						<span class="label-text text-lg">Name</span>
 					</label>
 					<input
 						id="name"
@@ -37,7 +37,7 @@
 				<!-- Email Field -->
 				<div class="form-control">
 					<label class="label" for="email">
-						<span class="label-text">Email</span>
+						<span class="label-text text-lg">Email</span>
 					</label>
 					<input
 						id="email"
@@ -52,7 +52,7 @@
 				<!-- Password Field -->
 				<div class="form-control">
 					<label class="label" for="password">
-						<span class="label-text">Password</span>
+						<span class="label-text text-lg">Password</span>
 					</label>
 					<input
 						id="password"
@@ -67,7 +67,7 @@
 				<!-- Confirm Password Field -->
 				<div class="form-control">
 					<label class="label" for="passwordConfirm">
-						<span class="label-text">Confirm Password</span>
+						<span class="label-text text-lg">Confirm Password</span>
 					</label>
 					<input
 						id="passwordConfirm"
@@ -105,7 +105,7 @@
 			<!-- Login link -->
 			<div class="mt-4 text-center text-secondary">
 				<span>Already have an account?</span>
-				<a href="/login" class="link-hover link link-secondary ml-1">Log in</a>
+				<a href="/login" class="link link-secondary ml-1">Log in</a>
 			</div>
 		</div>
 	</div>

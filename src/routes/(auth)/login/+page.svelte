@@ -71,7 +71,7 @@
 			<!-- Register link -->
 			<div class="mt-4 text-center text-secondary">
 				<span>Don't have an account?</span>
-				<a href="/register" class="link-hover link link-secondary ml-1">Register</a>
+				<a href="/register" class="link link-secondary ml-1">Register</a>
 			</div>
 		</div>
 	</div>

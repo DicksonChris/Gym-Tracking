@@ -8,7 +8,6 @@ export const load: PageServerLoad = async ({ locals }) => {
     }
 
     try {
-        // Show all or filter out hidden as you prefer
         const all = await getExercises(locals.pb, user, true);
         return { allExercises: all };
     } catch (error) {

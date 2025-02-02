@@ -4,7 +4,7 @@ import type { Actions, PageServerLoad } from './$types';
 // If already logged in, redirect
 export const load: PageServerLoad = async ({ locals }) => {
     if (locals.pb.authStore.isValid) {
-        throw redirect(303, '/');
+        throw redirect(303, '/app');
     }
     return {};
 };
@@ -34,7 +34,7 @@ export const actions: Actions = {
                 name
             });
 
-            // Log them in immediately after creation, or you can require them to confirm email, etc.
+            // TODO: Log them in immediately after creation, or you can require them to confirm email, etc.
             await locals.pb.collection('users').authWithPassword(email, password);
 
             // Redirect or show success

@@ -1,34 +1,27 @@
+// src/routes/exercise/[exerciseID]/history/[historyID]/+page.server.ts
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { getExercise } from '$lib/api/exercises';
-import { deleteHistory, createHistory, getHistoriesByExercise, type History } from '$lib/api/history';
+import { deleteHistory, getHistory, updateHistory, type History } from '$lib/api/history';
 
 export const load: PageServerLoad = async ({ params, locals }) => {
-    const user = locals.pb.authStore.record;
-    if (!user) {
-        throw redirect(303, '/login');
-    }
+	const user = locals.pb.authStore.record;
+	if (!user) {
+		throw redirect(303, '/login');
+	}
 
-    const exercise = await getExercise(locals.pb, user, params.exerciseID).catch(() => null);
-    if (!exercise) {
-        return { exercise: null, lastHistory: null };
-    }
+	const exercise = await getExercise(locals.pb, user, params.exerciseID).catch(() => null);
+	const history = await getHistory(locals.pb, user, params.historyID).catch(() => null);
 
-    const allHistories = await getHistoriesByExercise(locals.pb, user, exercise.id);
-    const lastHistory = allHistories
-        .slice()
-        .sort((a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime())[0] || null;
-
-    return {
-        exercise,
-        lastHistory
-    };
+	return {
+		exercise,
+		history
+	};
 };
 
+
+
 export const actions: Actions = {
-	/**
-	 * The default action for creating a new History record.
-	 */
 	upsert: async ({ request, locals, params }) => {
 		const user = locals.pb.authStore.record;
 		if (!user) {
@@ -40,17 +33,15 @@ export const actions: Actions = {
 		const weight = formData.get('weight');
 		const distance = formData.get('distance');
 		const time = formData.get('time');
+		const historyId = params.historyID;
 
-		// At least one field must be provided
 		if (!reps && !weight && !distance && !time) {
 			return fail(400, {
-				formError: 'At least one field (reps, weight, distance, time) must be provided'
+				formError: 'At least one field is required to update'
 			});
 		}
 
 		const historyData: Partial<History> = {
-			exercise: params.exerciseID,
-			startTime: new Date().toISOString(),
 			reps: reps ? Number(reps) : undefined,
 			weight: weight ? Number(weight) : undefined,
 			distance: distance?.toString() || undefined,
@@ -58,19 +49,16 @@ export const actions: Actions = {
 		};
 
 		try {
-			await createHistory(locals.pb, user, historyData);
+			await updateHistory(locals.pb, user, historyId, historyData);
 		} catch (err: any) {
-			console.error('Error creating history:', err);
+			console.error('Error updating history:', err);
 			return fail(400, {
-				formError: err.message || 'Something went wrong creating the history'
+				formError: err.message || 'Something went wrong updating the history'
 			});
 		}
 
-		throw redirect(303, '/');
+		throw redirect(303, `/app`);
 	},
-    /**
-     * Action for deleting a History record.
-     */
     delete: async ({ request, locals }) => {
         const user = locals.pb.authStore.record;
         if (!user) {
@@ -90,6 +78,6 @@ export const actions: Actions = {
             return fail(400, { formError: err.message || 'Error deleting history' });
         }
 
-        throw redirect(303, '/');
+        throw redirect(303, '/app');
     }
 };
