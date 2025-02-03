@@ -29,7 +29,9 @@
 
 	function handleGroupNameBlur(e: FocusEvent) {
 		const input = e.target as HTMLInputElement;
-		workout.groupName = input.value;
+		if (workout) {
+			workout.groupName = input.value;
+		}
 	}
 
 	async function handleUpdateWorkoutName() {
@@ -41,9 +43,9 @@
 					headers: { 'Content-Type': 'application/json' },
 					credentials: 'include',
 					body: JSON.stringify({
-						id: workout.id,
-						groupName: workout.groupName,
-						exercises: workout.exercises
+						id: workout?.id,
+						groupName: workout?.groupName,
+						exercises: workout?.exercises
 					})
 				});
 				editingGroupName = false;
@@ -62,7 +64,7 @@
 		const updatedExercises = workoutExercises.map((x) => x.id);
 		const body = {
 			id: workoutID,
-			groupName: workout.groupName,
+			groupName: workout?.groupName,
 			exercises: updatedExercises
 		};
 

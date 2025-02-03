@@ -10,8 +10,6 @@
 	import { selectedWorkoutsStore } from '$lib/stores/selectedWorkoutsStore';
 	import type { Workout } from '$lib/api/workouts';
 
-	export let data;
-
 	// The SSR data has "workouts" already. We'll store them in a local var or read from the store.
 	let workouts: Workout[] = [];
 

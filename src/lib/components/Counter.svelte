@@ -1,4 +1,3 @@
-<!-- src/lib/components/Counter.svelte -->
 <script lang="ts">
     import { createEventDispatcher, onMount } from 'svelte';
     import Icon from '@iconify/svelte';
@@ -103,6 +102,7 @@
 
     /* Firefox */
     input[type='number'] {
+        appearance: textfield;
         -moz-appearance: textfield;
     }
 </style>
