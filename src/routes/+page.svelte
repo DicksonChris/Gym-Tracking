@@ -2,6 +2,9 @@
 	import SwirlingStars from '$lib/components/SwirlingStarsHero.svelte';
 	import { onMount } from 'svelte';
 
+	export let data;
+	let { isUser } = data;
+
 	onMount(() => {
 		const computedStyles = getComputedStyle(document.querySelector(':root')!);
 		const primaryColor = `hsl(${computedStyles.getPropertyValue('--p')})`;
@@ -39,14 +42,18 @@
 		console.log(primaryColor);
 	});
 </script>
-<SwirlingStars height={'500px'} bg="linear-gradient(135deg, #000, #fff)
-burnColors={[
-    "rgba(255, 200, 100, 0.8)",
-    "rgba(255, 50, 50, 0.8)",
-    "rgba(100, 100, 255, 0.8)"
-  ]}
-">
+
+<SwirlingStars
+	height={'500px'}
+	bg="linear-gradient(135deg, #000, #fff)
+burnColors={['rgba(255, 200, 100, 0.8)', 'rgba(255, 50, 50, 0.8)', 'rgba(100, 100, 255, 0.8)']}
+"
+>
 	<img src="/images/GainsGalaxy.app.png" alt="logo" width="400px" />
 </SwirlingStars>
-
-<a href="/login">Login</a> | <a href="/register">Register</a>
+{#if !isUser}
+	<span class="flex flex-row gap-2 mt-2">
+		<a class="btn btn-lg btn-primary flex-1" href="/login">Login</a>
+		<a class="btn btn-lg btn-secondary flex-1" href="/register">Register</a>
+	</span>
+{/if}
