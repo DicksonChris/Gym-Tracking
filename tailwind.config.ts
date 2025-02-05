@@ -22,7 +22,13 @@ export default {
             'cmyk',
             'cupcake',
             'cyberpunk',
-            'fantasy',
+            {
+                fantasy: {
+                    ...require('daisyui/src/theming/themes')["fantasy"],
+                    "primary": "#58216d",
+                    "secondary": "#273583",
+                }
+            },
             'garden',
             'lemonade',
             'light',

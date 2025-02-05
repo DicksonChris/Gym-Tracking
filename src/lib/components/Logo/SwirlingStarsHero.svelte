@@ -28,7 +28,7 @@
 
 		// Array for swirling stars
 		const swirlingStars = [];
-		const swirlingStarCount = 200; // Adjust the number of swirling stars as desired
+		const swirlingStarCount = 150; // Adjust the number of swirling stars as desired
 
 		// Resize the canvas based on the container size, then update the center and regenerate the background and stars.
 		function resizeCanvas() {
@@ -137,7 +137,7 @@
   The canvas fills the container as a background,
   and the <slot> renders any child content above it.
 -->
-<div class="hero" bind:this={container} style="height: {height}">
+<div class="hero breakout" bind:this={container} style="height: {height}">
 	<canvas bind:this={canvas}></canvas>
 	<div class="content">
 		<slot></slot>
@@ -148,6 +148,7 @@
 	.hero {
 		position: relative;
 		overflow: hidden;
+		max-height: 50vw;
 	}
 	canvas {
 		position: absolute;
@@ -167,5 +168,12 @@
 		color: white;
 		text-align: center;
 		padding: 1rem;
+	}
+
+	.breakout {
+		width: 100vw;
+		margin: -100%; /* old browsers fallback */
+		margin: calc(50% - 50vw);
+		background-color: black;
 	}
 </style>

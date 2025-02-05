@@ -5,7 +5,7 @@
 
 	// Derived store to determine if the current path is not '/'
 	const showBackButton = derived(page, ($page) =>
-		$page.url.pathname !== '/' ? $page.url.pathname !== '/app' : false
+		$page.url.pathname !== '/' ? $page.url.pathname !== '/home' : false
 	);
 
 	// Function to navigate back to the previous page

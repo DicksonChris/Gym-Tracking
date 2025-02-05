@@ -77,7 +77,7 @@
 				body: JSON.stringify(body)
 			});
 
-			goto('/app/workouts'); // or wherever
+			goto('/home/workouts'); // or wherever
 		} catch (error) {
 			console.error('Failed to update workout:', error);
 			alert('Error: ' + error);

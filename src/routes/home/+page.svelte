@@ -36,7 +36,7 @@
 	}
 
 	function handleClick(workoutID: string) {
-		goto(`/app/workouts/${workoutID}`);
+		goto(`/home/workouts/${workoutID}`);
 	}
 
 	/** When WorkoutDropdown updates its selection, we store that in selectedWorkoutsStore */

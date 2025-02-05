@@ -15,7 +15,7 @@
 	data-theme={data.user ? $themeStore : 'fantasy'}
 >
 	{#if data.user}
-		<header class="fixed left-0 top-0 z-10 flex w-full justify-between bg-base-200 p-4">
+		<header class="fixed left-0 top-0 z-10 flex w-full justify-between bg-base-100 p-4">
 			<Nav />
 			<span class="flex items-center space-x-2">
 				<ThemeDropdown initialTheme={data.theme} />
@@ -32,11 +32,11 @@
 			</span>
 		</header>
 	{:else}
-		<header class="fixed left-0 top-0 z-10 flex w-full justify-between bg-primary p-4">
+		<header class="fixed left-0 top-0 z-10 flex w-full justify-between p-4">
 			<NavAuth />
 		</header>
 	{/if}
-	<main class="container mx-auto p-2 pt-20">
+	<main class="container mx-auto">
 		{@render children()}
 	</main>
 </div>

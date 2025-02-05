@@ -90,7 +90,7 @@
 					...exerciseData
 				})
 			});
-			goto('/app/exercises');
+			goto('/home/exercises');
 		} catch (err) {
 			console.error('Error saving exercise:', err);
 			alert('Failed to save exercise.');

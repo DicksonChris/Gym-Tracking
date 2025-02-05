@@ -12,7 +12,7 @@
 <a
     type="button"
     class="flex overflow-clip whitespace-nowrap border-[1px] border-base-100 text-lg text-base-content hover:border-[1px] hover:border-secondary hover:bg-secondary hover:bg-opacity-20"
-    href="/app/exercise/{history.exercise}/history/{history.id}"
+    href="/home/exercise/{history.exercise}/history/{history.id}"
 >
     {#if history.reps && history.weight}
         <div class="py-2 flex flex-nowrap items-center">

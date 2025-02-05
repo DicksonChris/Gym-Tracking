@@ -4,7 +4,7 @@ import type { Actions, PageServerLoad } from './$types';
 export const load: PageServerLoad = async ({ locals }) => {
   // If user is already logged in, redirect them.
   if (locals.pb.authStore.isValid) {
-    throw redirect(303, '/app');
+    throw redirect(303, '/home');
   }
   // Return an empty object (or include a default formError if you prefer).
   return {};
@@ -30,6 +30,6 @@ export const actions: Actions = {
     }
 
     // On success, redirect to home (or wherever)
-    throw redirect(303, '/app');
+    throw redirect(303, '/home');
   }
 };

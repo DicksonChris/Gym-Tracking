@@ -10,11 +10,11 @@
 	let { allExercises, workouts } = data;
 
 	function handleEditClick(workoutID: string) {
-		goto(`/app/workouts/${workoutID}`);
+		goto(`/home/workouts/${workoutID}`);
 	}
 
 	function handleCreateClick() {
-		goto('/app/workouts/new');
+		goto('/home/workouts/new');
 	}
 
 	async function handleDeleteClick(workoutID: string) {

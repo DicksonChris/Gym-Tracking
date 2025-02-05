@@ -3,7 +3,7 @@
 	export let exerciseID: string;
 
 	function handleClick() {
-		goto(`/app/exercise/${exerciseID}`);
+		goto(`/home/exercise/${exerciseID}`);
 	}
 </script>
 

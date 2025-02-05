@@ -32,11 +32,11 @@
 	}
 
 	function handleCreateClick() {
-		goto('/app/exercises/new');
+		goto('/home/exercises/new');
 	}
 
 	function handleEditClick(exerciseID: string) {
-		goto(`/app/exercises/${exerciseID}`);
+		goto(`/home/exercises/${exerciseID}`);
 	}
 
 	function toggleShowHidden() {

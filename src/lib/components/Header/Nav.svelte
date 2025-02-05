@@ -5,7 +5,7 @@
 
 	// Derived store to determine if the current path is not '/'
 	const showBackButton = derived(page, ($page) =>
-		$page.url.pathname !== '/' ? $page.url.pathname !== '/app' : false
+		$page.url.pathname !== '/' ? $page.url.pathname !== '/home' : false
 	);
 
 	// Function to navigate back to the previous page
@@ -16,7 +16,7 @@
 	}
 </script>
 
-<nav class="">
+<nav>
 	<div class="navbar-center text-slate-300">
 		<ul class="flex items-center">
 			{#if $showBackButton}
@@ -44,19 +44,46 @@
 					</button>
 				</li>
 			{:else}
-				<li class="h-8"></li>
+				<!-- Empty spacer so the layout doesn't shift -->
+				<li class="h-8 mr-4"></li>
 			{/if}
+
+			<!-- Logo/link to root -->
 			<li class="mr-4">
-				<a href="/"><img src="/images/GainsGalaxySMALL.png" alt="logo" width="80px" /></a>
+				<a href="/">
+					<img src="/images/GainsGalaxySMALL.png" alt="logo" width="80px" />
+				</a>
 			</li>
+
 			<li class="mr-4">
-				<a href="/app" class="transition-colors hover:text-accent">Home</a>
+				<!-- 'class:text-primary={condition}' toggles .text-primary if the condition is true -->
+				<a
+					href="/home"
+					class="transition-colors hover:text-accent"
+					class:text-accent={$page.url.pathname === '/home'}
+				>
+					Home
+				</a>
 			</li>
+
 			<li class="mr-4">
-				<a href="/app/workouts" class="transition-colors hover:text-accent">Workouts</a>
+				<a
+					href="/home/workouts"
+					class="transition-colors hover:text-accent"
+					class:text-accent={$page.url.pathname === '/home/workouts'}
+				>
+					Workouts
+				</a>
 			</li>
+
 			<li class="mr-4">
-				<a href="/app/exercises" class="transition-colors hover:text-accent">Exercises</a>
+				<a
+					href="/home/exercises"
+					class="transition-colors hover:text-accent"
+					class:text-accent={$page.url.pathname === '/home/exercises'}
+				>
+					Exercises
+				</a>
 			</li>
 		</ul>
 	</div>
