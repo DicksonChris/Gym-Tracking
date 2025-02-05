@@ -172,8 +172,6 @@
 
 	.breakout {
 		width: 100vw;
-		margin: -100%; /* old browsers fallback */
-		margin: calc(50% - 50vw);
 		background-color: black;
 	}
 </style>

@@ -2,14 +2,13 @@
 	import GainsGalaxyImage from '$lib/components/Logo/GainsGalaxyImage.svelte';
 	import SpiralGalaxyMask from '$lib/components/Logo/SpiralGalaxyMask.svelte';
 	import SwirlingStars from '$lib/components/Logo/SwirlingStarsHero.svelte';
-	import { onMount } from 'svelte';
 
 	export let data;
 	let { isUser } = data;
 	
 </script>
 
-<div class="w-100vw relative h-[500px] max-h-[50vw]">
+<div class="w-100vw relative h-[500px] max-h-[50vw] top-0">
 	<div class="absolute-full-width-background z-0 bg-primary"></div>
 	<SpiralGalaxyMask>
 		<SwirlingStars
