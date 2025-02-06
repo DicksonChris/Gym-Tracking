@@ -1,11 +1,10 @@
-// src/lib/stores/themeStore.ts
 import { writable } from 'svelte/store';
 import { browser } from '$app/environment';
 
 /**
- * A Svelte store to keep track of the user's chosen theme, default 'dracula'.
+ * A Svelte store to keep track of the user's chosen theme
  */
-export const themeStore = writable<string>('dracula');
+export const themeStore = writable<string>();
 
 /**
  * Overwrite the store with a new theme.

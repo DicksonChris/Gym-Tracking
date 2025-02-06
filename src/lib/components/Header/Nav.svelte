@@ -49,9 +49,9 @@
 			{/if}
 
 			<!-- Logo/link to root -->
-			<li class="mr-4">
+			<li class="mr-4 flex-shrink-0 w-16 md:w-20">
 				<a href="/">
-					<img src="/images/GainsGalaxySMALL.png" alt="logo" width="80px" />
+					<img src="/images/GainsGalaxySMALL.png" alt="logo" >
 				</a>
 			</li>
 

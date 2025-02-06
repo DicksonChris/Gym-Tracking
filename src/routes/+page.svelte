@@ -8,11 +8,10 @@
 	
 </script>
 
-<div class="w-100vw relative h-[500px] max-h-[50vw] top-0">
+<div class="w-100vw relative aspect-[12/24] md:aspect-[16/12] top-0">
 	<div class="absolute-full-width-background z-0 bg-primary"></div>
 	<SpiralGalaxyMask>
 		<SwirlingStars
-			height={'500px'}
 			bg="linear-gradient(135deg, #000, #fff)
 burnColors={['rgba(255, 200, 100, 0.8)', 'rgba(255, 50, 50, 0.8)', 'rgba(100, 100, 255, 0.8)']}
 "

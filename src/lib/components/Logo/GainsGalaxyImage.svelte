@@ -31,7 +31,7 @@
 </script>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
-<div class="tilt-container" on:mousemove={handleMouseMove} on:mouseleave={handleMouseLeave}>
+<div class="tilt-container w-[96vw]" on:mousemove={handleMouseMove} on:mouseleave={handleMouseLeave}>
   <img
     bind:this={imageElement}
     src="/images/GainsGalaxy.app.png"
@@ -46,11 +46,10 @@
   .tilt-container {
     position: absolute;
     left: 50%;
-    top: calc(55%);
+    top: calc(50%);
     transform: translateX(-50%) translateY(-50%);
     perspective: 1000px;
-    /* Ensure the container is sized for the image */
-    max-width: 40vw;
+    max-width: 1500px;
   }
 
   .tilting-image {

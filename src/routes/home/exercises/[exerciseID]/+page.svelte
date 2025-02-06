@@ -1,19 +1,23 @@
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-autofocus -->
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import Icon from '@iconify/svelte';
 	import Title from '$lib/components/Title.svelte';
 	import type { Exercise } from '$lib/api/exercises';
 	import Counter from '$lib/components/Counter.svelte';
+	import { dndzone } from 'svelte-dnd-action';
 
-	/** SSR data from +page.server.ts */
 	export let data;
 
 	let { exerciseID, exercise, muscleGroups } = data;
 
-	// If there's no exercise, we might be "new" or load failed
 	let exerciseName: string = exercise ? exercise.name : '';
 	let selectedMuscleGroups: string[] = exercise
-		? (exercise.muscleGroup || '').split(',').map((g) => g.trim())
+		? (exercise.muscleGroup || '')
+				.split(',')
+				.map((g) => g.trim())
 		: [];
 	let newMuscleGroup = '';
 
@@ -22,9 +26,6 @@
 	let defaultStep: number = exercise?.defaultStep ?? 0;
 	let editingExerciseName = (exerciseID === 'new');
 
-	/** 
-	 * For inline editing of exercise name 
-	 */
 	function toggleEditExerciseName() {
 		editingExerciseName = !editingExerciseName;
 	}
@@ -32,9 +33,6 @@
 		exerciseName = (e.target as HTMLInputElement).value;
 	}
 
-	/**
-	 * If not "new," do a partial update of just the name field
-	 */
 	async function handleUpdateExerciseName() {
 		if (exerciseID !== 'new' && exercise) {
 			try {
@@ -53,14 +51,10 @@
 				alert('Failed to update exercise name.');
 			}
 		} else {
-			// if "new", do nothing
 			editingExerciseName = false;
 		}
 	}
 
-	/**
-	 * Final submission, either creating or updating the exercise fully
-	 */
 	async function handleSubmit() {
 		if (!exerciseName.trim()) {
 			alert('Exercise name is required.');
@@ -97,13 +91,24 @@
 		}
 	}
 
-	function addNewMuscleGroup() {
-		const group = newMuscleGroup.trim();
-		if (group && !muscleGroups.includes(group)) {
-			muscleGroups = [...muscleGroups, group];
-			selectedMuscleGroups = [...selectedMuscleGroups, group];
-			newMuscleGroup = '';
-		}
+	let items = selectedMuscleGroups.map((name) => ({ id: name }));
+
+	function syncItems() {
+		items = selectedMuscleGroups.map((name) => ({ id: name }));
+	}
+
+	function handleConsider(e: CustomEvent) {
+		items = e.detail.items;
+		selectedMuscleGroups = items.map((i) => i.id);
+	}
+	function handleFinalize(e: CustomEvent) {
+		items = e.detail.items;
+		selectedMuscleGroups = items.map((i) => i.id);
+	}
+
+	function removeMuscleGroup(name: string) {
+		selectedMuscleGroups = selectedMuscleGroups.filter((m) => m !== name);
+		syncItems();
 	}
 
 	function toggleMuscleGroup(group: string) {
@@ -112,10 +117,29 @@
 		} else {
 			selectedMuscleGroups = [...selectedMuscleGroups, group];
 		}
+		syncItems();
 	}
+
+	function addNewMuscleGroup() {
+		const group = newMuscleGroup.trim();
+		if (group && !muscleGroups.includes(group)) {
+			muscleGroups = [...muscleGroups, group];
+			selectedMuscleGroups = [...selectedMuscleGroups, group];
+			newMuscleGroup = '';
+			syncItems();
+		}
+	}
+
+	let isBadgeHovered = false;
+	function onHoverStart() {
+		isBadgeHovered = true;
+	}
+	function onHoverEnd() {
+		isBadgeHovered = false;
+	}
+
 </script>
 
-<!-- Render the page if we have exercise info or it's "new" -->
 {#if exerciseID === 'new' || exercise}
 	<Title title={exerciseID === 'new' ? 'Create New Exercise' : 'Edit Exercise'} />
 
@@ -133,7 +157,6 @@
 		{/if}
 
 		{#if editingExerciseName}
-			<!-- If "new," show check icon, else show 'save' icon -->
 			<button
 				on:click={handleUpdateExerciseName}
 				class="btn btn-ghost btn-secondary btn-sm text-base-content"
@@ -165,36 +188,49 @@
 			</button>
 		</div>
 
-		<!-- Existing Muscle Groups -->
 		<div>
 			<h2 class="text-lg font-semibold mb-2">Add Tag</h2>
 			<div class="flex select-none flex-wrap gap-2 mb-2">
 				{#each muscleGroups as group}
-					<span
-						class="badge cursor-pointer transition-colors
-							{selectedMuscleGroups.includes(group)
-								? 'badge-accent'
-								: 'badge-outline text-neutral-content'}"
-						on:click={() => toggleMuscleGroup(group)}
-					>
-						{group}
-					</span>
+					{#each group.split(',').map((g) => g.trim()) as individualGroup}
+						<span
+							class="badge cursor-pointer transition-colors
+								{selectedMuscleGroups.includes(individualGroup)
+									? 'badge-accent'
+									: 'badge-outline text-neutral-content'}"
+							on:click={() => toggleMuscleGroup(individualGroup)}
+						>
+							{individualGroup}
+						</span>
+					{/each}
 				{/each}
 			</div>
 		</div>
 
-		<!-- Chosen muscle groups -->
+		<!-- Chosen Muscle Groups with Drag & Drop -->
 		<div>
 			<h3 class="text-md font-semibold mb-2">Selected Tags:</h3>
-			<div class="flex flex-wrap gap-2 bg-base-300 p-2 rounded">
-				{#each selectedMuscleGroups as mg}
-					<span class="badge badge-accent">
-						{mg}
-						<button
-							type="button"
-							on:click={() => (selectedMuscleGroups = selectedMuscleGroups.filter((m) => m !== mg))}
-							class="ml-1"
-						>
+			<div
+				use:dndzone={{
+					items,
+					flipDurationMs: 300,
+					dropTargetStyle: { borderColor: 'var(--color-primary-100)' },
+					dropTargetClasses: ['border-[1px]', 'border-primary', 'border-solid']
+				}}
+				on:consider={handleConsider}
+				on:finalize={handleFinalize}
+				class="dnd-zone flex min-h-9 flex-wrap gap-2 rounded-lg border-[1px] border-base-300 bg-base-300 p-2 {isBadgeHovered ? 'border-primary' : ''}"
+				on:mouseenter={onHoverStart}
+				on:mouseleave={onHoverEnd}
+			>
+				{#each items as group (group.id)}
+					<span
+						class="badge badge-accent select-none"
+						on:mouseenter={onHoverStart}
+						on:mouseleave={onHoverEnd}
+					>
+						{group.id}
+						<button type="button" on:click={() => removeMuscleGroup(group.id)} class="ml-1">
 							<Icon icon="bi:x" class="h-4 w-4" />
 						</button>
 					</span>
@@ -212,8 +248,8 @@
 				</label>
 				{#if selectedMeasurements.includes('reps')}
 					<div class="ml-6">
-						<label class="label">Default Reps</label>
-						<Counter bind:value={defaultReps} min={0} step={1} decimal={false} />
+						<label class="label" for="Reps">Default Reps</label>
+						<Counter bind:value={defaultReps} min={0} step={1} decimal={false} id="Reps" />
 					</div>
 				{/if}
 
@@ -223,18 +259,18 @@
 				</label>
 				{#if selectedMeasurements.includes('weight')}
 					<div class="ml-6">
-						<label class="label">Default Step (lbs)</label>
-						<Counter bind:value={defaultStep} step={0.5} min={0} decimal={true} />
+						<label class="label" for="Step">Default Step (lbs)</label>
+						<Counter bind:value={defaultStep} step={0.5} min={0} decimal={true} id="Step" />
 					</div>
 				{/if}
 
-				<label class="flex items-center">
-					<input type="checkbox" bind:group={selectedMeasurements} value="time" class="checkbox" />
+				<label class="flex items-center" for="Time">
+					<input type="checkbox" bind:group={selectedMeasurements} value="time" class="checkbox" id="Time" />
 					<span class="ml-2">Time</span>
 				</label>
 
-				<label class="flex items-center">
-					<input type="checkbox" bind:group={selectedMeasurements} value="distance" class="checkbox" />
+				<label class="flex items-center" for="Distance">
+					<input type="checkbox" bind:group={selectedMeasurements} value="distance" class="checkbox" id="Distance" />
 					<span class="ml-2">Distance</span>
 				</label>
 			</div>

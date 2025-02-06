@@ -7,6 +7,7 @@
     export let min: number = 0;
     export let max: number = Infinity;
     export let decimal: boolean = false;
+    export let id: string = "";
 
     const dispatch = createEventDispatcher();
     let displayValue: string = decimal ? value.toFixed(1) : value.toString();
@@ -73,6 +74,7 @@
                 bind:value={displayValue}
                 on:input={handleInput}
                 on:blur={formatValue}
+                id={id}
                 class="w-40 input input-lg input-primary border-none bg-neutral text-center text-4xl text-neutral-content focus:outline-none"
                 aria-label="Counter input"
                 step={decimal ? "0.1" : "1"}

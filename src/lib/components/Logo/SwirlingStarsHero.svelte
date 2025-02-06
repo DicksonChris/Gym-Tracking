@@ -137,41 +137,9 @@
   The canvas fills the container as a background,
   and the <slot> renders any child content above it.
 -->
-<div class="hero breakout" bind:this={container} style="height: {height}">
+<div class="h-full" bind:this={container}>
 	<canvas bind:this={canvas}></canvas>
-	<div class="content">
+	<div>
 		<slot></slot>
 	</div>
 </div>
-
-<style>
-	.hero {
-		position: relative;
-		overflow: hidden;
-		max-height: 50vw;
-	}
-	canvas {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		pointer-events: none;
-	}
-	.content {
-		position: relative;
-		z-index: 1;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		height: 100%;
-		color: white;
-		text-align: center;
-		padding: 1rem;
-	}
-
-	.breakout {
-		width: 100vw;
-		background-color: black;
-	}
-</style>
