@@ -5,6 +5,8 @@
 	import { exercisesStore } from '$lib/stores/exercisesStore';
 	import type { Exercise } from '$lib/api/exercises';
 	import Icon from '@iconify/svelte';
+	import ShinyTitle from '$lib/components/ShinyTitle.svelte';
+	import ShinyButton from './ShinyButton.svelte';
 
 	export let exerciseID: string;
 	export let index: number;
@@ -13,8 +15,8 @@
 
 	// Reactive statement to get the exercise from the store
 	$: exercise = $exercisesStore?.find((e) => e.id === exerciseID) ?? null;
-
 </script>
+
 
 {#if $exercisesStore === null}
 	<li class="card bg-base-100 px-4 pb-4">
@@ -23,41 +25,45 @@
 		</div>
 	</li>
 {:else if exercise && !exercise.hidden}
-	<li class="card bg-base-100 px-4 pb-4 {index === -1 ? 'rounded-t-none' : 'rounded-none'}">
+	<li class="card px-4 
+	pb-4 {index === -1 ? 'rounded-t-none' : 'rounded-none'}">
 		<div class="mt-4 flex items-center justify-between">
-				<div 
-					id="{exerciseID}-titleRow" 
+			<ShinyTitle>
+				<div
+					id="{exerciseID}-titleRow"
 					bind:clientWidth={titleRowWidth}
-					class="flex items-center overflow-hidden"
+					class="flex items-center overflow-hidden mr-auto"
 				>
-				<span
-					class="mr-4 min-w-0 flex-grow overflow-hidden text-ellipsis whitespace-nowrap font-medium text-white sm:text-lg md:text-xl"
-				>
-					{exercise.name}
-				</span>
-				{#if exercise.url}
-					<a
-						href={exercise.url}
-						target="_blank"
-						rel="noopener noreferrer"
-						class="link text-base-content mr-2"
+					<span
+						class="mr-4 min-w-0 flex-grow overflow-hidden text-ellipsis text-[#09093b] whitespace-nowrap font-medium sm:text-lg md:text-xl"
 					>
-						<Icon icon="line-md:link" class="h-6 w-6" />
-					</a>
-				{/if}
-				<button
-					class="w-8 flex-shrink-0 text-xl text-secondary"
-					on:click={() => (showAll = !showAll)}
+						{exercise.name}
+					</span>
+				</div>
+				<ShinyButton size="small">
+					<PlusButton {exerciseID} />
+				</ShinyButton>
+			</ShinyTitle>
+			{#if exercise.url}
+				<a
+					href={exercise.url}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="link mr-2 text-base-content"
 				>
-					{#if showAll}
-						<Icon icon="fe:drop-down" class="h-6 w-6" />
-					{:else}
-						<Icon icon="fe:drop-right" class="h-6 w-6" />
-					{/if}
-				</button>
-				
-			</div>
-			<PlusButton {exerciseID} />
+					<Icon icon="line-md:link" class="h-6 w-6" />
+				</a>
+			{/if}
+			<button
+				class="w-8 flex-shrink-0 text-xl text-secondary"
+				on:click={() => (showAll = !showAll)}
+			>
+				{#if showAll}
+					<Icon icon="fe:drop-down" class="h-6 w-6" />
+				{:else}
+					<Icon icon="fe:drop-right" class="h-6 w-6" />
+				{/if}
+			</button>
 		</div>
 		<HistoryList {exerciseID} {showAll} muscleGroups={exercise?.muscleGroup.split(', ') ?? []} />
 	</li>
@@ -71,6 +77,5 @@
 			</span>
 			<PlusButton exerciseID="#" />
 		</div>
-		<hr class="border-grey my-2" />
 	</li>
 {/if}

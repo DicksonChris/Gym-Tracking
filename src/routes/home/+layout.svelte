@@ -4,4 +4,5 @@
 
 <div class="p-2 pt-20">
 	{@render children()}
+	<div class="float "></div>
 </div>

@@ -4,7 +4,6 @@
 	import type { Exercise } from '$lib/api/exercises';
 	import type { History } from '$lib/api/history';
 	import { enhance } from '$app/forms';
-	import ShinyButton from '$lib/components/ShinyButton.svelte';
 
 	export let exercise: Exercise;
 	export let initialData: History | null = null;
@@ -105,9 +104,6 @@
 			{initialData ? 'Update' : 'Submit'}
 		</button>
 	</form>
-	<div class="w-40 h-40 bg-[#f0e4b1] p-4">
-		<ShinyButton />
-	</div>
 
 	<!-- Delete Confirmation Modal -->
 	{#if showDeleteModal}

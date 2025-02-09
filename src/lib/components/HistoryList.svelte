@@ -42,9 +42,7 @@
 </script>
 
 {#if Object.keys(groupedHistory).length > 0}
-    <hr class= />
 {:else}
-    <hr class="border-grey my-2" />
 {/if}
 
 <div class="history-list">

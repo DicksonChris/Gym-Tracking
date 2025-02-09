@@ -18,53 +18,24 @@ export default {
 
     daisyui: {
         themes: [
-            'autumn',
-            'cmyk',
-            'cupcake',
-            'cyberpunk',
-            {
-                fantasy: {
-                    ...require('daisyui/src/theming/themes')["fantasy"],
-                    "primary": "#58216d",
-                    "secondary": "#273583",
-                }
-            },
-            'garden',
-            'lemonade',
-            'light',
-            'pastel',
-            'valentine',
-            'aqua',
-            'black',
-            'business',
-            'coffee',
-            'dark',
-            'dim',
-            'dracula',
-            'forest',
-            'halloween',
-            'luxury',
-            'night',
             'palenight',
-            'sunset',
-            'synthwave',
             {
                 // Palenight
                 palenight: {
-                    "primary": "#a7fcb3",       // defaultAccent
-                    "secondary": "#80CBC4",     // base.blue
-                    "accent": "#C792EA",        // base.purple
-                    "neutral": "#333747",       // inputBackground
-                    "base-100": "#292D3E",      // background
-                    "base-200": "#1B1E2B",      // backgroundAlt
-                    "base-300": "#424A6C",      // contrastBorder
+                    "primary": "#1cceee",       // defaultAccent
+                    "secondary": "#f6c900",     // base.blue
+                    "accent": "#f96d4d",        // base.purple
+                    "neutral": "#fbfaca",       // inputBackground
+                    "base-100": "#eee1b3",      // background
+                    "base-200": "#fbfaca",      // backgroundAlt
+                    "base-300": "#e1b980",      // contrastBorder
                     "info": "#89DDFF",          // base.cyan
                     "success": "#C3E88D",       // base.green
                     "warning": "#FFCB6B",       // base.yellow
                     "error": "#f07178",         // base.red
                     "--btn-text-case": "none",
-                    "--rounded-box": "0.25rem",
-                    "--rounded-btn": "0.25rem"
+                    "--rounded-box": "1rem",
+                    "--rounded-btn": "1rem"
                 }
             }
         ]
