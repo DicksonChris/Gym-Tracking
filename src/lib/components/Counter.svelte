@@ -57,13 +57,13 @@
     }
 </script>
 
-<div class="grid grid-cols-3">
+<div class="mx-auto rounded-3xl shadow-xl">
     <div class="spacer"></div>
     <div class="flex flex-row items-center justify-center">
         <button
             type="button"
             on:click={decrement}
-            class="btn bg-base-300 btn-lg w-20 rounded-l-3xl rounded-r-none"
+            class="btn bg-base-300 btn-lg w-20 rounded-l-3xl rounded-r-none border-t-0"
             aria-label="Decrement"
         >
             <Icon icon="fa-solid:minus" />
@@ -85,7 +85,7 @@
         <button
             type="button"
             on:click={increment}
-            class="btn bg-base-300 btn-lg w-20 rounded-l-none rounded-r-3xl"
+            class="btn bg-base-300 btn-lg w-20 rounded-l-none rounded-r-3xl border-t-0"
             aria-label="Increment"
         >
             <Icon icon="fa-solid:plus" />

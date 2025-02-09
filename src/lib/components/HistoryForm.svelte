@@ -4,6 +4,7 @@
 	import type { Exercise } from '$lib/api/exercises';
 	import type { History } from '$lib/api/history';
 	import { enhance } from '$app/forms';
+	import ShinyButton from '$lib/components/ShinyButton.svelte';
 
 	export let exercise: Exercise;
 	export let initialData: History | null = null;
@@ -16,23 +17,11 @@
 
 	const isUpdate = !!initialData;
 
-	$: weight = (
-		isUpdate
-			? (initialData?.weight)
-			: (lastHistory?.weight)
-	) ?? 0;
+	$: weight = (isUpdate ? initialData?.weight : lastHistory?.weight) ?? 0;
 
-	$: distance = (
-		isUpdate
-			? (initialData?.distance)
-			: (lastHistory?.distance)
-	) ?? '';
+	$: distance = (isUpdate ? initialData?.distance : lastHistory?.distance) ?? '';
 
-	$: time = (
-		isUpdate
-			? (initialData?.time)
-			: (lastHistory?.time)
-	) ?? '';
+	$: time = (isUpdate ? initialData?.time : lastHistory?.time) ?? '';
 
 	let showDeleteModal = false;
 
@@ -60,7 +49,13 @@
 		</div>
 		<hr class="border-grey my-2" />
 		{#if initialData}
-			<p>{new Date(initialData.startTime).toLocaleString()}</p>
+			<p class="text-slate-300">
+				{new Date(initialData.startTime).toLocaleString(undefined, {
+					year: 'numeric',
+					month: 'long',
+					day: 'numeric'
+				})}
+			</p>
 		{/if}
 	</header>
 
@@ -69,11 +64,10 @@
 		in the route's +page.server.ts for create or update 
 	-->
 	<form method="POST" action="?/upsert" use:enhance>
-
 		{#if exercise.measurement?.includes('weight')}
-			<div class="form-control">
-				<label class="label text-2xl font-semibold" for="weight">WEIGHT (lbs)</label>
-				<hr class="mb-8 border-secondary" />
+			<div class="form-control mb-8">
+				<label class="label mx-auto text-2xl font-semibold" for="weight">WEIGHT</label>
+
 				<Counter decimal bind:value={weight} step={exercise.defaultStep || 0} min={0} max={1000} />
 				<input type="hidden" name="weight" value={weight} />
 			</div>
@@ -81,8 +75,7 @@
 
 		{#if exercise.measurement?.includes('reps')}
 			<div class="form-control">
-				<label class="label text-2xl font-semibold" for="reps">REPS</label>
-				<hr class="mb-8 border-secondary" />
+				<label class="label mx-auto text-2xl font-semibold" for="reps">REPS</label>
 				<Counter bind:value={reps} step={1} min={0} max={1000} />
 				<input type="hidden" name="reps" value={reps} />
 			</div>
@@ -112,6 +105,9 @@
 			{initialData ? 'Update' : 'Submit'}
 		</button>
 	</form>
+	<div class="w-40 h-40 bg-[#f0e4b1] p-4">
+		<ShinyButton />
+	</div>
 
 	<!-- Delete Confirmation Modal -->
 	{#if showDeleteModal}
