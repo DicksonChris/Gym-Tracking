@@ -1,38 +1,77 @@
-# sv
+# Gym-Tracking
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+A gym workout tracker built with [SvelteKit](https://svelte.dev/docs/kit) (Svelte 5, Tailwind + daisyUI) and [PocketBase](https://pocketbase.io/).
 
-## Creating a project
+- Create **exercises** (muscle groups, measured by weight/reps/distance/time)
+- Group them into **workouts**
+- Log **history** (sets) per exercise and browse it by month/day
+- Per-user **themes** and selected workouts
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Architecture
+
+| Piece | What it is | Port |
+| ----- | ---------- | ---- |
+| SvelteKit app | UI + server endpoints (`adapter-node`) | 3000 |
+| PocketBase | Auth + database (single binary, embedded SQLite) | 8090 |
+
+The SvelteKit server talks to PocketBase using `VITE_POCKETBASE_URL` (baked in at **build time** by Vite). The database schema is version-controlled in [`pb_migrations/`](./pb_migrations) and is applied automatically by PocketBase on first start.
+
+## Proxmox LXC install (recommended)
+
+Installs the app **and** PocketBase together in a single LXC, community-scripts style. Run on your Proxmox VE host shell:
 
 ```bash
-# create a new project in the current directory
-npx sv create
-
-# create a new project in my-app
-npx sv create my-app
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/DicksonChris/Gym-Tracking/main/ct/gym-tracking.sh)"
 ```
 
-## Developing
+This uses the [community-scripts core](https://github.com/community-scripts/core) engine to:
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+1. Create a Debian LXC (defaults: 2 vCPU, 2 GB RAM, 6 GB disk — adjustable in the advanced wizard)
+2. Install Node.js 22 and the latest PocketBase release
+3. Clone this repo to `/opt/gym-tracking`, build it, and apply the DB migrations
+4. Create a PocketBase superuser (credentials saved to `/root/gym-tracking.creds` inside the container)
+5. Set up and start two systemd services: `gym-tracking` and `pocketbase`
 
-```bash
-npm run dev
+After install:
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+- App: `http://<container-ip>:3000` — register your user here
+- PocketBase dashboard: `http://<container-ip>:8090/_/` — superuser login in `/root/gym-tracking.creds`
+
+To **update** later, run the same one-liner inside the container (or re-run it on the host and pick the existing container), which pulls the latest code and rebuilds.
+
+> **Note:** the app's `ORIGIN` is pinned to the container IP at install time (in `/opt/gym-tracking/.env.node`). If the container's IP changes or you put it behind a reverse proxy, update `ORIGIN` there and `systemctl restart gym-tracking`, otherwise form submissions are rejected by SvelteKit's CSRF protection.
+
+## Local development
+
+1. **PocketBase** — [download](https://pocketbase.io/docs/) the binary for your OS, then from the repo root:
+
+   ```bash
+   ./pocketbase serve --http=127.0.0.1:8090 --migrationsDir ./pb_migrations
+   ```
+
+   The first run applies the schema migration automatically. Visit `http://127.0.0.1:8090/_/` once to create your superuser (optional — only needed for the admin dashboard).
+
+2. **App** — create `.env` (see [`.env.example`](./.env.example)):
+
+   ```bash
+   cp .env.example .env
+   npm install
+   npm run dev
+   ```
+
+3. Open `http://localhost:5173`, register a user, and start tracking.
 
 ## Building
 
-To create a production version of your app:
-
 ```bash
-npm run build
+npm run build     # production build (adapter-node)
+node build        # serve it (set PORT / ORIGIN env vars)
 ```
 
-You can preview the production build with `npm run preview`.
+## Repo layout
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+| Path | Purpose |
+| ---- | ------- |
+| `src/` | SvelteKit app |
+| `pb_migrations/` | PocketBase schema (applied automatically) |
+| `ct/`, `install/` | Proxmox community-scripts installer |
