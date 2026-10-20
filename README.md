@@ -39,7 +39,15 @@ After install:
 
 To **update** later, run the same one-liner inside the container (or re-run it on the host and pick the existing container), which pulls the latest code and rebuilds.
 
-> **Note:** the app's `ORIGIN` is pinned to the container IP at install time (in `/opt/gym-tracking/.env.node`). If the container's IP changes or you put it behind a reverse proxy, update `ORIGIN` there and `systemctl restart gym-tracking`, otherwise form submissions are rejected by SvelteKit's CSRF protection.
+> **Serve it behind a TLS reverse proxy** (Caddy, NPM, Traefik…) pointing at `http://<container-ip>:3000`. The app's auth cookie is flagged `Secure`, so browsers only keep the login session over HTTPS (plain-http works for `localhost` only). The installer configures the app to derive its origin from `X-Forwarded-Proto`/`X-Forwarded-Host`; if you must run without a proxy, edit `/opt/gym-tracking/.env.node` (comment the two `*_HEADER` lines, set `ORIGIN=http://<container-ip>:3000`) and `systemctl restart gym-tracking`.
+>
+> Example Caddy site block:
+>
+> ```caddyfile
+> gym.example.com {
+>     reverse_proxy http://<container-ip>:3000
+> }
+> ```
 
 ## Local development
 

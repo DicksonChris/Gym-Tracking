@@ -30,12 +30,17 @@ $STD npm ci
 $STD npm run build
 $STD npm prune --omit=dev
 LOCAL_IP="$(hostname -I | awk '{print $1}')"
-# Runtime env for the Node server. ORIGIN must match the URL used in the
-# browser or form submissions will be rejected (SvelteKit CSRF protection).
+# Runtime env for the Node server. Behind a TLS reverse proxy (recommended),
+# the origin is derived from the proxy's forwarded headers. The app's auth
+# cookie is flagged Secure, so browsers require HTTPS (localhost excepted) —
+# serve it through a TLS proxy for real use.
 cat <<EOF >/opt/gym-tracking/.env.node
 PORT=3000
 HOST=0.0.0.0
-ORIGIN=http://${LOCAL_IP}:3000
+PROTOCOL_HEADER=x-forwarded-proto
+HOST_HEADER=x-forwarded-host
+# Without a reverse proxy, comment the two HEADER lines above and use:
+# ORIGIN=http://${LOCAL_IP}:3000
 EOF
 msg_ok "Installed Gym-Tracking"
 
