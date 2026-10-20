@@ -34,16 +34,17 @@ export const actions: Actions = {
                 name
             });
 
-            // TODO: Log them in immediately after creation, or you can require them to confirm email, etc.
+            // Log them in immediately after creation
             await locals.pb.collection('users').authWithPassword(email, password);
-
-            // Redirect or show success
-            throw redirect(303, '/');
         } catch (err: any) {
             console.error('Register error:', err);
             return fail(400, {
                 formError: err.message || 'Something went wrong registering.'
             });
         }
+
+        // Must be thrown outside the try/catch, otherwise the redirect is
+        // swallowed and reported as a registration failure.
+        throw redirect(303, '/home');
     }
 };
