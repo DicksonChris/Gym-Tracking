@@ -79,6 +79,19 @@
 					/>
 				</div>
 
+				<!-- Default program opt-in -->
+				<div class="form-control">
+					<label class="label cursor-pointer justify-start gap-3">
+						<input
+							type="checkbox"
+							name="seedDefaults"
+							checked
+							class="checkbox-primary checkbox checkbox-sm"
+						/>
+						<span class="label-text">Add default workouts and exercises</span>
+					</label>
+				</div>
+
 				<!-- Error Message -->
 				{#if errorMessage}
 					<div class="alert text-error bg-inherit p-0">
