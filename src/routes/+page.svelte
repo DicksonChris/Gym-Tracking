@@ -17,11 +17,21 @@
 	<GainsGalaxyImage />
 
 	{#if !isUser}
+		<!-- Scrim so the buttons read clearly against the busy artwork -->
+		<div
+			class="pointer-events-none absolute inset-x-0 bottom-0 z-[5] h-44 bg-gradient-to-t from-black/70 via-black/35 to-transparent"
+		></div>
 		<div
 			class="absolute inset-x-0 bottom-0 z-10 mx-auto flex w-full max-w-md gap-2 p-4 pb-[calc(1rem+env(safe-area-inset-bottom))]"
 		>
-			<a class="btn btn-primary btn-lg flex-1" href="/login">Login</a>
-			<a class="btn btn-secondary btn-lg flex-1" href="/register">Register</a>
+			<a
+				class="btn btn-primary btn-lg flex-1 shadow-lg shadow-black/60 ring-1 ring-white/40"
+				href="/login">Login</a
+			>
+			<a
+				class="btn btn-secondary btn-lg flex-1 shadow-lg shadow-black/60 ring-1 ring-white/40"
+				href="/register">Register</a
+			>
 		</div>
 	{/if}
 </div>
