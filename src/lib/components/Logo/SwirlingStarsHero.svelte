@@ -42,8 +42,11 @@
 
 		let rafId = 0;
 
-		// Resize the canvas based on the container size, then update the center and regenerate the background and stars.
+		// Resize the canvas based on the container size. The background is
+		// regenerated, but existing swirling stars are rescaled proportionally
+		// so resizing feels smooth instead of re-scattering everything.
 		function resizeCanvas() {
+			const previousMax = maxSwirlRadius;
 			canvas.width = container.clientWidth;
 			canvas.height = container.clientHeight;
 			centerX = canvas.width / 2;
@@ -51,7 +54,15 @@
 			// Set maxSwirlRadius so that stars can travel off the edge.
 			maxSwirlRadius = Math.sqrt(centerX * centerX + centerY * centerY) * 0.9;
 			createBackground();
-			createSwirlingStars();
+			if (swirlingStars.length === 0 || previousMax <= 0) {
+				createSwirlingStars();
+			} else {
+				const scale = maxSwirlRadius / previousMax;
+				for (const star of swirlingStars) {
+					star.r *= scale;
+					star.size *= scale;
+				}
+			}
 		}
 		window.addEventListener('resize', resizeCanvas);
 		resizeCanvas();
@@ -155,12 +166,12 @@
 </script>
 
 <!--
-  The hero container is relatively positioned.
+  The hero container fills its parent.
   The canvas fills the container as a background,
   and the <slot> renders any child content above it.
 -->
-<div class="h-full" bind:this={container}>
-	<canvas bind:this={canvas}></canvas>
+<div class="h-full w-full" bind:this={container}>
+	<canvas class="block h-full w-full" bind:this={canvas}></canvas>
 	<div>
 		<slot></slot>
 	</div>

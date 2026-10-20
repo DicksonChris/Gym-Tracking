@@ -1,8 +1,8 @@
 <!--
   The wrapping div applies the mask to whatever content is passed into the component.
-  You can use this component as a wrapper for an <img> or any other element.
+  It fills its (positioned) parent, so the mask always covers the full area.
 -->
-<div class="mask-container recenter h-full w-[100vw] md:w-[unset]">
+<div class="mask-container absolute inset-0">
 	<slot />
 </div>
 
@@ -10,7 +10,7 @@
 	.mask-container {
 		/* Apply the galaxy mask image.
        Note: The mask uses the alpha channel of the image.
-       Adjust mask-size (cover, contain, etc.) as needed for your design. */
+       "cover" keeps the spiral covering the whole area at any aspect ratio. */
 		mask-image: url('/images/galaxy-mask.png');
 		-webkit-mask-image: url('/images/galaxy-mask.png');
 		mask-size: cover;
@@ -19,12 +19,5 @@
 		-webkit-mask-repeat: no-repeat;
 		mask-position: center;
 		-webkit-mask-position: center;
-	}
-
-	.recenter {
-		position: relative;
-		left: 50%;
-		margin-left: -50vw;
-		width: 100vw;
 	}
 </style>

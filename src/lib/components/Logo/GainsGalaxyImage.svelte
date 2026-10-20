@@ -31,12 +31,11 @@
 </script>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
-<div class="tilt-container w-[96vw]" on:mousemove={handleMouseMove} on:mouseleave={handleMouseLeave}>
+<div class="tilt-container" on:mousemove={handleMouseMove} on:mouseleave={handleMouseLeave}>
   <img
     bind:this={imageElement}
     src="/images/GainsGalaxy.app.png"
     alt="logo"
-    width="400px"
     class="tilting-image"
     style="transform: {transformStyle}"
   />
@@ -49,7 +48,8 @@
     top: calc(50%);
     transform: translateX(-50%) translateY(-50%);
     perspective: 1000px;
-    max-width: 1500px;
+    /* Near full width on small screens, capped as the window grows. */
+    width: min(92vw, 600px);
   }
 
   .tilting-image {

@@ -8,28 +8,28 @@
 	
 </script>
 
-<div class="w-100vw relative aspect-[12/24] md:aspect-[16/12] top-0">
-	<div class="absolute-full-width-background z-0 bg-primary"></div>
+<!-- Full-viewport hero: the spiral + purple background always cover the
+     visible window, and the auth buttons overlay the bottom of the hero. -->
+<div class="full-bleed relative h-svh overflow-hidden bg-primary">
 	<SpiralGalaxyMask>
 		<SwirlingStars bg="black" />
 	</SpiralGalaxyMask>
-	<GainsGalaxyImage/>
+	<GainsGalaxyImage />
+
+	{#if !isUser}
+		<div
+			class="absolute inset-x-0 bottom-0 z-10 mx-auto flex w-full max-w-md gap-2 p-4 pb-[calc(1rem+env(safe-area-inset-bottom))]"
+		>
+			<a class="btn btn-primary btn-lg flex-1" href="/login">Login</a>
+			<a class="btn btn-secondary btn-lg flex-1" href="/register">Register</a>
+		</div>
+	{/if}
 </div>
 
-{#if !isUser}
-	<span class="flex flex-row gap-2 mt-2">
-		<a class="btn btn-primary btn-lg flex-1" href="/login">Login</a>
-		<a class="btn btn-secondary btn-lg flex-1" href="/register">Register</a>
-	</span>
-{/if}
-
 <style>
-	.absolute-full-width-background {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 200vw;
-		height: 100%;
-		margin-left: -100%;
+	/* Break out of the layout container to span the full viewport width. */
+	.full-bleed {
+		width: 100vw;
+		margin-left: calc(50% - 50vw);
 	}
 </style>
