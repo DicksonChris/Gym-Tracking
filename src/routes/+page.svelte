@@ -22,14 +22,14 @@
 			class="pointer-events-none absolute inset-x-0 bottom-0 z-[5] h-44 bg-gradient-to-t from-black/70 via-black/35 to-transparent"
 		></div>
 		<div
-			class="absolute inset-x-0 bottom-0 z-10 mx-auto flex w-full max-w-md gap-2 p-4 pb-[calc(1rem+env(safe-area-inset-bottom))]"
+			class="absolute inset-x-0 bottom-0 z-10 mx-auto flex w-full max-w-md gap-2 p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] md:max-w-xl md:gap-3 xl:max-w-3xl xl:p-6"
 		>
 			<a
-				class="btn btn-primary btn-lg flex-1 shadow-lg shadow-black/60 ring-1 ring-white/40"
+				class="btn btn-primary btn-lg flex-1 shadow-lg shadow-black/60 ring-1 ring-white/40 md:h-[4.5rem] md:min-h-[4.5rem] md:text-xl xl:h-20 xl:min-h-20 xl:text-2xl"
 				href="/login">Login</a
 			>
 			<a
-				class="btn btn-secondary btn-lg flex-1 shadow-lg shadow-black/60 ring-1 ring-white/40"
+				class="btn btn-secondary btn-lg flex-1 shadow-lg shadow-black/60 ring-1 ring-white/40 md:h-[4.5rem] md:min-h-[4.5rem] md:text-xl xl:h-20 xl:min-h-20 xl:text-2xl"
 				href="/register">Register</a
 			>
 		</div>

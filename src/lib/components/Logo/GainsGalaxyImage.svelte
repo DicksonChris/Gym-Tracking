@@ -48,8 +48,9 @@
     top: calc(50%);
     transform: translateX(-50%) translateY(-50%);
     perspective: 1000px;
-    /* Near full width on small screens, capped as the window grows. */
-    width: min(92vw, 600px);
+    /* Near full width on small screens, capped as the window grows
+       (and by viewport height so it can't clip on short, wide windows). */
+    width: min(92vw, 1500px, 160vh);
   }
 
   .tilting-image {
