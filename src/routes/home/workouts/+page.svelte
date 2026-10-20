@@ -21,13 +21,18 @@
 		const confirmDelete = confirm('Are you sure?');
 		if (!confirmDelete) return;
 		try {
-			await fetch(`/api/workouts/${workoutID}`, {
+			const res = await fetch(`/api/workouts/${workoutID}`, {
 				method: 'DELETE',
 				credentials: 'include'
 			});
+			if (!res.ok) {
+				const body = await res.json().catch(() => ({}));
+				throw new Error(body.error || `HTTP ${res.status}`);
+			}
 			workouts = workouts.filter((w) => w.id !== workoutID);
 		} catch (err) {
 			console.error('Delete error:', err);
+			alert('Failed to delete workout.');
 		}
 	}
 </script>
@@ -87,7 +92,10 @@
 									</div>
 									<!-- Tags / muscle groups -->
 									<div class="flex flex-wrap gap-1 overflow-hidden">
-										{#each exercise.muscleGroup.split(',') as muscleGroup}
+										{#each exercise.muscleGroup
+											?.split(',')
+											.map((g) => g.trim())
+											.filter(Boolean) ?? [] as muscleGroup}
 											<p class="badge badge-accent badge-sm text-nowrap">{muscleGroup}</p>
 										{/each}
 									</div>

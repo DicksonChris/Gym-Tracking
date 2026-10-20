@@ -103,7 +103,8 @@ export async function unhideExercise(pb: PocketBase, user: AuthRecord | null, ex
 }
 
 /**
- * Update an exercise by ID (relies on PocketBase rule user=@request.auth.id).
+ * Update an exercise by ID. Verifies ownership before writing
+ * (defense in depth on top of the PocketBase collection rules).
  */
 export async function updateExercise(
 	pb: PocketBase,
@@ -113,6 +114,10 @@ export async function updateExercise(
 ) {
 	if (!user) {
 		throw new Error('Not authenticated');
+	}
+	const existing = await pb.collection<Exercise>('exercises').getOne(exerciseId);
+	if (existing.user !== user.id) {
+		throw new Error('Unauthorized or record not found');
 	}
 	return await pb.collection('exercises').update(exerciseId, data);
 }

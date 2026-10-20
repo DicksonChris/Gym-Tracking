@@ -3,6 +3,23 @@
     import Icon from '@iconify/svelte';
     import { browser } from '$app/environment';
     export let history: History;
+
+    // Primary/secondary display values depending on what was tracked.
+    $: first = history.reps
+        ? history.weight
+            ? `${history.reps}`
+            : `${history.reps} reps`
+        : history.time
+          ? `${history.time} min`
+          : history.weight
+            ? `${history.weight} lbs`
+            : (history.distance ?? '');
+    $: second =
+        history.reps && history.weight
+            ? `${history.weight} lbs`
+            : history.time && history.distance
+              ? `${history.distance}`
+              : '';
 </script>
 
 <svelte:head>
@@ -10,38 +27,24 @@
 </svelte:head>
 
 <a
-    type="button"
     class="flex overflow-clip whitespace-nowrap border-[1px] border-base-100 text-lg text-base-content hover:border-[1px] hover:border-secondary hover:bg-secondary hover:bg-opacity-20"
     href="/home/exercise/{history.exercise}/history/{history.id}"
 >
-    {#if history.reps && history.weight}
-        <div class="py-2 flex flex-nowrap items-center">
-            <div class="cursor-pointer px-1">
-                <p class="">
-                    {history.reps ? `${history.reps} ` : `${history.time} min`}
-                </p>
-            </div>
-            {#if browser}
-                <Icon icon="maki:cross" class="px-[3px]" />
-            {:else}
-                <span class="px-[4px]">×</span>
+    <div class="flex flex-nowrap items-center py-2">
+        <div class="cursor-pointer px-1">
+            <p>{first}</p>
+        </div>
+        {#if second}
+            {#if history.reps && history.weight}
+                {#if browser}
+                    <Icon icon="maki:cross" class="px-[3px]" />
+                {:else}
+                    <span class="px-[4px]">×</span>
+                {/if}
             {/if}
             <div class="cursor-pointer px-1">
-                <p class="">
-                    {history.reps ? `${history.weight} lbs` : `${history.distance}`}
-                </p>
+                <p>{second}</p>
             </div>
-        </div>
-    {:else}
-        <li class="flex-1 cursor-pointer px-1 py-2">
-            <p class="">
-                {history.reps ? `${history.reps} ` : `${history.time} min`}
-            </p>
-        </li>
-        <li class="flex-1 cursor-pointer px-1 py-2">
-            <p class="">
-                {history.reps ? `${history.weight} lbs` : `${history.distance}`}
-            </p>
-        </li>
-    {/if}
+        {/if}
+    </div>
 </a>

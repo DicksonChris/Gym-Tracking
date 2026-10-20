@@ -1,24 +1,19 @@
 <script lang="ts">
-    import { historiesStore } from '$lib/stores/historiesStore';
     import HistoryItem from './HistoryItem.svelte';
-    import { derived } from 'svelte/store';
     import type { History } from '$lib/api/history';
 
+    export let histories: History[] = [];
     export let showAll = false;
-    export let exerciseID: string;
-    export let muscleGroups: string[];
+    export let muscleGroups: string[] = [];
 
     let badgeClasses = "badge badge-neutral border-accent select-none"
 
-    // Remove onMount loading since data is loaded server-side
-    const exerciseHistories = derived(historiesStore, ($store) => $store[exerciseID] || []);
-    
-    // Rest of the component stays the same
+    // Group by "MMM YYYY" -> day of month, sorted chronologically.
     let groupedHistory: Record<string, Record<string, History[]>> = {};
-
-    // Subscribe to derived store
-    exerciseHistories.subscribe((histories) => {
-        groupedHistory = histories.reduce(
+    $: groupedHistory = histories
+        .slice()
+        .sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime())
+        .reduce(
             (acc, history) => {
                 const dateObj = new Date(history.startTime);
                 const month = dateObj.toLocaleString('default', { month: 'short' }).toUpperCase(); // "DEC"
@@ -33,7 +28,6 @@
             },
             {} as Record<string, Record<string, History[]>>
         );
-    });
 
     // Function to get abbreviated day of the week
     function getDayOfWeek(dateString: string) {
@@ -41,11 +35,7 @@
     }
 </script>
 
-{#if Object.keys(groupedHistory).length > 0}
-    <hr class= />
-{:else}
-    <hr class="border-grey my-2" />
-{/if}
+<hr class="border-grey my-2" />
 
 <div class="history-list">
     {#if Object.keys(groupedHistory).length === 0}

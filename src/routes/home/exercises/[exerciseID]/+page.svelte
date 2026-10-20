@@ -36,7 +36,7 @@
 	async function handleUpdateExerciseName() {
 		if (exerciseID !== 'new' && exercise) {
 			try {
-				await fetch('/api/exercises', {
+				const res = await fetch('/api/exercises', {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					credentials: 'include',
@@ -45,6 +45,10 @@
 						name: exerciseName.trim()
 					})
 				});
+				if (!res.ok) {
+					const body = await res.json().catch(() => ({}));
+					throw new Error(body.error || `HTTP ${res.status}`);
+				}
 				editingExerciseName = false;
 			} catch (err) {
 				console.error('Error updating exercise name:', err);
@@ -75,7 +79,7 @@
 		}
 
 		try {
-			await fetch('/api/exercises', {
+			const res = await fetch('/api/exercises', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				credentials: 'include',
@@ -84,6 +88,10 @@
 					...exerciseData
 				})
 			});
+			if (!res.ok) {
+				const body = await res.json().catch(() => ({}));
+				throw new Error(body.error || `HTTP ${res.status}`);
+			}
 			goto('/home/exercises');
 		} catch (err) {
 			console.error('Error saving exercise:', err);

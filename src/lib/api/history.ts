@@ -53,16 +53,22 @@ export async function getHistoriesByExercise(
 }
 
 /**
- * Fetch a single History item by ID. 
- * With PocketBase's rule user=@request.auth.id, this should 404 if not the owner.
+ * Fetch a single History item by ID. Verifies ownership
+ * (defense in depth on top of the PocketBase collection rules).
  */
 export async function getHistory(
     pb: PocketBase,
     user: AuthRecord | null,
     historyId: string
 ): Promise<History> {
-    // You could optionally do an ownership check here if needed
-    return await pb.collection('history').getOne<History>(historyId);
+    if (!user) {
+        throw new Error('Not authenticated');
+    }
+    const record = await pb.collection('history').getOne<History>(historyId);
+    if (record.user !== user.id) {
+        throw new Error('Unauthorized or record not found');
+    }
+    return record;
 }
 
 /**
@@ -101,6 +107,7 @@ export async function updateHistory(
     if (!user) {
         throw new Error('Not authenticated');
     }
+    await getHistory(pb, user, historyId); // ownership check
     return await pb.collection('history').update(historyId, data);
 }
 
@@ -115,5 +122,6 @@ export async function deleteHistory(
     if (!user) {
         throw new Error('Not authenticated');
     }
+    await getHistory(pb, user, historyId); // ownership check
     await pb.collection('history').delete(historyId);
 }

@@ -42,15 +42,22 @@ export async function getWorkouts(pb: PocketBase, user: AuthRecord | null): Prom
 }
 
 /**
- * Fetch a single workout by ID. 
- * PocketBase rules should prevent reading if it's not owned by the current user.
+ * Fetch a single workout by ID. Verifies ownership
+ * (defense in depth on top of the PocketBase collection rules).
  */
 export async function getWorkout(
     pb: PocketBase,
     user: AuthRecord | null,
     workoutId: string
 ): Promise<Workout> {
-    return await pb.collection('workouts').getOne<Workout>(workoutId);
+    if (!user) {
+        throw new Error('Not authenticated');
+    }
+    const workout = await pb.collection('workouts').getOne<Workout>(workoutId);
+    if (workout.user !== user.id) {
+        throw new Error('Unauthorized or record not found');
+    }
+    return workout;
 }
 
 /**
@@ -65,6 +72,7 @@ export async function updateWorkout(
     if (!user) {
         throw new Error('Not authenticated');
     }
+    await getWorkout(pb, user, workoutId); // ownership check
     return await pb.collection('workouts').update(workoutId, data);
 }
 
@@ -79,5 +87,6 @@ export async function deleteWorkout(
     if (!user) {
         throw new Error('Not authenticated');
     }
+    await getWorkout(pb, user, workoutId); // ownership check
     await pb.collection('workouts').delete(workoutId);
 }

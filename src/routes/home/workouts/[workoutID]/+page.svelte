@@ -38,7 +38,7 @@
 		// If not "new", optionally do a partial update here. Or just wait until final "Submit".
 		if (workoutID !== 'new') {
 			try {
-				await fetch('/api/workouts', {
+				const res = await fetch('/api/workouts', {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					credentials: 'include',
@@ -48,6 +48,10 @@
 						exercises: workout?.exercises
 					})
 				});
+				if (!res.ok) {
+					const body = await res.json().catch(() => ({}));
+					throw new Error(body.error || `HTTP ${res.status}`);
+				}
 				editingGroupName = false;
 			} catch (error) {
 				console.error('Failed to update workout name:', error);
@@ -70,12 +74,16 @@
 
 		try {
 			// call /api/workouts to create or update
-			await fetch('/api/workouts', {
+			const res = await fetch('/api/workouts', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				credentials: 'include',
 				body: JSON.stringify(body)
 			});
+			if (!res.ok) {
+				const resBody = await res.json().catch(() => ({}));
+				throw new Error(resBody.error || `HTTP ${res.status}`);
+			}
 
 			goto('/home/workouts'); // or wherever
 		} catch (error) {

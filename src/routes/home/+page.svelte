@@ -1,47 +1,52 @@
 <script lang="ts">
-	import { onDestroy } from 'svelte';
 	import { goto } from '$app/navigation';
 	import Icon from '@iconify/svelte';
 
 	import WorkoutDropdown from '$lib/components/WorkoutDropdown.svelte';
 	import ExerciseItem from '$lib/components/ExerciseItem.svelte';
 
-	import { workoutsStore } from '$lib/stores/workoutsStore';
-	import { selectedWorkoutsStore } from '$lib/stores/selectedWorkoutsStore';
+	import type { Exercise } from '$lib/api/exercises';
+	import type { History } from '$lib/api/history';
 	import type { Workout } from '$lib/api/workouts';
 
-	// The SSR data has "workouts" already. We'll store them in a local var or read from the store.
-	let workouts: Workout[] = [];
+	export let data: {
+		workouts: Workout[];
+		exercises: Exercise[];
+		selectedWorkouts: string[];
+		histories: Record<string, History[]>;
+	};
 
-	// We have an SSR-based store. If you like, you can read from that:
-	$: workouts = $workoutsStore ?? [];
+	$: workouts = data.workouts ?? [];
 
-	let showList = false;
-	let container: HTMLUListElement | null = null;
-	let selectedWorkouts: string[] = [];
+	// Local selection state, initialized from the server and synced back
+	// explicitly on change (never on load, so it can't wipe saved data).
+	let selectedWorkouts: string[] = data.selectedWorkouts ?? [];
 
-	// Sync with the selectedWorkouts store
-	const unsubscribe = selectedWorkoutsStore.subscribe((value) => {
-		selectedWorkouts = value;
-	});
-
-	onDestroy(() => {
-		unsubscribe();
-	});
-
-	function handleClickOutside(e: MouseEvent) {
-		if (container && !container.contains(e.target as Node)) {
-			showList = false;
-		}
+	function exerciseById(id: string): Exercise | null {
+		return data.exercises.find((e) => e.id === id) ?? null;
 	}
 
 	function handleClick(workoutID: string) {
 		goto(`/home/workouts/${workoutID}`);
 	}
 
-	/** When WorkoutDropdown updates its selection, we store that in selectedWorkoutsStore */
-	function handleSelectionChange(event: CustomEvent<string[]>) {
-		selectedWorkoutsStore.set(event.detail);
+	/** When WorkoutDropdown updates its selection, persist it to the server. */
+	async function handleSelectionChange(event: CustomEvent<string[]>) {
+		const previous = selectedWorkouts;
+		selectedWorkouts = event.detail;
+		try {
+			const res = await fetch('/api/selectedWorkouts', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				credentials: 'include',
+				body: JSON.stringify({ workouts: selectedWorkouts })
+			});
+			if (!res.ok) throw new Error(`HTTP ${res.status}`);
+		} catch (err) {
+			console.error('Failed to save workout selection:', err);
+			selectedWorkouts = previous;
+			alert('Failed to save workout selection.');
+		}
 	}
 
 	/**
@@ -49,10 +54,8 @@
 	 */
 	$: orderedWorkouts = selectedWorkouts
 		.map((id) => workouts.find((w) => w.id === id))
-		.filter((w) => w !== undefined);
+		.filter((w): w is Workout => w !== undefined);
 </script>
-
-<svelte:window on:click={handleClickOutside} />
 
 <!-- 
   Pass the SSR "workouts" to WorkoutDropdown,
@@ -64,7 +67,7 @@
 	on:selectionChange={handleSelectionChange}
 />
 
-<ul class="space-y-6" bind:this={container}>
+<ul class="space-y-6">
 	{#each orderedWorkouts as workout}
 		{#if workout}
 			<li class="card mb-12">
@@ -83,7 +86,8 @@
 					{#if workout.exercises}
 						{#each workout.exercises as exerciseID, index}
 							<ExerciseItem
-								{exerciseID}
+								exercise={exerciseById(exerciseID)}
+								histories={data.histories[exerciseID] ?? []}
 								index={index + 1 === workout.exercises.length ? -1 : index}
 							/>
 						{/each}

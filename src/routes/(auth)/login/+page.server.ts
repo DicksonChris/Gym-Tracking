@@ -16,11 +16,6 @@ export const actions: Actions = {
     const email = formData.get('email')?.toString() || '';
     const password = formData.get('password')?.toString() || '';
 
-    // Intentionally trigger an error if a certain email is used:
-    if (email === 'triggererror@example.com') {
-      return fail(400, { formError: 'Intentional error triggered.' });
-    }
-
     try {
       // Attempt PocketBase login
       await locals.pb.collection('users').authWithPassword(email, password);

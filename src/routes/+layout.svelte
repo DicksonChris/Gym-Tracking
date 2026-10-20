@@ -4,7 +4,6 @@
 	import Nav from '$lib/components/Header/Nav.svelte';
 	import { page } from '$app/state';
 	import NavAuth from '$lib/components/Header/NavAuth.svelte';
-	import { themeStore } from '$lib/stores/themeStore';
 	import Icon from '@iconify/svelte';
 	import { onMount } from 'svelte';
 
@@ -16,6 +15,35 @@
 
 	// Declare isMobile as reactive state using the $state rune.
 	let isMobile = $state(false);
+
+	// Current theme. Follows the server value when it changes (e.g. after
+	// login); otherwise only the dropdown updates it, so navigation and
+	// component remounts can never snap it back.
+	let theme = $state(data.theme ?? 'dracula');
+	let lastServerTheme = data.theme;
+	$effect(() => {
+		if (data.theme && data.theme !== lastServerTheme) {
+			lastServerTheme = data.theme;
+			theme = data.theme;
+		}
+	});
+
+	async function handleThemeChange(event: CustomEvent<string>) {
+		const previous = theme;
+		theme = event.detail;
+		try {
+			const res = await fetch('/api/theme', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				credentials: 'include',
+				body: JSON.stringify({ theme })
+			});
+			if (!res.ok) throw new Error(`HTTP ${res.status}`);
+		} catch (err) {
+			console.error('Failed to save theme:', err);
+			theme = previous;
+		}
+	}
 
 	onMount(() => {
 		const updateWidth = () => {
@@ -29,14 +57,14 @@
 
 <div
 	class="min-h-screen bg-base-200 font-sans text-primary"
-	data-theme={data.user ? $themeStore : 'fantasy'}
+	data-theme={data.user ? theme : 'fantasy'}
 >
 	{#if data.user}
 		<header class="fixed left-0 top-0 z-10 flex w-full justify-between {bgClass} p-4">
 			<Nav />
 			<span class="flex items-center space-x-2">
 				{#if !isMobile}
-					<ThemeDropdown initialTheme={data.theme} />
+					<ThemeDropdown {theme} on:change={handleThemeChange} />
 				{/if}
 				<div class="dropdown dropdown-end">
 					<button class="flex pr-2">
@@ -45,11 +73,13 @@
 					<ul class="z-100 menu dropdown-content rounded-box bg-base-100 p-2 shadow">
 						{#if isMobile}
 							<li>
-								<ThemeDropdown initialTheme={data.theme} />
+								<ThemeDropdown {theme} on:change={handleThemeChange} />
 							</li>
 						{/if}
 						<li>
-							<a href="/logout" class="menu-title text-base-content">Logout</a>
+							<form method="POST" action="/logout">
+								<button type="submit" class="menu-title text-base-content">Logout</button>
+							</form>
 						</li>
 					</ul>
 				</div>

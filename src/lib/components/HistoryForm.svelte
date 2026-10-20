@@ -74,7 +74,7 @@
 			<div class="form-control">
 				<label class="label text-2xl font-semibold" for="weight">WEIGHT (lbs)</label>
 				<hr class="mb-8 border-secondary" />
-				<Counter decimal bind:value={weight} step={exercise.defaultStep || 0} min={0} max={1000} />
+				<Counter decimal bind:value={weight} step={exercise.defaultStep || 2.5} min={0} max={1000} />
 				<input type="hidden" name="weight" value={weight} />
 			</div>
 		{/if}

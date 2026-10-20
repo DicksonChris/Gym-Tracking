@@ -52,7 +52,7 @@
 
 		// Attempt to update on the server
 		try {
-			await fetch('/api/exercises/toggleHidden', {
+			const res = await fetch('/api/exercises/toggleHidden', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				credentials: 'include',
@@ -61,6 +61,7 @@
 					hidden: exercise.hidden
 				})
 			});
+			if (!res.ok) throw new Error(`HTTP ${res.status}`);
 			// If successful, do nothing else — local state is now correct.
 		} catch (err) {
 			console.error('Failed to toggle hidden:', err);
@@ -118,7 +119,10 @@
 
 				<!-- Middle: muscle group tags -->
 				<div class="flex flex-wrap gap-2">
-					{#each exercise.muscleGroup?.split(',').map((g) => g.trim()) as group}
+					{#each exercise.muscleGroup
+						?.split(',')
+						.map((g) => g.trim())
+						.filter(Boolean) ?? [] as group}
 						<span
 							class="badge badge-accent badge-sm overflow-hidden truncate whitespace-nowrap"
 							title={group}

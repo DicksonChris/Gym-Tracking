@@ -1,6 +1,10 @@
 <script lang="ts">
-	import { themeStore } from '$lib/stores/themeStore';
-	export let initialTheme: string = 'dracula';
+	import { createEventDispatcher } from 'svelte';
+
+	/** The currently active theme (owned by the parent). */
+	export let theme: string = 'dracula';
+
+	const dispatch = createEventDispatcher<{ change: string }>();
 
 	const themes = [
 		'autumn',
@@ -29,25 +33,19 @@
 		'synthwave',
 	];
 
-	// Initialize with passed theme
-	$: if (initialTheme) {
-		themeStore.set(initialTheme);
-	}
-
 	function handleChange(event: Event) {
-		const newTheme = (event.target as HTMLSelectElement).value;
-		themeStore.set(newTheme);
+		dispatch('change', (event.target as HTMLSelectElement).value);
 	}
 </script>
 
 <select
-	bind:value={$themeStore}
+	value={theme}
 	on:change={handleChange}
 	class="select select-ghost select-xs pb-6 text-base-content"
 	aria-label="Select Theme"
 >
-	{#each themes as theme, idx}
+	{#each themes as themeName, idx}
 		{#if idx===10}<hr>{/if}
-		<option value={theme}>{theme.charAt(0).toUpperCase() + theme.slice(1)}</option>
+		<option value={themeName}>{themeName.charAt(0).toUpperCase() + themeName.slice(1)}</option>
 	{/each}
 </select>

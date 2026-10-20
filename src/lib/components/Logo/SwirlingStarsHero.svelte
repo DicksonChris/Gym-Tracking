@@ -1,34 +1,46 @@
-<script>
-	import { onMount, onDestroy } from 'svelte';
+<script lang="ts">
+	import { onMount } from 'svelte';
 
 	// Props:
-	// - height: the hero banner height (default: full viewport height)
 	// - burnColors: an array of three color strings for the chromatic aberration burn
-	// - bg: the background fill (can be a color or CSS gradient)
-	export let height = '100vh';
-	export let burnColors = [
+	// - bg: the background fill (a canvas fillStyle color)
+	export let burnColors: string[] = [
 		'rgba(255, 200, 100, 0.8)',
 		'rgba(255, 50, 50, 0.8)',
 		'rgba(100, 100, 255, 0.8)'
 	];
 	export let bg = 'black';
 
-	let container;
-	let canvas;
+	interface SwirlingStar {
+		r: number;
+		theta: number;
+		speed: number;
+		size: number;
+		burnColor: string;
+	}
+
+	let container: HTMLDivElement;
+	let canvas: HTMLCanvasElement;
 
 	onMount(() => {
 		const ctx = canvas.getContext('2d');
+		if (!ctx) return;
 
 		// Variables for canvas center and maximum swirl radius
-		let centerX, centerY, maxSwirlRadius;
+		let centerX = 0;
+		let centerY = 0;
+		let maxSwirlRadius = 0;
 
 		// Create an offscreen canvas for the static star field background
 		const bgCanvas = document.createElement('canvas');
 		const bgCtx = bgCanvas.getContext('2d');
+		if (!bgCtx) return;
 
 		// Array for swirling stars
-		const swirlingStars = [];
+		const swirlingStars: SwirlingStar[] = [];
 		const swirlingStarCount = 150; // Adjust the number of swirling stars as desired
+
+		let rafId = 0;
 
 		// Resize the canvas based on the container size, then update the center and regenerate the background and stars.
 		function resizeCanvas() {
@@ -48,6 +60,7 @@
 		// Each background star is drawn using a radial gradient that is white in the center and
 		// fades to one of the provided burnColors at its edge.
 		function createBackground() {
+			if (!bgCtx) return;
 			bgCanvas.width = canvas.width;
 			bgCanvas.height = canvas.height;
 			bgCtx.fillStyle = bg; // use the passed background value
@@ -85,29 +98,37 @@
 		}
 
 		// Draw a four-pointed star whose points always face the cardinal directions.
-		function drawStar(ctx, x, y, spikes, outerRadius, innerRadius) {
+		function drawStar(
+			starCtx: CanvasRenderingContext2D,
+			x: number,
+			y: number,
+			spikes: number,
+			outerRadius: number,
+			innerRadius: number
+		) {
 			let rot = (Math.PI / 2) * 3; // Start at -90° (pointing up)
 			const step = Math.PI / spikes; // For 4 spikes, each step is 45°
-			ctx.beginPath();
-			ctx.moveTo(x, y - outerRadius);
+			starCtx.beginPath();
+			starCtx.moveTo(x, y - outerRadius);
 			for (let i = 0; i < spikes; i++) {
 				const x1 = x + Math.cos(rot) * outerRadius;
 				const y1 = y + Math.sin(rot) * outerRadius;
-				ctx.lineTo(x1, y1);
+				starCtx.lineTo(x1, y1);
 				rot += step;
 				const x2 = x + Math.cos(rot) * innerRadius;
 				const y2 = y + Math.sin(rot) * innerRadius;
-				ctx.lineTo(x2, y2);
+				starCtx.lineTo(x2, y2);
 				rot += step;
 			}
-			ctx.lineTo(x, y - outerRadius);
-			ctx.closePath();
-			ctx.fill();
+			starCtx.lineTo(x, y - outerRadius);
+			starCtx.closePath();
+			starCtx.fill();
 		}
 
 		// Animation loop: update positions and redraw the canvas.
 		function animate() {
-			requestAnimationFrame(animate);
+			if (!ctx) return;
+			rafId = requestAnimationFrame(animate);
 			ctx.drawImage(bgCanvas, 0, 0);
 			swirlingStars.forEach((star) => {
 				star.theta += star.speed;
@@ -126,9 +147,10 @@
 		}
 		animate();
 
-		onDestroy(() => {
+		return () => {
 			window.removeEventListener('resize', resizeCanvas);
-		});
+			cancelAnimationFrame(rafId);
+		};
 	});
 </script>
 

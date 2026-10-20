@@ -1,7 +1,7 @@
 import type { LayoutServerLoad } from './$types';
 import { redirect } from '@sveltejs/kit';
 
-export const load: LayoutServerLoad = async ({ locals, url }: { locals: any; url: URL }) => {
+export const load: LayoutServerLoad = async ({ locals, url }) => {
 	// Get the authenticated user from PocketBase.
 	const user = locals.pb.authStore.record;
 	let theme;
