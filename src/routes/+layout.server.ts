@@ -6,9 +6,12 @@ export const load: LayoutServerLoad = async ({ locals, url }) => {
 	const user = locals.pb.authStore.record;
 	let theme;
 
-	// If no user is found and the current path is not /login or /register,
+	// If no user is found and the current path is not a public page,
 	// redirect to /login.
-	if (!user && url.pathname !== '/login' && url.pathname !== '/register' && url.pathname !== '/') {
+	const publicPaths = ['/', '/login', '/register', '/forgot-password'];
+	const isPublic =
+		publicPaths.includes(url.pathname) || url.pathname.startsWith('/reset-password/');
+	if (!user && !isPublic) {
 		throw redirect(302, '/login');
 	}
 

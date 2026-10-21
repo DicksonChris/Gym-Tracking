@@ -62,6 +62,12 @@
 					
 				{/if}
 
+				<div class="text-right">
+					<a href="/forgot-password" class="link-hover link text-sm text-secondary">
+						Forgot password?
+					</a>
+				</div>
+
 				<!-- Submit Button -->
 				<div class="form-control mt-6">
 					<button type="submit" class="btn btn-primary">Login</button>
