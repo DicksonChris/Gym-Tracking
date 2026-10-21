@@ -101,7 +101,7 @@
 						<Icon icon="bi:person-circle" class="h-6 w-6 text-base-content" />
 					</button>
 					{#if menuOpen}
-						<ul class="menu absolute right-0 top-8 z-50 w-48 rounded-box bg-base-100 p-2 shadow-lg">
+						<ul class="menu absolute right-0 top-8 z-50 w-56 rounded-box bg-base-100 p-2 shadow-lg">
 							{#if isMobile}
 								<li class="pointer-events-auto mb-2">
 									<div class="flex flex-col items-stretch gap-1 p-1">

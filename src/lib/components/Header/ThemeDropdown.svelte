@@ -44,7 +44,7 @@
 	value={theme}
 	on:change={handleChange}
 	class={block
-		? 'select select-bordered select-sm w-full text-base-content'
+		? 'select select-bordered w-full leading-normal text-base-content'
 		: 'select select-ghost select-xs pb-6 text-base-content'}
 	aria-label="Select Theme"
 >
