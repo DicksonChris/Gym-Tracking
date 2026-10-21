@@ -3,8 +3,10 @@
 	import Counter from '$lib/components/Counter.svelte';
 	import type { Exercise } from '$lib/api/exercises';
 	import type { History } from '$lib/api/history';
-	import { startRestTimer } from '$lib/stores/restTimer';
+	import { startRestTimer, retimeRestTimer } from '$lib/stores/restTimer';
 	import { queueSet } from '$lib/offlineQueue';
+	import RestSelect from '$lib/components/RestSelect.svelte';
+	import { effectiveRest } from '$lib/rest';
 
 	export let exercise: Exercise;
 	export let histories: History[] = [];
@@ -28,6 +30,8 @@
 	let time = '';
 	let note = '';
 	let initialized = false;
+	let rest = 0;
+	let savingRest = false;
 
 	$: if (exercise && !initialized) {
 		initialized = true;
@@ -35,6 +39,34 @@
 		weight = lastSet?.weight ?? 0;
 		distance = lastSet?.distance ?? '';
 		time = lastSet?.time ?? '';
+		rest = effectiveRest(exercise.restSeconds);
+	}
+
+	function startRest() {
+		startRestTimer(rest, exercise.id, exercise.name);
+	}
+
+	async function saveRest(e: CustomEvent<number>) {
+		const previous = effectiveRest(exercise.restSeconds);
+		rest = e.detail;
+		retimeRestTimer(exercise.id, rest);
+		savingRest = true;
+		try {
+			const res = await fetch('/api/exercises', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				credentials: 'include',
+				body: JSON.stringify({ id: exercise.id, restSeconds: rest })
+			});
+			if (!res.ok) throw new Error(`HTTP ${res.status}`);
+			exercise = { ...exercise, restSeconds: rest };
+		} catch (err) {
+			console.error('Failed to save rest time:', err);
+			rest = previous;
+			showToast('error', 'Failed to save rest time.');
+		} finally {
+			savingRest = false;
+		}
 	}
 
 	let logging = false;
@@ -85,7 +117,7 @@
 			} else {
 				showToast('success', 'Set logged');
 			}
-			startRestTimer();
+			startRest();
 		} catch (err) {
 			// network failure -> queue for later; anything else -> error
 			if (err instanceof TypeError || !navigator.onLine) {
@@ -93,7 +125,7 @@
 				histories = [...histories, { ...body } as History];
 				note = '';
 				showToast('queued', 'Offline — set queued, will sync');
-				startRestTimer();
+				startRest();
 			} else {
 				console.error('Failed to log set:', err);
 				showToast('error', 'Failed to log set.');
@@ -184,16 +216,19 @@
 	</div>
 {/if}
 
-<!-- optional per-set note -->
-<div class="form-control mt-4">
+<!-- optional per-set note + this exercise's rest time -->
+<div class="mt-4 flex gap-2">
 	<input
 		id="note"
-		class="input input-bordered input-sm"
+		class="input input-bordered min-w-0 flex-1 text-base"
 		type="text"
 		maxlength="500"
-		placeholder="Note (optional) — e.g. felt easy"
+		placeholder="Note (optional)"
 		bind:value={note}
 	/>
+	<div class="w-32 flex-shrink-0">
+		<RestSelect value={rest} disabled={savingRest} on:change={saveRest} />
+	</div>
 </div>
 
 <!-- today's sets so far -->

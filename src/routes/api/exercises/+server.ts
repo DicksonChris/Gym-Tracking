@@ -1,5 +1,6 @@
 import type { RequestHandler } from './$types';
 import { createExercise, updateExercise } from '$lib/api/exercises';
+import { parseRestSeconds } from '$lib/rest';
 
 export const POST: RequestHandler = async ({ request, locals }) => {
     const user = locals.pb.authStore.record;
@@ -10,6 +11,10 @@ export const POST: RequestHandler = async ({ request, locals }) => {
     try {
         const body = await request.json();
         const { id, name, muscleGroup, measurement, defaultReps, defaultStep, hidden } = body;
+        const restSeconds = parseRestSeconds(body.restSeconds);
+        if (body.restSeconds !== undefined && restSeconds === undefined) {
+            return new Response(JSON.stringify({ error: 'Invalid restSeconds' }), { status: 400 });
+        }
 
         // If you want to handle toggles specifically
         if (id && hidden !== undefined && !name && !muscleGroup) {
@@ -25,7 +30,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
                 muscleGroup,
                 measurement,
                 defaultReps,
-                defaultStep
+                defaultStep,
+                restSeconds
             });
             return new Response(JSON.stringify(record), { status: 200 });
         } else {
@@ -35,6 +41,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
                 measurement,
                 defaultReps,
                 defaultStep,
+                restSeconds,
                 hidden
             });
             return new Response(JSON.stringify(updated), { status: 200 });

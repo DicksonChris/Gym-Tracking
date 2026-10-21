@@ -67,6 +67,40 @@ export const defaultExercises: SeedExercise[] = [
 	{ id: 27, name: 'Biking', muscleGroup: 'Heart', measurement: TIME_DISTANCE }
 ];
 
+/**
+ * Rest between sets (seconds; -1 = no timer). Heavy compounds get longer rest.
+ * Keep in sync with pb_migrations/1760000002_add_exercise_rest.js.
+ */
+export const defaultRest: Record<string, number> = {
+	'Barbell Squat': 180,
+	'Flat Dumbbell Bench Press': 120,
+	'Wide Grip Pulldowns': 90,
+	'Leg Curls': 90,
+	'Dumbbell Standing Overhead Press': 120,
+	'Incline Dumbbell Curl': 60,
+	'Cable Pushdown with Rope': 60,
+	'Straight Leg Calf Raises': 60,
+	'Face Pulls and Raise': 60,
+	Deadlifts: 300,
+	'Incline Dumbbell Bench': 120,
+	'Cable Row': 90,
+	'Leg Press': 120,
+	'Dumbbell Lateral Raise': 60,
+	'Dumbbell Hammer Curl': 60,
+	'Overhead Triceps Extension': 60,
+	'Seated Calf Raises': 60,
+	'Dumbbell Skullcrusher': 60,
+	'Bent Over Dumbbell Row': 90,
+	'Fly Machine': 60,
+	'Leg Extension': 60,
+	'Back Extensions': 90,
+	'Dumbbell Preacher Curl': 60,
+	'Heels To The Heavens': 45,
+	'X-Man Crunch': 45,
+	Running: -1,
+	Biking: -1
+};
+
 export const defaultWorkouts: SeedWorkout[] = [
 	{ groupName: 'Fullbody 1 Heavy', exercises: [1, 2, 3, 4, 5, 6, 7, 8, 9] },
 	{ groupName: 'Fullbody 2 Medium', exercises: [10, 11, 12, 13, 14, 15, 16, 17, 9] },
@@ -87,7 +121,8 @@ export async function seedDefaultProgram(pb: PocketBase, userId: string) {
 			user: userId,
 			name: ex.name,
 			muscleGroup: ex.muscleGroup,
-			measurement: ex.measurement
+			measurement: ex.measurement,
+			restSeconds: defaultRest[ex.name] ?? 0
 		});
 		idMap.set(ex.id, record.id);
 	}

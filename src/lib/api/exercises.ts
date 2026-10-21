@@ -10,6 +10,8 @@ export interface Exercise {
 	hidden?: boolean;
 	defaultReps?: number;
 	defaultStep?: number;
+	/** Seconds of rest between sets; -1 = no timer, 0/unset = app default. */
+	restSeconds?: number;
 	url?: string;
 }
 

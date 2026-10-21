@@ -1,19 +1,11 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
 	import Icon from '@iconify/svelte';
-	import {
-		restTimer,
-		clearRestTimer,
-		extendRestTimer,
-		getRestDuration,
-		setRestDuration,
-		REST_PRESETS
-	} from '$lib/stores/restTimer';
+	import { restTimer, clearRestTimer, extendRestTimer } from '$lib/stores/restTimer';
+	import { fmtDuration } from '$lib/rest';
 
 	let now = Date.now();
 	let finished = false;
-	let showSettings = false;
-	let duration = 90;
 
 	const tick = setInterval(() => {
 		now = Date.now();
@@ -62,51 +54,28 @@
 		}, 4000);
 	}
 
-	function fmt(s: number): string {
-		return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
-	}
-
-	function openSettings() {
-		duration = getRestDuration();
-		showSettings = !showSettings;
-	}
-
-	function pickPreset(p: number) {
-		setRestDuration(p);
-		showSettings = false;
-	}
 </script>
 
 {#if $restTimer}
 	<div
 		class="fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom))] left-1/2 z-[60] -translate-x-1/2"
 	>
-		{#if showSettings}
-			<div class="mb-2 flex justify-center gap-1">
-				{#each REST_PRESETS as p}
-					<button
-						class="btn btn-xs {getRestDuration() === p ? 'btn-primary' : 'btn-neutral'}"
-						on:click={() => pickPreset(p)}
-					>
-						{p}s
-					</button>
-				{/each}
-			</div>
-		{/if}
 		<div
 			class="flex items-center gap-2 rounded-full border border-primary bg-base-100 py-2 pl-4 pr-2 shadow-lg shadow-black/40 {remaining === 0
 				? 'animate-pulse border-success'
 				: ''}"
 		>
 			<Icon icon="mdi:timer-outline" class="h-5 w-5 {remaining === 0 ? 'text-success' : 'text-primary'}" />
-			<span class="min-w-[3.5rem] font-mono text-xl font-bold text-base-content">
-				{remaining === 0 ? 'GO!' : fmt(remaining)}
+			<span class="flex min-w-[3.5rem] flex-col leading-tight">
+				<span class="font-mono text-xl font-bold text-base-content">
+					{remaining === 0 ? 'GO!' : fmtDuration(remaining)}
+				</span>
+				{#if $restTimer.label}
+					<span class="max-w-[9rem] truncate text-[0.65rem] opacity-60">{$restTimer.label}</span>
+				{/if}
 			</span>
 			{#if remaining > 0}
 				<button class="btn btn-ghost btn-xs" on:click={() => extendRestTimer(30)}>+30s</button>
-				<button class="btn btn-ghost btn-xs" aria-label="Timer settings" on:click={openSettings}>
-					<Icon icon="mdi:cog" class="h-4 w-4" />
-				</button>
 			{/if}
 			<button class="btn btn-ghost btn-xs" aria-label="Dismiss timer" on:click={clearRestTimer}>
 				<Icon icon="mdi:close" class="h-4 w-4" />

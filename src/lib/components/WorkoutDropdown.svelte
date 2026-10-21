@@ -44,6 +44,12 @@
 		}
 	}
 
+	/** Open the list programmatically (e.g. from an empty-state link). */
+	export function open() {
+		showList = true;
+		textInput?.focus();
+	}
+
 	/**
 	 * Filter the workouts based on the input `query`.
 	 */

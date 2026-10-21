@@ -21,6 +21,7 @@
 	// Local selection state, initialized from the server and synced back
 	// explicitly on change (never on load, so it can't wipe saved data).
 	let selectedWorkouts: string[] = data.selectedWorkouts ?? [];
+	let dropdown: WorkoutDropdown;
 
 	function exerciseById(id: string): Exercise | null {
 		return data.exercises.find((e) => e.id === id) ?? null;
@@ -62,23 +63,47 @@
   along with the current "selectedWorkouts" array 
 -->
 <WorkoutDropdown
+	bind:this={dropdown}
 	workouts={workouts}
 	{selectedWorkouts}
 	on:selectionChange={handleSelectionChange}
 />
 
-{#if workouts.length === 0}
-	<div class="card mt-6 bg-base-100 p-8 text-center">
-		<Icon icon="mdi:dumbbell" class="mx-auto mb-2 h-10 w-10 opacity-40" />
-		<p class="text-base-content">Welcome! You don't have any workouts yet.</p>
-		<a href="/home/workouts/new" class="btn btn-primary mx-auto mt-4">Create your first workout</a>
-	</div>
-{:else if selectedWorkouts.length === 0}
-	<div class="card mt-6 bg-base-100 p-8 text-center">
-		<Icon icon="mdi:arrow-up" class="mx-auto mb-2 h-10 w-10 animate-bounce opacity-40" />
-		<p class="text-base-content">Pick your workouts above to get started 👆</p>
-		<p class="mt-1 text-sm opacity-60">Selected workouts show up here with your history.</p>
-	</div>
+{#if workouts.length === 0 || selectedWorkouts.length === 0}
+	<section class="mt-8 px-1">
+		<h2 class="text-xl font-normal text-base-content">Start</h2>
+		<ul class="mt-3 space-y-2">
+			{#if workouts.length > 0}
+				<li>
+					<button
+						type="button"
+						class="flex items-center gap-2 text-info hover:underline"
+						on:click|stopPropagation={() => dropdown.open()}
+					>
+						<Icon icon="codicon:checklist" class="h-4 w-4" />
+						Select workouts...
+					</button>
+				</li>
+			{/if}
+			<li>
+				<a href="/home/workouts/new" class="flex items-center gap-2 text-info hover:underline">
+					<Icon icon="codicon:add" class="h-4 w-4" />
+					New workout...
+				</a>
+			</li>
+			<li>
+				<a href="/home/exercises" class="flex items-center gap-2 text-info hover:underline">
+					<Icon icon="codicon:list-unordered" class="h-4 w-4" />
+					Manage exercises...
+				</a>
+			</li>
+		</ul>
+		<p class="mt-6 text-sm opacity-60">
+			{workouts.length === 0
+				? 'No workouts yet.'
+				: 'Selected workouts show up here with your recent sets.'}
+		</p>
+	</section>
 {/if}
 
 <ul class="space-y-6">

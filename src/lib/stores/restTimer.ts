@@ -1,31 +1,39 @@
 import { writable } from 'svelte/store';
-import { browser } from '$app/environment';
+
+export interface RestTimerState {
+	startedAt: number;
+	endsAt: number;
+	exerciseId?: string;
+	label?: string;
+}
 
 /**
  * Global rest timer. Client-only: never written during SSR, so the
  * module-level store is safe.
  */
-export const restTimer = writable<{ endsAt: number } | null>(null);
+export const restTimer = writable<RestTimerState | null>(null);
 
-const DURATION_KEY = 'restDuration';
-export const REST_PRESETS = [60, 90, 120, 180];
-
-export function getRestDuration(): number {
-	if (!browser) return 90;
-	const v = parseInt(localStorage.getItem(DURATION_KEY) ?? '90', 10);
-	return Number.isFinite(v) && v > 0 ? v : 90;
+/** Start a countdown; a non-positive duration means "no timer" for that exercise. */
+export function startRestTimer(seconds: number, exerciseId?: string, label?: string) {
+	if (seconds <= 0) {
+		restTimer.set(null);
+		return;
+	}
+	const now = Date.now();
+	restTimer.set({ startedAt: now, endsAt: now + seconds * 1000, exerciseId, label });
 }
 
-export function setRestDuration(seconds: number) {
-	if (browser) localStorage.setItem(DURATION_KEY, String(seconds));
-}
-
-export function startRestTimer(seconds = getRestDuration()) {
-	restTimer.set({ endsAt: Date.now() + seconds * 1000 });
+/** Re-time a running timer for this exercise after its rest setting changes. */
+export function retimeRestTimer(exerciseId: string, seconds: number) {
+	restTimer.update((t) => {
+		if (!t || t.exerciseId !== exerciseId) return t;
+		if (seconds <= 0) return null;
+		return { ...t, endsAt: t.startedAt + seconds * 1000 };
+	});
 }
 
 export function extendRestTimer(seconds: number) {
-	restTimer.update((t) => (t ? { endsAt: t.endsAt + seconds * 1000 } : t));
+	restTimer.update((t) => (t ? { ...t, endsAt: t.endsAt + seconds * 1000 } : t));
 }
 
 export function clearRestTimer() {

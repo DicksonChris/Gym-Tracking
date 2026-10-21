@@ -7,6 +7,8 @@
 	import Title from '$lib/components/Title.svelte';
 	import type { Exercise } from '$lib/api/exercises';
 	import Counter from '$lib/components/Counter.svelte';
+	import RestSelect from '$lib/components/RestSelect.svelte';
+	import { effectiveRest } from '$lib/rest';
 	import { dndzone } from 'svelte-dnd-action';
 
 	export let data;
@@ -24,6 +26,7 @@
 	let selectedMeasurements: string[] = exercise ? (exercise.measurement || []) : [];
 	let defaultReps: number = exercise?.defaultReps ?? 0;
 	let defaultStep: number = exercise?.defaultStep ?? 0;
+	let restSeconds: number = effectiveRest(exercise?.restSeconds);
 	let editingExerciseName = (exerciseID === 'new');
 
 	function toggleEditExerciseName() {
@@ -68,7 +71,8 @@
 		const exerciseData: Partial<Exercise> = {
 			name: exerciseName.trim(),
 			muscleGroup: selectedMuscleGroups.join(', '),
-			measurement: selectedMeasurements
+			measurement: selectedMeasurements,
+			restSeconds
 		};
 
 		if (selectedMeasurements.includes('reps')) {
@@ -281,6 +285,14 @@
 					<input type="checkbox" bind:group={selectedMeasurements} value="distance" class="checkbox" id="Distance" />
 					<span class="ml-2">Distance</span>
 				</label>
+			</div>
+		</div>
+
+		<div>
+			<label class="text-lg font-semibold" for="rest">Rest between sets</label>
+			<p class="mb-2 text-sm opacity-60">Timer that starts after you log a set.</p>
+			<div class="max-w-xs">
+				<RestSelect id="rest" bind:value={restSeconds} />
 			</div>
 		</div>
 

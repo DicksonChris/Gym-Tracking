@@ -71,14 +71,13 @@
 </h1>
 
 {#if orderedWorkouts.length === 0}
-	<div class="card bg-base-100 p-8 text-center">
-		<Icon icon="mdi:dumbbell" class="mx-auto mb-2 h-10 w-10 opacity-40" />
-		<p class="text-base-content">No workouts selected.</p>
-		<p class="mt-1 text-sm opacity-60">
-			Pick your workouts on the <a href="/home" class="link link-secondary">home page</a> to use
-			workout mode.
-		</p>
-	</div>
+	<section class="px-1">
+		<p class="text-sm opacity-60">No workouts selected.</p>
+		<a href="/home" class="mt-3 flex items-center gap-2 text-info hover:underline">
+			<Icon icon="codicon:checklist" class="h-4 w-4" />
+			Select workouts...
+		</a>
+	</section>
 {:else}
 	<div class="space-y-6">
 		{#each orderedWorkouts as workout}
@@ -127,7 +126,7 @@
 											{:else if last.length > 0}
 												Last: {summary(last)}
 											{:else}
-												First time — go get it 💪
+												No history yet
 											{/if}
 										</span>
 									</span>
