@@ -60,7 +60,9 @@
 	data-theme={data.user ? theme : 'fantasy'}
 >
 	{#if data.user}
-		<header class="fixed left-0 top-0 z-10 flex w-full justify-between {bgClass} p-4">
+		<header
+			class="fixed left-0 top-0 z-10 flex w-full justify-between {bgClass} p-4 pt-[calc(1rem+env(safe-area-inset-top))]"
+		>
 			<Nav />
 			<span class="flex items-center space-x-2">
 				{#if !isMobile}
@@ -86,7 +88,9 @@
 			</span>
 		</header>
 	{:else}
-		<header class="fixed left-0 top-0 z-10 flex w-full justify-between p-4">
+		<header
+			class="fixed left-0 top-0 z-10 flex w-full justify-between p-4 pt-[calc(1rem+env(safe-area-inset-top))]"
+		>
 			<NavAuth />
 		</header>
 	{/if}

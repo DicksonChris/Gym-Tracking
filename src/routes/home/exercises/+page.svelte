@@ -99,7 +99,7 @@
 	<div class="text-base-content">
 		<!-- Table header row -->
 		<div
-			class="sticky top-[65px] z-50 grid grid-cols-[4fr_2fr_1fr] gap-2 border-b border-base-content bg-base-100 px-4 py-2 font-semibold text-primary"
+			class="sticky top-[calc(65px+env(safe-area-inset-top))] z-50 grid grid-cols-[4fr_2fr_1fr] gap-2 border-b border-base-content bg-base-100 px-4 py-2 font-semibold text-primary"
 		>
 			<div class="text-center text-sm">Exercise</div>
 			<div class="text-start text-sm">Tags</div>
