@@ -1,6 +1,7 @@
 <script lang="ts">
 	import PlusButton from './CreateSet.svelte';
 	import HistoryList from '$lib/components/HistoryList.svelte';
+	import ProgressChart from '$lib/components/ProgressChart.svelte';
 	import type { Exercise } from '$lib/api/exercises';
 	import type { History } from '$lib/api/history';
 	import Icon from '@iconify/svelte';
@@ -49,6 +50,9 @@
 			</div>
 			<PlusButton exerciseID={exercise.id} />
 		</div>
+		{#if showAll}
+			<ProgressChart {histories} measurement={exercise.measurement ?? []} />
+		{/if}
 		<HistoryList {histories} {showAll} {muscleGroups} />
 	</li>
 {/if}
