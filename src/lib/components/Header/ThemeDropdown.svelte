@@ -3,6 +3,8 @@
 
 	/** The currently active theme (owned by the parent). */
 	export let theme: string = 'dracula';
+	/** Render as a full-width bordered select (for use inside menus). */
+	export let block = false;
 
 	const dispatch = createEventDispatcher<{ change: string }>();
 
@@ -41,7 +43,9 @@
 <select
 	value={theme}
 	on:change={handleChange}
-	class="select select-ghost select-xs pb-6 text-base-content"
+	class={block
+		? 'select select-bordered select-sm w-full text-base-content'
+		: 'select select-ghost select-xs pb-6 text-base-content'}
 	aria-label="Select Theme"
 >
 	{#each themes as themeName, idx}

@@ -47,6 +47,17 @@
 		}
 	}
 
+	// Account menu: explicit state instead of daisyUI's focus-based dropdown,
+	// which never opens on iOS Safari (buttons don't receive focus on tap).
+	let menuOpen = $state(false);
+	let menuContainer: HTMLElement | undefined = $state();
+
+	function handleWindowClick(e: MouseEvent) {
+		if (menuOpen && menuContainer && !menuContainer.contains(e.target as Node)) {
+			menuOpen = false;
+		}
+	}
+
 	onMount(() => {
 		const updateWidth = () => {
 			isMobile = window.innerWidth < 500;
@@ -65,6 +76,8 @@
 	});
 </script>
 
+<svelte:window onclick={handleWindowClick} />
+
 <div
 	class="min-h-screen bg-base-200 font-sans text-primary"
 	data-theme={data.user ? theme : 'fantasy'}
@@ -78,22 +91,32 @@
 				{#if !isMobile}
 					<ThemeDropdown {theme} on:change={handleThemeChange} />
 				{/if}
-				<div class="dropdown dropdown-end">
-					<button class="flex pr-2">
+				<div class="relative" bind:this={menuContainer}>
+					<button
+						class="flex pr-2"
+						aria-label="Account menu"
+						aria-expanded={menuOpen}
+						onclick={() => (menuOpen = !menuOpen)}
+					>
 						<Icon icon="bi:person-circle" class="h-6 w-6 text-base-content" />
 					</button>
-					<ul class="z-100 menu dropdown-content rounded-box bg-base-100 p-2 shadow">
-						{#if isMobile}
+					{#if menuOpen}
+						<ul class="menu absolute right-0 top-8 z-50 w-48 rounded-box bg-base-100 p-2 shadow-lg">
+							{#if isMobile}
+								<li class="pointer-events-auto mb-2">
+									<div class="flex flex-col items-stretch gap-1 p-1">
+										<span class="text-xs font-semibold uppercase opacity-60">Theme</span>
+										<ThemeDropdown {theme} block on:change={handleThemeChange} />
+									</div>
+								</li>
+							{/if}
 							<li>
-								<ThemeDropdown {theme} on:change={handleThemeChange} />
+								<form method="POST" action="/logout">
+									<button type="submit" class="w-full text-left text-base-content">Logout</button>
+								</form>
 							</li>
-						{/if}
-						<li>
-							<form method="POST" action="/logout">
-								<button type="submit" class="menu-title text-base-content">Logout</button>
-							</form>
-						</li>
-					</ul>
+						</ul>
+					{/if}
 				</div>
 			</span>
 		</header>
