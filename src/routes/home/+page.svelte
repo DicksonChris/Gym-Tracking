@@ -67,6 +67,20 @@
 	on:selectionChange={handleSelectionChange}
 />
 
+{#if workouts.length === 0}
+	<div class="card mt-6 bg-base-100 p-8 text-center">
+		<Icon icon="mdi:dumbbell" class="mx-auto mb-2 h-10 w-10 opacity-40" />
+		<p class="text-base-content">Welcome! You don't have any workouts yet.</p>
+		<a href="/home/workouts/new" class="btn btn-primary mx-auto mt-4">Create your first workout</a>
+	</div>
+{:else if selectedWorkouts.length === 0}
+	<div class="card mt-6 bg-base-100 p-8 text-center">
+		<Icon icon="mdi:arrow-up" class="mx-auto mb-2 h-10 w-10 animate-bounce opacity-40" />
+		<p class="text-base-content">Pick your workouts above to get started 👆</p>
+		<p class="mt-1 text-sm opacity-60">Selected workouts show up here with your history.</p>
+	</div>
+{/if}
+
 <ul class="space-y-6">
 	{#each orderedWorkouts as workout}
 		{#if workout}

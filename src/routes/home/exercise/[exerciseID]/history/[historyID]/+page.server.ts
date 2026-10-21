@@ -33,6 +33,7 @@ export const actions: Actions = {
 		const weight = formData.get('weight');
 		const distance = formData.get('distance');
 		const time = formData.get('time');
+		const note = formData.get('note');
 		const historyId = params.historyID;
 
 		if (!reps && !weight && !distance && !time) {
@@ -45,7 +46,8 @@ export const actions: Actions = {
 			reps: reps ? Number(reps) : undefined,
 			weight: weight ? Number(weight) : undefined,
 			distance: distance?.toString() || undefined,
-			time: time?.toString() || undefined
+			time: time?.toString() || undefined,
+			note: note?.toString().slice(0, 500) || ''
 		};
 
 		try {

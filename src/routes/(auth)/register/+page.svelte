@@ -10,6 +10,7 @@
 	let email = '';
 	let password = '';
 	let passwordConfirm = '';
+	let submitting = false;
 </script>
 
 <!-- Outer container centers the card on the page -->
@@ -18,7 +19,17 @@
 		<div class="card-body">
 			<h2 class="card-title mb-4 justify-center">Register</h2>
 
-			<form method="POST" use:enhance class="space-y-4">
+			<form
+				method="POST"
+				use:enhance={() => {
+					submitting = true;
+					return async ({ update }) => {
+						submitting = false;
+						await update();
+					};
+				}}
+				class="space-y-4"
+			>
 				<!-- Name Field -->
 				<div class="form-control">
 					<label class="label" for="name">
@@ -111,7 +122,10 @@
 
 				<!-- Submit Button -->
 				<div class="form-control mt-6">
-					<button type="submit" class="btn btn-primary">Register</button>
+					<button type="submit" class="btn btn-primary" disabled={submitting}>
+						{#if submitting}<span class="loading loading-spinner loading-sm"></span>{/if}
+						Register
+					</button>
 				</div>
 			</form>
 

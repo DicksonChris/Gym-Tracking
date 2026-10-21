@@ -18,9 +18,9 @@
 
 <nav>
 	<div class="navbar-center text-slate-300">
-		<ul class="flex items-center">
+		<ul class="flex items-center text-sm md:text-base">
 			{#if $showBackButton}
-				<li class="mr-4">
+				<li class="mr-2">
 					<button
 						on:click={goBack}
 						class="flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:bg-primary"
@@ -45,17 +45,17 @@
 				</li>
 			{:else}
 				<!-- Empty spacer so the layout doesn't shift -->
-				<li class="h-8 mr-4"></li>
+				<li class="h-8 mr-2"></li>
 			{/if}
 
 			<!-- Logo/link to root -->
-			<li class="mr-4 flex-shrink-0 w-16 md:w-20">
+			<li class="mr-2 w-12 flex-shrink-0 md:mr-4 md:w-20">
 				<a href="/">
 					<img src="/images/GainsGalaxySMALL.png" alt="logo" >
 				</a>
 			</li>
 
-			<li class="mr-4">
+			<li class="mr-2 md:mr-4">
 				<!-- 'class:text-primary={condition}' toggles .text-primary if the condition is true -->
 				<a
 					href="/home"
@@ -66,7 +66,17 @@
 				</a>
 			</li>
 
-			<li class="mr-4">
+			<li class="mr-2 md:mr-4">
+				<a
+					href="/home/today"
+					class="transition-colors hover:text-accent"
+					class:text-accent={$page.url.pathname === '/home/today'}
+				>
+					Today
+				</a>
+			</li>
+
+			<li class="mr-2 md:mr-4">
 				<a
 					href="/home/workouts"
 					class="transition-colors hover:text-accent"
@@ -76,13 +86,23 @@
 				</a>
 			</li>
 
-			<li class="mr-4">
+			<li class="mr-2 md:mr-4">
 				<a
 					href="/home/exercises"
 					class="transition-colors hover:text-accent"
 					class:text-accent={$page.url.pathname === '/home/exercises'}
 				>
 					Exercises
+				</a>
+			</li>
+
+			<li class="mr-2 md:mr-4">
+				<a
+					href="/home/stats"
+					class="transition-colors hover:text-accent"
+					class:text-accent={$page.url.pathname === '/home/stats'}
+				>
+					Stats
 				</a>
 			</li>
 		</ul>

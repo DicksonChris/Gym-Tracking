@@ -10,6 +10,7 @@ export interface History {
     weight?: number;
     distance?: string;
     time?: string;
+    note?: string;
 }
 
 /**
@@ -88,7 +89,7 @@ export async function createHistory(
     return await pb.collection('history').create({
         ...data,
         user: user.id,
-        startTime: new Date().toISOString()
+        startTime: data.startTime || new Date().toISOString()
     });
 }
 

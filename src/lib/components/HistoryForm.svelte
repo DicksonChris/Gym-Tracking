@@ -13,6 +13,8 @@
 	let weight: number;
 	let distance: string;
 	let time: string;
+	let note: string = initialData?.note ?? '';
+	let submitting = false;
 
 	const isUpdate = !!initialData;
 
@@ -68,7 +70,17 @@
 		We do method="POST" to trigger the default action 
 		in the route's +page.server.ts for create or update 
 	-->
-	<form method="POST" action="?/upsert" use:enhance>
+	<form
+		method="POST"
+		action="?/upsert"
+		use:enhance={() => {
+			submitting = true;
+			return async ({ update }) => {
+				submitting = false;
+				await update();
+			};
+		}}
+	>
 
 		{#if exercise.measurement?.includes('weight')}
 			<div class="form-control">
@@ -108,7 +120,26 @@
 			</div>
 		{/if}
 
-		<button class="btn btn-primary btn-block fixed bottom-0 right-0 rounded-none" type="submit">
+		<div class="form-control mt-4">
+			<input
+				id="note"
+				name="note"
+				class="input input-bordered input-sm"
+				type="text"
+				maxlength="500"
+				placeholder="Note (optional)"
+				bind:value={note}
+			/>
+		</div>
+
+		<button
+			class="btn btn-primary btn-block fixed bottom-0 right-0 rounded-none"
+			type="submit"
+			disabled={submitting}
+		>
+			{#if submitting}
+				<span class="loading loading-spinner loading-sm"></span>
+			{/if}
 			{initialData ? 'Update' : 'Submit'}
 		</button>
 	</form>

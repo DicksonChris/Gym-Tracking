@@ -4,8 +4,10 @@
 	import Nav from '$lib/components/Header/Nav.svelte';
 	import { page } from '$app/state';
 	import NavAuth from '$lib/components/Header/NavAuth.svelte';
+	import RestTimer from '$lib/components/RestTimer.svelte';
 	import Icon from '@iconify/svelte';
 	import { onMount } from 'svelte';
+	import { flushQueue } from '$lib/offlineQueue';
 
 	// Grab props using the new $props rune
 	let { data, children } = $props();
@@ -51,7 +53,15 @@
 		};
 		updateWidth();
 		window.addEventListener('resize', updateWidth);
-		return () => window.removeEventListener('resize', updateWidth);
+
+		// sync any sets logged while offline
+		flushQueue();
+		window.addEventListener('online', flushQueue);
+
+		return () => {
+			window.removeEventListener('resize', updateWidth);
+			window.removeEventListener('online', flushQueue);
+		};
 	});
 </script>
 
@@ -97,4 +107,7 @@
 	<main class="container mx-auto">
 		{@render children()}
 	</main>
+	{#if data.user}
+		<RestTimer />
+	{/if}
 </div>

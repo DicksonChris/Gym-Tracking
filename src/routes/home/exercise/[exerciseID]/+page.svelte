@@ -1,14 +1,13 @@
 <script lang="ts">
-	/** @type {import('./$types').PageProps} */
-	export let data; 
+	import SetLogger from '$lib/components/SetLogger.svelte';
 
-	import HistoryForm from '$lib/components/HistoryForm.svelte';
+	export let data;
 
-	const { exercise, lastHistory } = data;
+	$: ({ exercise, histories } = data);
 </script>
 
 {#if exercise}
-    <HistoryForm {exercise} lastHistory={lastHistory} />
+	<SetLogger {exercise} {histories} />
 {:else}
-    <p>No exercise found or access denied.</p>
+	<p>No exercise found or access denied.</p>
 {/if}

@@ -8,6 +8,7 @@
 
 	let email = '';
 	let password = '';
+	let submitting = false;
 </script>
 
 <div class="flex items-center justify-center p-4">
@@ -15,7 +16,17 @@
 		<div class="card-body">
 			<h2 class="card-title mb-4 justify-center">Login</h2>
 
-			<form method="POST" use:enhance class="space-y-4">
+			<form
+				method="POST"
+				use:enhance={() => {
+					submitting = true;
+					return async ({ update }) => {
+						submitting = false;
+						await update();
+					};
+				}}
+				class="space-y-4"
+			>
 				<!-- Email Field -->
 				<div class="form-control">
 					<label class="label" for="email">
@@ -70,7 +81,10 @@
 
 				<!-- Submit Button -->
 				<div class="form-control mt-6">
-					<button type="submit" class="btn btn-primary">Login</button>
+					<button type="submit" class="btn btn-primary" disabled={submitting}>
+						{#if submitting}<span class="loading loading-spinner loading-sm"></span>{/if}
+						Login
+					</button>
 				</div>
 			</form>
 
