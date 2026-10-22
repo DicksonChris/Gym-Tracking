@@ -2,6 +2,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import Icon from '@iconify/svelte';
+	import Fab from '$lib/components/Fab.svelte';
 
 	// Data from +page.server.ts:
 	export let data;
@@ -116,11 +117,4 @@
 </ul>
 
 <!-- Button to create a new workout -->
-<button
-	aria-label="Create workout"
-	title="Create workout"
-	class="btn btn-circle btn-primary btn-lg fixed bottom-4 right-4 hover:btn-neutral hover:text-primary"
-	on:click={handleCreateClick}
->
-	<Icon icon="bi:plus-lg" class="h-6 w-6" />
-</button>
+<Fab label="Create workout" on:click={handleCreateClick} />

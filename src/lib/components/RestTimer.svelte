@@ -1,11 +1,19 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
 	import Icon from '@iconify/svelte';
-	import { restTimer, clearRestTimer, extendRestTimer } from '$lib/stores/restTimer';
-	import { fmtDuration } from '$lib/rest';
+	import {
+		restTimer,
+		clearRestTimer,
+		extendRestTimer,
+		adjustExerciseRest
+	} from '$lib/stores/restTimer';
+	import { fmtDuration, REST_MAX, REST_MIN, REST_STEP } from '$lib/rest';
 
 	let now = Date.now();
 	let finished = false;
+	let showSettings = false;
+
+	$: if (!$restTimer) showSettings = false;
 
 	const tick = setInterval(() => {
 		now = Date.now();
@@ -60,22 +68,50 @@
 	<div
 		class="fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom))] left-1/2 z-[60] -translate-x-1/2"
 	>
+		{#if showSettings && remaining > 0}
+			<div
+				class="mb-2 flex items-center justify-center gap-1 rounded-full border border-base-300 bg-base-100 p-1 shadow-lg shadow-black/40"
+			>
+				<button
+					class="btn btn-ghost btn-xs"
+					disabled={$restTimer.restSeconds <= REST_MIN}
+					on:click={() => adjustExerciseRest(-REST_STEP)}
+				>
+					−15s
+				</button>
+				<span class="px-1 text-xs text-base-content">
+					Rest <span class="font-mono font-bold">{fmtDuration($restTimer.restSeconds)}</span>
+				</span>
+				<button
+					class="btn btn-ghost btn-xs"
+					disabled={$restTimer.restSeconds >= REST_MAX}
+					on:click={() => adjustExerciseRest(REST_STEP)}
+				>
+					+15s
+				</button>
+			</div>
+		{/if}
 		<div
 			class="flex items-center gap-2 rounded-full border border-primary bg-base-100 py-2 pl-4 pr-2 shadow-lg shadow-black/40 {remaining === 0
 				? 'animate-pulse border-success'
 				: ''}"
 		>
 			<Icon icon="mdi:timer-outline" class="h-5 w-5 {remaining === 0 ? 'text-success' : 'text-primary'}" />
-			<span class="flex min-w-[3.5rem] flex-col leading-tight">
-				<span class="font-mono text-xl font-bold text-base-content">
-					{remaining === 0 ? 'GO!' : fmtDuration(remaining)}
-				</span>
-				{#if $restTimer.label}
-					<span class="max-w-[9rem] truncate text-[0.65rem] opacity-60">{$restTimer.label}</span>
-				{/if}
+			<span class="min-w-[3.5rem] font-mono text-xl font-bold text-base-content">
+				{remaining === 0 ? 'GO!' : fmtDuration(remaining)}
 			</span>
 			{#if remaining > 0}
 				<button class="btn btn-ghost btn-xs" on:click={() => extendRestTimer(30)}>+30s</button>
+				{#if $restTimer.exerciseId}
+					<button
+						class="btn btn-ghost btn-xs {showSettings ? 'text-primary' : ''}"
+						aria-label="Rest settings for this exercise"
+						aria-expanded={showSettings}
+						on:click={() => (showSettings = !showSettings)}
+					>
+						<Icon icon="mdi:cog" class="h-4 w-4" />
+					</button>
+				{/if}
 			{/if}
 			<button class="btn btn-ghost btn-xs" aria-label="Dismiss timer" on:click={clearRestTimer}>
 				<Icon icon="mdi:close" class="h-4 w-4" />

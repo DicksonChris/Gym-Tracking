@@ -7,7 +7,8 @@
 	import Title from '$lib/components/Title.svelte';
 	import type { Exercise } from '$lib/api/exercises';
 	import Counter from '$lib/components/Counter.svelte';
-	import RestSelect from '$lib/components/RestSelect.svelte';
+	import RestStepper from '$lib/components/RestStepper.svelte';
+	import Fab from '$lib/components/Fab.svelte';
 	import { effectiveRest } from '$lib/rest';
 	import { dndzone } from 'svelte-dnd-action';
 
@@ -237,13 +238,18 @@
 			>
 				{#each items as group (group.id)}
 					<span
-						class="badge badge-accent select-none"
+						class="badge badge-accent badge-lg select-none gap-1 py-4 pr-0"
 						on:mouseenter={onHoverStart}
 						on:mouseleave={onHoverEnd}
 					>
 						{group.id}
-						<button type="button" on:click={() => removeMuscleGroup(group.id)} class="ml-1">
-							<Icon icon="bi:x" class="h-4 w-4" />
+						<button
+							type="button"
+							on:click={() => removeMuscleGroup(group.id)}
+							aria-label="Remove {group.id}"
+							class="flex h-8 w-8 items-center justify-center rounded-full hover:bg-black/20"
+						>
+							<Icon icon="bi:x-lg" class="h-4 w-4" />
 						</button>
 					</span>
 				{/each}
@@ -291,18 +297,11 @@
 		<div>
 			<label class="text-lg font-semibold" for="rest">Rest between sets</label>
 			<p class="mb-2 text-sm opacity-60">Timer that starts after you log a set.</p>
-			<div class="max-w-xs">
-				<RestSelect id="rest" bind:value={restSeconds} />
-			</div>
+			<RestStepper id="rest" bind:value={restSeconds} />
 		</div>
 
 		<!-- Submit Button -->
-		<button
-			type="submit"
-			class="btn btn-circle btn-primary btn-lg fixed bottom-4 right-4 hover:btn-neutral hover:text-primary"
-		>
-			<Icon icon="bi:check2" class="h-6 w-6" />
-		</button>
+		<Fab type="submit" icon="bi:check2" label="Save exercise" />
 	</form>
 {:else}
 	<p class="text-error">No exercise found or not authorized.</p>

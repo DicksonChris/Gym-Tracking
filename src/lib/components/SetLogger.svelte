@@ -3,9 +3,8 @@
 	import Counter from '$lib/components/Counter.svelte';
 	import type { Exercise } from '$lib/api/exercises';
 	import type { History } from '$lib/api/history';
-	import { startRestTimer, retimeRestTimer } from '$lib/stores/restTimer';
+	import { startRestTimer, restOverrides } from '$lib/stores/restTimer';
 	import { queueSet } from '$lib/offlineQueue';
-	import RestSelect from '$lib/components/RestSelect.svelte';
 	import { effectiveRest } from '$lib/rest';
 
 	export let exercise: Exercise;
@@ -30,8 +29,6 @@
 	let time = '';
 	let note = '';
 	let initialized = false;
-	let rest = 0;
-	let savingRest = false;
 
 	$: if (exercise && !initialized) {
 		initialized = true;
@@ -39,34 +36,12 @@
 		weight = lastSet?.weight ?? 0;
 		distance = lastSet?.distance ?? '';
 		time = lastSet?.time ?? '';
-		rest = effectiveRest(exercise.restSeconds);
 	}
+
+	$: rest = $restOverrides[exercise.id] ?? effectiveRest(exercise.restSeconds);
 
 	function startRest() {
-		startRestTimer(rest, exercise.id, exercise.name);
-	}
-
-	async function saveRest(e: CustomEvent<number>) {
-		const previous = effectiveRest(exercise.restSeconds);
-		rest = e.detail;
-		retimeRestTimer(exercise.id, rest);
-		savingRest = true;
-		try {
-			const res = await fetch('/api/exercises', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				credentials: 'include',
-				body: JSON.stringify({ id: exercise.id, restSeconds: rest })
-			});
-			if (!res.ok) throw new Error(`HTTP ${res.status}`);
-			exercise = { ...exercise, restSeconds: rest };
-		} catch (err) {
-			console.error('Failed to save rest time:', err);
-			rest = previous;
-			showToast('error', 'Failed to save rest time.');
-		} finally {
-			savingRest = false;
-		}
+		startRestTimer(rest, exercise.id);
 	}
 
 	let logging = false;
@@ -216,19 +191,16 @@
 	</div>
 {/if}
 
-<!-- optional per-set note + this exercise's rest time -->
-<div class="mt-4 flex gap-2">
+<!-- optional per-set note -->
+<div class="form-control mt-4">
 	<input
 		id="note"
-		class="input input-bordered min-w-0 flex-1 text-base"
+		class="input input-bordered input-sm"
 		type="text"
 		maxlength="500"
-		placeholder="Note (optional)"
+		placeholder="Note (optional) — e.g. felt easy"
 		bind:value={note}
 	/>
-	<div class="w-32 flex-shrink-0">
-		<RestSelect value={rest} disabled={savingRest} on:change={saveRest} />
-	</div>
 </div>
 
 <!-- today's sets so far -->
@@ -265,7 +237,7 @@
 {/if}
 
 <!-- actions -->
-<div class="fixed bottom-0 right-0 flex w-full">
+<div class="fixed bottom-0 right-0 flex w-full bg-base-200 pb-[env(safe-area-inset-bottom)]">
 	{#if lastSet}
 		<button
 			class="btn btn-secondary flex-1 rounded-none"

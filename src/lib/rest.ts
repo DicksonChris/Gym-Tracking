@@ -5,8 +5,9 @@
  */
 export const DEFAULT_REST = 90;
 export const REST_OFF = -1;
-
-export const REST_OPTIONS = [REST_OFF, 30, 45, 60, 90, 120, 150, 180, 240, 300, 420, 600];
+export const REST_MIN = 15;
+export const REST_MAX = 600;
+export const REST_STEP = 15;
 
 /** Normalize a stored value into the effective setting (seconds or REST_OFF). */
 export function effectiveRest(restSeconds: number | null | undefined): number {
@@ -18,13 +19,9 @@ export function fmtDuration(s: number): string {
 	return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 }
 
-export function fmtRest(s: number): string {
-	return s === REST_OFF ? 'Off' : fmtDuration(s);
-}
-
 /** Validate a client-supplied value; returns undefined when invalid. */
 export function parseRestSeconds(v: unknown): number | undefined {
 	if (typeof v !== 'number' || !Number.isInteger(v)) return undefined;
-	if (v === REST_OFF || (v >= 0 && v <= 3600)) return v;
+	if (v === REST_OFF || v === 0 || (v >= REST_MIN && v <= REST_MAX)) return v;
 	return undefined;
 }

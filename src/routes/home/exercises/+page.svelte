@@ -3,6 +3,7 @@
 	import { goto } from '$app/navigation';
 	import MuscleGroupFilter from '$lib/components/MuscleGroupFilter.svelte';
 	import Icon from '@iconify/svelte';
+	import Fab from '$lib/components/Fab.svelte';
 
 	export let data: { allExercises: Exercise[] };
 
@@ -150,14 +151,7 @@
 </main>
 
 <!-- Floating Create Button -->
-<button
-	aria-label="Create Exercise"
-	title="Create Exercise"
-	class="btn btn-circle btn-primary btn-lg fixed bottom-[calc(1rem+env(safe-area-inset-bottom))] right-[calc(1rem+env(safe-area-inset-right))] z-50 hover:btn-neutral hover:text-primary"
-	on:click={handleCreateClick}
->
-	<Icon icon="bi:plus-lg" class="h-6 w-6" />
-</button>
+<Fab label="Create Exercise" on:click={handleCreateClick} />
 
 <style>
 	:root {

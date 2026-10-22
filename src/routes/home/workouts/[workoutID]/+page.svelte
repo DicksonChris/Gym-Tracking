@@ -2,6 +2,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import Icon from '@iconify/svelte';
+	import Fab from '$lib/components/Fab.svelte';
 	import Title from '$lib/components/Title.svelte';
 	import DnDList from '$lib/components/DnDList.svelte';
 	import type { Exercise } from '$lib/api/exercises';
@@ -146,12 +147,7 @@
 		</div>
 	</div>
 
-	<button
-		class="btn btn-circle btn-primary btn-lg fixed bottom-4 right-4 hover:btn-neutral hover:text-primary"
-		on:click={handleSubmit}
-	>
-		<Icon icon="bi:check2" class="h-6 w-6" />
-	</button>
+	<Fab icon="bi:check2" label="Save workout" on:click={handleSubmit} />
 {:else}
 	<!-- If no workout found or user not logged in, show message -->
 	<p class="text-error">No workout data.</p>

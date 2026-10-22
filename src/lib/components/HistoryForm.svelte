@@ -132,16 +132,14 @@
 			/>
 		</div>
 
-		<button
-			class="btn btn-primary btn-block fixed bottom-0 right-0 rounded-none"
-			type="submit"
-			disabled={submitting}
-		>
-			{#if submitting}
-				<span class="loading loading-spinner loading-sm"></span>
-			{/if}
-			{initialData ? 'Update' : 'Submit'}
-		</button>
+		<div class="fixed bottom-0 right-0 w-full bg-base-200 pb-[env(safe-area-inset-bottom)]">
+			<button class="btn btn-primary btn-block rounded-none" type="submit" disabled={submitting}>
+				{#if submitting}
+					<span class="loading loading-spinner loading-sm"></span>
+				{/if}
+				{initialData ? 'Update' : 'Submit'}
+			</button>
+		</div>
 	</form>
 
 	<!-- Delete Confirmation Modal -->
