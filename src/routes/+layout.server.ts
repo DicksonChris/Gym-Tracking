@@ -1,7 +1,9 @@
 import type { LayoutServerLoad } from './$types';
 import { redirect } from '@sveltejs/kit';
+import { getActiveSession } from '$lib/api/sessions';
 
-export const load: LayoutServerLoad = async ({ locals, url }) => {
+export const load: LayoutServerLoad = async ({ locals, url, depends }) => {
+	depends('app:session');
 	// Get the authenticated user from PocketBase.
 	const user = locals.pb.authStore.record;
 	let theme;
@@ -20,5 +22,12 @@ export const load: LayoutServerLoad = async ({ locals, url }) => {
 		theme = user.theme;
 	}
 
-	return { user, theme };
+	const activeSession = user
+		? await getActiveSession(locals.pb, user).catch((err) => {
+				console.error('Failed to load active session:', err);
+				return null;
+			})
+		: null;
+
+	return { user, theme, activeSession };
 };

@@ -4,16 +4,19 @@
 
 	import WorkoutDropdown from '$lib/components/WorkoutDropdown.svelte';
 	import ExerciseItem from '$lib/components/ExerciseItem.svelte';
+	import StartWorkout from '$lib/components/StartWorkout.svelte';
 
 	import type { Exercise } from '$lib/api/exercises';
 	import type { History } from '$lib/api/history';
 	import type { Workout } from '$lib/api/workouts';
+	import type { Session } from '$lib/api/sessions';
 
 	export let data: {
 		workouts: Workout[];
 		exercises: Exercise[];
 		selectedWorkouts: string[];
 		histories: Record<string, History[]>;
+		activeSession: Session | null;
 	};
 
 	$: workouts = data.workouts ?? [];
@@ -69,42 +72,31 @@
 	on:selectionChange={handleSelectionChange}
 />
 
-{#if workouts.length === 0 || selectedWorkouts.length === 0}
-	<section class="mt-8 px-1">
-		<h2 class="text-xl font-normal text-base-content">Start</h2>
-		<ul class="mt-3 space-y-2">
-			{#if workouts.length > 0}
-				<li>
-					<button
-						type="button"
-						class="flex items-center gap-2 text-info hover:underline"
-						on:click|stopPropagation={() => dropdown.open()}
-					>
-						<Icon icon="codicon:checklist" class="h-4 w-4" />
-						Select workouts...
-					</button>
-				</li>
-			{/if}
+<div class="my-6">
+	<StartWorkout workouts={orderedWorkouts} activeSession={data.activeSession}>
+		{#if workouts.length > 0 && selectedWorkouts.length === 0}
+			<li>
+				<button
+					type="button"
+					class="flex items-center gap-2 text-info hover:underline"
+					on:click|stopPropagation={() => dropdown.open()}
+				>
+					<Icon icon="codicon:checklist" class="h-4 w-4" />
+					Select workouts...
+					<span class="text-xs text-base-content opacity-40">to start them from here</span>
+				</button>
+			</li>
+		{/if}
+		{#if workouts.length === 0}
 			<li>
 				<a href="/home/workouts/new" class="flex items-center gap-2 text-info hover:underline">
-					<Icon icon="codicon:add" class="h-4 w-4" />
+					<Icon icon="codicon:new-file" class="h-4 w-4" />
 					New workout...
 				</a>
 			</li>
-			<li>
-				<a href="/home/exercises" class="flex items-center gap-2 text-info hover:underline">
-					<Icon icon="codicon:list-unordered" class="h-4 w-4" />
-					Manage exercises...
-				</a>
-			</li>
-		</ul>
-		<p class="mt-6 text-sm opacity-60">
-			{workouts.length === 0
-				? 'No workouts yet.'
-				: 'Selected workouts show up here with your recent sets.'}
-		</p>
-	</section>
-{/if}
+		{/if}
+	</StartWorkout>
+</div>
 
 <ul class="space-y-6">
 	{#each orderedWorkouts as workout}

@@ -1,5 +1,6 @@
 import type { RequestHandler } from './$types';
 import { createHistory, getHistoriesByExercise, type History } from '$lib/api/history';
+import { addExerciseToSession, getSession } from '$lib/api/sessions';
 
 /**
  * JSON endpoint for logging a set. Used by the on-page logging flow and the
@@ -13,10 +14,18 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
 	try {
 		const body = await request.json();
-		const { exercise, reps, weight, distance, time, note, startTime } = body;
+		const { exercise, reps, weight, distance, time, note, startTime, session } = body;
 
 		if (!exercise || typeof exercise !== 'string') {
 			return new Response(JSON.stringify({ error: 'Missing exercise' }), { status: 400 });
+		}
+
+		// Link to a session only if it belongs to this user; a stale/foreign id is ignored.
+		let sessionId: string | undefined;
+		if (typeof session === 'string' && session) {
+			sessionId = await getSession(locals.pb, user, session)
+				.then((s) => s.id)
+				.catch(() => undefined);
 		}
 
 		// PR detection: compare against existing bests before inserting.
@@ -32,10 +41,16 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			time: time?.toString() || undefined,
 			note: note?.toString().slice(0, 500) || undefined,
 			// honor a client-provided time for offline-queued sets
-			startTime: typeof startTime === 'string' && startTime ? startTime : undefined
+			startTime: typeof startTime === 'string' && startTime ? startTime : undefined,
+			session: sessionId
 		};
 
 		const record = await createHistory(locals.pb, user, data);
+		if (sessionId) {
+			await addExerciseToSession(locals.pb, user, sessionId, exercise).catch((err) =>
+				console.error('Failed to add exercise to session:', err)
+			);
+		}
 
 		const w = Number(weight) || 0;
 		const r = Number(reps) || 0;

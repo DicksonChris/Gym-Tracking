@@ -14,6 +14,7 @@ export interface PendingSet {
 	distance?: string;
 	time?: string;
 	note?: string;
+	session?: string;
 	startTime: string;
 }
 

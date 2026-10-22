@@ -3,11 +3,14 @@
 
 	export let data;
 
-	$: ({ exercise, histories } = data);
+	$: ({ exercise, histories, nextExercise, activeSession } = data);
 </script>
 
 {#if exercise}
-	<SetLogger {exercise} {histories} />
+	<!-- keyed so moving to the next exercise re-initializes the form -->
+	{#key exercise.id}
+		<SetLogger {exercise} {histories} session={activeSession} {nextExercise} />
+	{/key}
 {:else}
 	<p>No exercise found or access denied.</p>
 {/if}

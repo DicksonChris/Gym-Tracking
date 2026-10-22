@@ -11,6 +11,8 @@ export interface History {
     distance?: string;
     time?: string;
     note?: string;
+    /** Session the set was logged in, if any. */
+    session?: string;
 }
 
 /**

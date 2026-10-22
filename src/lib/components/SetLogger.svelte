@@ -6,9 +6,14 @@
 	import { startRestTimer, restOverrides } from '$lib/stores/restTimer';
 	import { queueSet } from '$lib/offlineQueue';
 	import { effectiveRest } from '$lib/rest';
+	import ElapsedClock from '$lib/components/ElapsedClock.svelte';
+	import type { Session } from '$lib/api/sessions';
 
 	export let exercise: Exercise;
 	export let histories: History[] = [];
+	/** Active workout session; logged sets are linked to it. */
+	export let session: Session | null = null;
+	export let nextExercise: { id: string; name: string } | null = null;
 
 	// most recent set overall (for defaults + repeat button)
 	$: sorted = histories
@@ -71,7 +76,8 @@
 		const body = {
 			exercise: exercise.id,
 			...payload,
-			startTime: new Date().toISOString()
+			startTime: new Date().toISOString(),
+			...(session ? { session: session.id } : {})
 		};
 		try {
 			const res = await fetch('/api/history', {
@@ -139,6 +145,24 @@
 </script>
 
 <header class="mb-6">
+	{#if session}
+		<div class="mb-3 flex items-center gap-2 rounded-box bg-base-100 px-2 py-1 text-sm">
+			<a href="/home/today" class="flex min-w-0 flex-1 items-center gap-1 hover:underline">
+				<Icon icon="mdi:chevron-left" class="h-5 w-5 flex-shrink-0" />
+				<span class="truncate text-base-content">{session.name}</span>
+				<span class="flex-shrink-0 opacity-60">· <ElapsedClock startedAt={session.startedAt} /></span>
+			</a>
+			{#if nextExercise}
+				<a
+					href="/home/exercise/{nextExercise.id}"
+					class="flex min-w-0 max-w-[50%] items-center gap-1 text-info hover:underline"
+				>
+					<span class="truncate">Next: {nextExercise.name}</span>
+					<Icon icon="mdi:chevron-right" class="h-5 w-5 flex-shrink-0" />
+				</a>
+			{/if}
+		</div>
+	{/if}
 	<div class="flex items-center justify-between">
 		<h2 class="mr-4 flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-lg font-medium">
 			{exercise.name}
